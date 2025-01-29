@@ -1,0 +1,27 @@
+
+
+.slick-dots li button:before {
+    font-size: 8px ;
+    z-index: 20;
+    padding-top: 15px;
+}
+.slick-dots li:hover button:before { 
+    color: #E57C00;  
+}
+.slick-dots .slick-active button:before {
+    color: #E57C00 !important ; 
+    z-index: 40px ; 
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+     .divider-media{
+        width: 20%;
+    } 
+}
+
+@media (max-width: 480px) {
+    .divider-media{
+        width: 30%;
+    }
+}

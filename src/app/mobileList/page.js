@@ -1,0 +1,138 @@
+
+import { IconButton, Button, Box, Typography } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Link from 'next/link';
+
+export default function page() {
+  return (
+
+    <Box
+      sx={{
+        position: 'relative',
+        height: '100vh',
+        backgroundImage: "url('/images/mobile.jpg')",
+        backgroundSize: "100% 100%",
+        backgroundPosition: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}>
+
+      <IconButton
+        sx={{
+          position: 'absolute',
+          top: 2,
+          left: 2,
+          color: 'white',
+        }}
+      >
+        <img src="/assets/helplogoWhite.svg" />
+      </IconButton>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          bottom: '10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: "100%",
+        }}>
+
+        <Button
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: { xs: '80%', sm: '40%', md: '20%', lg: '20%', xl: '20%' },
+            marginBottom: 2,
+            backgroundImage: 'linear-gradient(to left, #797993, #302E3B)',
+            borderRadius: '0px 25px 25px 25px',
+            padding: '5px 10px',
+            color: 'white',
+            fontWeight: 'bold',
+            transition: 'background-image 0.3s ease-in-out, color 0.3s ease-in-out',
+            '&:hover': {
+              backgroundImage: 'linear-gradient(to left, #E57C00, #E57C00)',
+              '& .icon-box': {
+                position: 'relative',
+                left: '90%',
+                backgroundColor: 'white',
+              },
+              '& .icon': {
+                color: '#E57C00',
+              },
+            },
+          }}
+        >
+          <Box
+            className="icon-box"
+            sx={{
+              backgroundColor: '#797993',
+              padding: '5px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'left 0.5s ease-in-out',
+              left: '0',
+            }}
+          >
+            <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
+          </Box>
+
+          <Link href="/categories" passHref style={{ textDecoration: 'none',  textAlign: 'center', width: "100%",  }}> {/* إزالة الخط تحت النص */}
+            <Box
+              sx={{
+                color: 'white',     
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease-in-out',
+              }}
+            >
+              OPEN MENU
+            </Box>
+          </Link>
+        </Button>
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 1,
+            width: { xs: '70%', sm: '30%', md: '20%', lg: '16%', xl: '20%' },
+          }} >
+
+          <Button variant="text" sx={{
+            color: "white", border: "1px solid #797993", fontSize: "11px", padding: "0px 8px",
+            textTransform: "capitalize", borderRadius: "25px", width: "100%",
+            '&:hover': {
+              border: "1px solid #E57C00",
+            }
+          }}>
+            English
+          </Button>
+          <Button variant="text" sx={{
+            color: "white", border: "1px solid #797993", fontSize: "11px", padding: "0px 8px",
+            textTransform: "capitalize", borderRadius: "25px", width: "100%",
+            '&:hover': {
+              border: "1px solid #E57C00",
+            }
+          }}>
+            العربية
+          </Button>
+        </Box>
+
+        <Typography sx={{ display: "flex", alignItems: "center", fontSize: "6px", color: "white", marginTop: "20px" }}>
+          2024-2025
+          <img src='/assets/qtapwhite.svg' style={{ width: "40px", padding: "0px 1px", height: "40px" }} />
+          All Rights Reserved
+        </Typography>
+      </Box>
+
+    </Box >
+  );
+}

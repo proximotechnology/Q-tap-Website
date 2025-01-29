@@ -1,0 +1,22 @@
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: white; 
+    width: 25px;  
+    height: 25px; 
+    padding:0px 60px; 
+    z-index: 44;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    font-size: 25px; 
+}
+
+.swiper-button-next {
+    right: 10px;
+}
+
+.swiper-button-prev {
+    left: 10px;
+}

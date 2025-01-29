@@ -1,0 +1,231 @@
+
+import React, { useEffect, useState } from "react";
+import { Box, Button, Typography, Modal, Divider } from "@mui/material";
+import { ordersDetails } from "../categories/data";
+import Link from "next/link";
+
+const PaymentModal = ({ isOpen, onClose }) => {
+
+    const specificOrder = ordersDetails.find(order => order.id === 3218);
+    
+    const [formData, setFormData] = useState(null);
+    useEffect(() => {
+        const storedData = localStorage.getItem('formData');
+        if (storedData) {
+            setFormData(JSON.parse(storedData));
+        }
+    }, []);
+    
+    // ========================================================================
+    const [totalPrice, setTotalPrice] = useState(0);
+
+    useEffect(() => {
+        const getTotalPriceFromLocalStorage = () => {
+            const storedPrice = localStorage.getItem('totalPrice');
+            return storedPrice ? parseFloat(storedPrice) : 0;
+        };
+
+        setTotalPrice(getTotalPriceFromLocalStorage());
+    }, []);
+    // ========================================================================
+
+    return (
+        <Modal
+            open={isOpen}
+            onClose={onClose}
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 6000,
+            }}
+        >
+            <Box
+                sx={{
+                    width: "85%",
+                    maxWidth: "400px",
+                    bgcolor: "#302E3B",
+                    boxShadow: 24,
+                    borderRadius: "40px",
+                    color: "#FFFFFF",
+                    fontFamily: "Arial, sans-serif",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                {/* Header */}
+                {specificOrder ? (
+                    <Box sx={{ textAlign: "center", }}>
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',
+                                padding: "8px 0px",
+                                color: "#AAAAAA",
+                                borderRadius: "40px 40px 0px 0px",
+                            }}
+                        >
+                            Order ID <span style={{ color: "white", }}>#{specificOrder.id}</span>
+                        </Typography>
+                    </Box>
+                ) : (
+                    <Typography variant="h6" color="error">
+                        Order not found
+                    </Typography>
+                )}
+                <Box sx={{ padding: "20px 30px", }}>
+
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            textAlign: "center",
+                            mb: 1,
+                            fontSize: "15px",
+                        }}
+                    >
+                        <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
+                        Payment
+                    </Typography>
+
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            textAlign: "center", justifyContent: "center",
+                            mb: 1,
+                            color: "#AAAAAA",
+                            fontSize: "11px",
+                        }}
+                    >
+                        Please Pay The Amount Down Below To <br /> Continue Your Order.
+                    </Typography>
+
+                    <Divider sx={{ backgroundColor: "#797993", my: 2 }} />
+
+
+                    <Box display={"flex"} width={"100%"} justifyContent={"space-between"} >
+                        <Box sx={{ width: "90%" }}>
+                            <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
+                                Sub Total:
+                                <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
+                            </Typography>
+
+                            <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
+                                Tax: <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
+                            </Typography>
+
+                            <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
+                                DisCount: <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{ width: "40%", textAlign: "left", marginLeft: "70px" }}>
+                            <Typography variant="h6" sx={{
+                                fontSize: '10px', fontWeight: "bold",
+                                color: '#575756'
+                            }}>
+                                Total price
+                            </Typography>
+
+                            <Typography variant="h6" sx={{ fontSize: '19px', fontWeight: "bold", color: 'white' }}>
+
+                                {totalPrice}<span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}> EGP</span>
+                            </Typography>
+                        </Box>
+
+                    </Box>
+
+                    <Divider sx={{ backgroundColor: "#797993", my: 2 }} />
+                    {formData ? (
+                        <>
+                            <Box >
+                                <Box display={"flex"} textAlign={"center"} alignItems={"center"} justifyContent={"space-between"} >
+                                    <Typography color="white" fontSize="12px"  >Payment Method</Typography>
+                                    <Typography>
+                                        <span style={{ color: "#AAAAAA", fontSize: "11px", borderBottom: "1px solid #AAAAAA" }}>
+                                            Change</span>
+                                    </Typography>
+                                </Box>
+                                <Typography color="#AAAAAA" fontSize="12px" margin={"5px 10px"} display={"flex"} alignItems={"center"}>
+                                    <span class="icon-wallet" style={{ fontSize: "20px", marginRight: "6px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+                                    {formData.selectedValue}
+                                </Typography>
+                            </Box>
+                        </>
+                    ) : (
+                        <Box sx={{
+                            color: 'white',
+                            width: '100%',
+                        }}> <Typography>No data available</Typography></Box>
+                    )}
+
+                    <Link href="/Feedback" passHref>
+                        <Button
+                            sx={{
+                                marginTop: "20px",
+                                backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',
+                                borderRadius: "40px",
+                                display: "flex",
+                                width: "100%",
+                                justifyContent: "center",
+                                padding: "4px 0px",
+                                alignItems: "center",
+                                color: "white",
+                                textTransform: "capitalize",
+                                fontSize: "14px",
+                                textDecoration: "none !important",
+                                "&:hover": {
+                                    backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',
+                                },
+                            }}>
+                            <img
+                                src="/assets/balance.svg" alt="pay icon"
+                                style={{ width: "20px ", height: "20px", marginRight: "5px" }}
+                            />
+                            pay
+                        </Button>
+                    </Link>
+
+                    <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+
+                        <Typography
+                            onClick={onClose}
+
+                            sx={{
+                                color: "#AAAAAA",
+                                textTransform: "none",
+                                cursor: "pointer",
+                            }}
+                        >
+                            <span className="icon-close1" style={{ fontSize: "14px", marginRight: "6px" }}></span>
+                            Cancel
+                        </Typography>
+
+                        <Divider
+                            orientation="vertical"
+                            flexItem
+                            sx={{
+                                mx: 3,
+                                backgroundColor: "white",
+                                height: "25px",
+                            }}
+                        />
+                        <Typography
+                            sx={{
+                                color: "#AAAAAA",
+                                textTransform: "none",
+                                cursor: "pointer",
+                                alignItems: "center",
+                            }}
+                        >
+                            <span className="icon-edit1" style={{ fontSize: "18px", color: "#038E43", marginRight: "6px" }}></span>
+                            Pay
+                        </Typography>
+                    </Box>
+                </Box>
+
+            </Box>
+        </Modal>
+    );
+};
+
+export default PaymentModal;

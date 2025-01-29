@@ -1,0 +1,84 @@
+import { Box, Divider, Typography } from '@mui/material';
+import React from 'react';
+import './Digital.css'
+export const Digital = () => {
+    return (
+        <Box sx={{
+            padding: { xs: "20px", md: "50px 100px 70px 100px" },
+            position: "relative",
+            overflow: "hidden",
+        }}>
+            <Box
+                sx={{
+
+                    height: "100vh",
+                    width: "100%",
+                    backgroundImage: "url('/images/digitial.jpg')",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: 1,
+                }}
+            />
+            <Box
+                sx={{
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "rgba(234, 236, 242, 0.6)",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    zIndex: 2,
+                }}
+            />
+            <Box sx={{ position: "relative", zIndex: 3 }}>
+                <Typography variant='body1' sx={{ color: "#222240", fontSize: { xs: "24px", md: "28px" }, wordSpacing: "4px" }}>
+                    Why Q-Tap Digital Menu?
+                </Typography>
+                <Divider sx={{ width: "5%", height: "3px", borderRadius: "20px", margin: "10px 0px", backgroundColor: "#E57C00" }} />
+
+                <Box sx={{ padding: "10px 30px" }}>
+
+                    {[
+                        "Menu (Creative design - editable - easy to use)",
+                        "Table Ordering – Takeaway – delivery",
+                        "Receiving Payment online",
+                        "Updating Orders step by step so can customer be updated",
+                        "Customers can Track their Orders",
+                        "Unique Table signs which Support QR code & NFC, one for each table",
+                        "All orders status and incomes on your mobile Screen one by one",
+                        "Efficient technical support available 24H"
+                    ].map((item, index) => (
+                        <Typography key={index} variant='body2' sx={{ lineHeight: "40px", color: "#949493", alignItems: "center", fontSize: "15px" }}>
+                            <img src="/assets/check.svg" alt="check" style={{ width: "16px", height: "16px", marginRight: "6px" }} />
+                            {item}
+                        </Typography>
+                    ))}
+                </Box>
+
+                <Box sx={{ width: "100%", height: { xs: "150px", md: "200px" }, padding: "10px 30px" }}>
+                    <img
+                        src="/images/digitMenu.jpg"
+                        alt="digitMenu"
+                        style={{ width: "100%", height: "100%", borderRadius: "40px", objectFit: "cover", }}
+                    />
+                    <img
+                        src="/images/phone.jpg"
+                        alt="phone"
+                        className="responsive-image"
+                        style={{
+                            borderRadius: "30px",
+                            zIndex: 1,
+                            position: "relative",
+                            top: "-200%",
+                            left: "70%",
+                        }}
+                    />
+                </Box>
+
+            </Box>
+        </Box>
+    );
+};

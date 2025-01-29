@@ -1,0 +1,94 @@
+.containerMenu {
+  height: auto;
+  width: 100%;
+  position: relative;
+  background-image: url("/images/logoClient.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.containerMenu::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.heroMenu {
+  padding: 0 !important;
+  height: calc(100vh - 0px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.joinButtonMenu {
+  background-color: #e57c00 !important;
+  border: none !important;
+  padding: 6px 40px !important;
+  font-size: 18px !important;
+  cursor: pointer !important;
+  color: white !important;
+  border-radius: 30px !important;
+  text-transform: capitalize !important;
+}
+.menu-icon {
+  position: absolute;
+  top: 20%;
+  right: -250px;
+  width: 500px;
+  height: 500px;
+  opacity: 0.1;
+}
+.nfc-icon {
+  position: absolute;
+  top: 10%;
+  right: 0;
+  width: 500px;
+  height: 500px;
+}
+@media (max-width: 1076px) {
+    .nfc-icon {
+        top: 50%;
+        width: 300px;
+        height: 300px;
+      }
+}
+@media (max-width: 768px) {
+  .heroMenu {
+    height: "80vh";
+    padding: 20px;
+  }
+
+  .joinButtonMenu {
+    padding: 8px 30px;
+    font-size: 1rem;
+  }
+
+  .navLinksMenu li a {
+    font-size: 0.875rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .navbarMenu {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .heroMenu {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .joinButtonMenu {
+    padding: 8px 20px;
+    font-size: 0.875rem;
+  }
+}
