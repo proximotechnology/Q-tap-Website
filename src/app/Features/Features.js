@@ -58,14 +58,11 @@ const Features = () => {
       Math.abs(index - activeIndex),
       featData.length - Math.abs(index - activeIndex)
     );
-
-    if (distanceFromActive === 0) {
+    if (distanceFromActive === 1 && index === activeIndex - 1) {
       return { width: "90%", height: "420px" };
-    } else if (distanceFromActive === 1) {
+    } else if (distanceFromActive === 0 ||distanceFromActive === 2) {
       return { width: "88%", height: "380px" };
-    } else if (distanceFromActive === 2) {
-      return { width: "85%", height: "360px" };
-    } else {
+    }  else {
       return { width: "77%", height: "340px" };
     }
   };

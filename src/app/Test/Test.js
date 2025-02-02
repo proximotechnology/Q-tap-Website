@@ -239,6 +239,7 @@ export const Test = () => {
           </Typography>
 
           <Box
+            id="faq"
             sx={{
               width: "80%",
               margin: "20px 0",

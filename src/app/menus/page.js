@@ -7,6 +7,7 @@ import { Dashboard } from './Dashboard/Dashboard';
 import { Signs } from './Signs/Signs';
 import Footer from '../Footer/Footer';
 import { Customer } from './Customer/Customer';
+import { VideoSlider } from '../VideoSlider/VideoSlider';
 
 
 const page = () => {
@@ -14,6 +15,7 @@ const page = () => {
     <div>
         <HomeMenu /> 
         <Video /> 
+        {/* <VideoSlider /> */}
         <Digital /> 
         <Dashboard /> 
         <Signs /> 

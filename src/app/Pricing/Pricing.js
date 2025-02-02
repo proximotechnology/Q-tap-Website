@@ -12,7 +12,8 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
             // width: { xs: '100%', sm: '80%', md: '30%' },  
             backgroundColor: 'white',
             margin: '20px',
-            height: "auto",
+            height: "90%",
+            position:"relative"
         }}
     >
         <Box sx={{ display: 'flex', justifyContent: 'center', position: "relative", top: "-40px" }}>
@@ -21,7 +22,7 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
                     backgroundColor: '#ef7d00',
                     textAlign: 'center',
                     padding: '5px 20px',
-                    width: "150px",
+                    width: "70%",
                     borderRadius: "40px",
                     color: '#fff',
                 }}
@@ -61,9 +62,9 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
             ))}
         </Box>
 
-        <Box display="flex" justifyContent="center" mt={6}>
+        <Box display="flex" justifyContent="center" mt={6} >
             <Button sx={{backgroundColor:"#222240" , fontSize:"15px" ,padding:"6px 40px", borderRadius:"20px" , color:"white",
-                textTransform:"capitalize"}}>
+                textTransform:"capitalize" , position:"absolute" , bottom:"15px"}}>
             subscribe <ArrowForwardIcon sx={{fontSize:"16px" ,marginLeft:"6px"}} />
             </Button>
         </Box>
@@ -123,9 +124,9 @@ export const Pricing = () => {
                         sx={{ color: "white", fontSize: "32px", zIndex: 12 }}>
                         Pricing
                     </Typography>
-                    <Divider sx={{
-                        width: "11%", borderRadius: "20px", marginTop: "-20px",
-                        height: "8px", border: "none", backgroundColor: "#E57C00", zIndex: 11
+                    <Divider sx={{ position:"absolute" , bottom:"10px" , left:{md:"44%" , xs:"35%"} ,
+                        width: { xs: "10%", md: "6%" }, borderRadius: "20px", marginTop: "-15px",
+                        height: "5px", border: "none", backgroundColor: "#E57C00", zIndex: 11 
                     }} />
                 </Box>
             </Box>

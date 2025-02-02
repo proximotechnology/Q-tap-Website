@@ -1,16 +1,17 @@
 "use client";
 
-import React,{useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Popover, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export const Admin = () => {
     const router = useRouter();
 
-    const [anchorElUser, setAnchorElUser] = useState(null); 
+    const [anchorElUser, setAnchorElUser] = useState(null);
     const openUserPopover = Boolean(anchorElUser);
     const [isLoggedIn, setIsLoggedIn] = useState(null);
 
@@ -20,11 +21,11 @@ export const Admin = () => {
     }, []);
 
     const handleUserClick = (event) => {
-        setAnchorElUser(event.currentTarget); 
+        setAnchorElUser(event.currentTarget);
     };
 
     const handleUserClose = () => {
-        setAnchorElUser(null);  
+        setAnchorElUser(null);
     };
 
     const handleLogoutClick = () => {
@@ -74,7 +75,7 @@ export const Admin = () => {
 
                     <List>
                         <Box
-                            onClick={() => navigate('/')}
+                            onClick={() => router.push('/')}
                             sx={{
                                 cursor: "pointer",
                                 backgroundColor: "#222240",
@@ -91,9 +92,11 @@ export const Admin = () => {
                             }}>
 
                             <span class="icon-home-icon-silhouette" style={{ color: "#ef7d00", marginRight: "5px", fontSize: "15px" }} ></span>
-                            <Typography sx={{ color: "white", fontSize: "10px", textTransform: "capitalize" }}>
-                                Dashboard
-                            </Typography>
+                            <Link href="https://qtap-dashboard.vercel.app" style={{ textDecoration: 'none' }} target="_blank" rel="noopener noreferrer">
+                                <Typography sx={{ color: "white", fontSize: "10px", textTransform: "capitalize" }}>
+                                    Dashboard
+                                </Typography>
+                            </Link>
                         </Box>
 
                         <ListItem sx={{ cursor: "pointer" }} oonClick={handleUserClose}>
@@ -106,31 +109,35 @@ export const Admin = () => {
                                 }} />
                         </ListItem>
 
-                        <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
-                            <ListItemIcon>
-                                <span class="icon-price-tag" style={{ fontSize: "20px" }}></span>
+                        <Link href="#pricing" style={{ textDecoration: 'none' }}>
+                            <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
+                                <ListItemIcon>
+                                    <span class="icon-price-tag" style={{ fontSize: "20px" }}></span>
                             </ListItemIcon>
                             <ListItemText primary="My Subscription"
                                 primaryTypographyProps={{
                                     sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: "-30px" }
                                 }} />
                         </ListItem>
+                        </Link>
 
-                        <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
-                            <ListItemIcon>
-                                <HelpOutlineOutlinedIcon sx={{ fontSize: "20px" }} />
-                            </ListItemIcon>
-                            <ListItemText primary="FAQ"
-                                primaryTypographyProps={{
-                                    sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: "-30px" }
-                                }} />
-                        </ListItem>
+                        <Link href="#faq" style={{ textDecoration: 'none' }}>
+                            <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
+                                <ListItemIcon>
+                                    <HelpOutlineOutlinedIcon sx={{ fontSize: "20px" }} />
+                                </ListItemIcon>
+                                <ListItemText primary="FAQ"
+                                    primaryTypographyProps={{
+                                        sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: "-30px" }
+                                    }} />
+                            </ListItem>
+                        </Link>
 
                         <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
                             <ListItemIcon>
                                 <img src="/assets/logout.svg" alt="icon" style={{ width: "16px", height: "16px" }} />
                             </ListItemIcon>
-                            <ListItemText 
+                            <ListItemText
                                 primary={isLoggedIn ? "Log Out" : "Log In"}
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -142,7 +149,7 @@ export const Admin = () => {
                                 }}
                                 primaryTypographyProps={{
                                     sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: "-30px" }
-                                }} 
+                                }}
                             />
                         </ListItem>
                     </List>
