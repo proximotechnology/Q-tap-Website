@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Paper, TextField, IconButton, Typography, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -8,15 +8,96 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PhotoIcon from '@mui/icons-material/Photo';
 
 const ChatBox = ({ onCloseChat }) => {
-    const [messages, setMessages] = useState([]);
-    const [inputValue, setInputValue] = useState('');
+    const [messages, setMessages] = useState([]); // store all messages
+    const [inputValue, setInputValue] = useState(''); // store current message text
 
-    const handleSendMessage = () => {
+    // function to send message
+    const handleSendMessage = async () => {
         if (inputValue.trim() !== '') {
-            setMessages([...messages, inputValue]);
-            setInputValue('');
+            try {
+                // create message data
+                const collectionData = {
+                    sender_id: sessionStorage.getItem("customer_id"),
+                    receiver_id: "1", // receiver id (support)
+                    sender_type: "customer", // sender type (customer)
+                    message: inputValue,
+                };
+
+                // send message to server
+                const response = await fetch("https://highleveltecknology.com/Qtap/api/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(collectionData),
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to send message');
+                }
+
+                // add message to UI
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    { message: inputValue, sender_type: "customer" },
+                ]);
+
+                // clear input field after sending
+                setInputValue('');
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
         }
     };
+
+    // fetch messages from server
+    const fetchMessages = async () => {
+        const customerId = sessionStorage.getItem("customer_id");
+        if (!customerId) {
+            console.error("Customer ID not found in sessionStorage");
+            return;
+        }
+
+        try {
+            const url = `https://highleveltecknology.com/Qtap/api/chat?customer_id=${customerId}`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Network error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                // merge customer and support messages in one array
+                const allMessages = [
+                    ...data.customer.map((msg) => ({ ...msg, sender_type: "customer" })),
+                    ...data.support.map((msg) => ({ ...msg, sender_type: "support" })),
+                ];
+                // sort messages by date
+                allMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                setMessages(allMessages);
+            }
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    };
+
+    // fetch messages when component is loaded 
+    useEffect(() => {
+        fetchMessages();
+
+        // set up polling to fetch new messages every 5 seconds
+        const pollingInterval = setInterval(fetchMessages, 5000); // 5000ms = 5 seconds
+
+        // clean up interval when component is unmounted
+        return () => clearInterval(pollingInterval);
+    }, []);
 
     return (
         <Paper
@@ -30,7 +111,7 @@ const ChatBox = ({ onCloseChat }) => {
                 padding: '10px',
                 display: 'flex',
                 flexDirection: 'column',
-                zIndex: 1000
+                zIndex: 1000,
             }}
         >
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -47,30 +128,30 @@ const ChatBox = ({ onCloseChat }) => {
             </Box>
             <Divider sx={{ backgroundColor: "#E57C00", marginBottom: "20px" }} />
 
-
+            {/* display messages */}
             <Box style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>
-                {messages.map((message, index) => (
+                {messages.map((msg, index) => (
                     <Box
                         key={index}
                         style={{
-                            backgroundColor: '#E57C00',
+                            backgroundColor: msg.sender_type === "customer" ? '#E57C00' : '#F1F1F1',
                             padding: '6px 15px',
-                            borderRadius: '20px 20px 20px 0px',
-                            textAlign: 'left',
-                            color: 'white',
+                            borderRadius: msg.sender_type === "customer" ? '20px 20px 0px 20px' : '20px 20px 20px 0px',
+                            textAlign: msg.sender_type === "customer" ? 'right' : 'left',
+                            color: msg.sender_type === "customer" ? 'white' : '#575756',
                             margin: '10px 0',
                             maxWidth: '60%',
-                            alignSelf: "flex-end",
+                            alignSelf: msg.sender_type === "customer" ? "flex-end" : "flex-start",
                             whiteSpace: 'pre-wrap',
                             wordWrap: 'break-word',
                         }}
                     >
-                        <Typography sx={{ fontSize: "12px" }}>{message}</Typography>
+                        <Typography sx={{ fontSize: "12px" }}>{msg.message}</Typography>
                     </Box>
                 ))}
             </Box>
 
-
+            {/* input field */}
             <Box style={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton>
                     <AddCircleIcon style={{ color: '#E57C00' }} />
@@ -91,9 +172,9 @@ const ChatBox = ({ onCloseChat }) => {
                             borderRadius: '20px',
                             backgroundColor: '#F1F1F1',
                             padding: '8px 10px',
-                            border: 'none',  
+                            border: 'none',
                         },
-                        notchedOutline: { border: 'none' }, // إزالة الخط الخاص بالإطار الخارجي
+                        notchedOutline: { border: 'none' },
                     }}
                     inputProps={{
                         style: {
@@ -103,13 +184,11 @@ const ChatBox = ({ onCloseChat }) => {
                     }}
                     sx={{
                         '& fieldset': {
-                            border: 'none', // إزالة الإطار العلوي من الـ fieldset
+                            border: 'none',
                         },
                     }}
                     style={{ flex: 1 }}
                 />
-
-
                 <IconButton onClick={handleSendMessage}>
                     <SendIcon style={{ color: '#E57C00' }} />
                 </IconButton>

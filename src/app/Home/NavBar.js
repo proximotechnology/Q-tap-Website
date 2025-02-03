@@ -168,25 +168,22 @@ function DrawerAppBar(props) {
                                 <img src="/Assets/qtapwhite.svg" alt="logo" style={{ width: "100px" }} />
                                 <Box sx={{ marginLeft: "30px", display: "flex" }} gap={"10px"}>
                                     {navItems.map((item) => {
-
                                         if (!item.path && !item.id) {
                                             return null;
                                         }
                                         return (
-                                            <>
-                                                <Link
-                                                    href={item.path ? item.path : `#${item.id}`}
-                                                    key={item.name}
-                                                    style={{ textDecoration: 'none' }}
+                                            <Link
+                                                href={item.path ? item.path : `#${item.id}`}
+                                                key={item.name}
+                                                style={{ textDecoration: 'none' }}
+                                            >
+                                                <Button
+                                                    sx={{ color: '#fff', fontSize: "11px", textTransform: "capitalize", display: 'flex', alignItems: 'center' }}
                                                 >
-                                                    <Button
-                                                        sx={{ color: '#fff', fontSize: "11px", textTransform: "capitalize", display: 'flex', alignItems: 'center' }}
-                                                    >
-                                                        <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
-                                                        <span style={{ marginLeft: '5px', fontSize: "11px" }}>{item.name}</span>
-                                                    </Button>
-                                                </Link>
-                                            </>
+                                                    <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
+                                                    <span style={{ marginLeft: '5px', fontSize: "11px" }}>{item.name}</span>
+                                                </Button>
+                                            </Link>
                                         );
                                     })}
                                 </Box>
