@@ -92,10 +92,7 @@ const ChatBox = ({ onCloseChat }) => {
     useEffect(() => {
         fetchMessages();
 
-        // set up polling to fetch new messages every 5 seconds
-        const pollingInterval = setInterval(fetchMessages, 5000); // 5000ms = 5 seconds
-
-        // clean up interval when component is unmounted
+        const pollingInterval = setInterval(fetchMessages, 5000);
         return () => clearInterval(pollingInterval);
     }, []);
 
@@ -129,28 +126,36 @@ const ChatBox = ({ onCloseChat }) => {
             <Divider sx={{ backgroundColor: "#E57C00", marginBottom: "20px" }} />
 
             {/* display messages */}
+
+
             <Box style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>
                 {messages.map((msg, index) => (
                     <Box
                         key={index}
                         style={{
-                            backgroundColor: msg.sender_type === "customer" ? '#E57C00' : '#F1F1F1',
-                            padding: '6px 15px',
-                            borderRadius: msg.sender_type === "customer" ? '20px 20px 0px 20px' : '20px 20px 20px 0px',
-                            textAlign: msg.sender_type === "customer" ? 'right' : 'left',
-                            color: msg.sender_type === "customer" ? 'white' : '#575756',
-                            margin: '10px 0',
-                            maxWidth: '60%',
-                            alignSelf: msg.sender_type === "customer" ? "flex-end" : "flex-start",
-                            whiteSpace: 'pre-wrap',
-                            wordWrap: 'break-word',
+                            display: "flex",
+                            justifyContent: msg.sender_type === "customer" ? "flex-end" : "flex-start", // Align customer messages to the right
+                            width: "100%", // Ensure the container takes full width
                         }}
                     >
-                        <Typography sx={{ fontSize: "12px" }}>{msg.message}</Typography>
+                        <Box
+                            style={{
+                                backgroundColor: msg.sender_type === "customer" ? '#E57C00' : '#F1F1F1',
+                                padding: '6px 15px',
+                                borderRadius: msg.sender_type === "customer" ? '20px 20px 0px 20px' : '20px 20px 20px 0px',
+                                textAlign: msg.sender_type === "customer" ? 'right' : 'left',
+                                color: msg.sender_type === "customer" ? 'white' : '#575756',
+                                margin: '10px 0',
+                                width: '60%', // Limit message width
+                                whiteSpace: 'pre-wrap',
+                                wordWrap: 'break-word',
+                            }}
+                        >
+                            <Typography sx={{ fontSize: "12px" }}>{msg.message}</Typography>
+                        </Box>
                     </Box>
                 ))}
             </Box>
-
             {/* input field */}
             <Box style={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton>
