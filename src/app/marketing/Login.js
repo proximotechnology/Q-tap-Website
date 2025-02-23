@@ -42,6 +42,7 @@ export const Login = () => {
         const data = {
           email,
           password,
+          user_type:"qtap_affiliates"
         };
         
         // send data to api 
