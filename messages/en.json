@@ -1,0 +1,41 @@
+{
+    "nav": {
+        "pricing": "Pricing",
+        "Home": "Home",
+        "We Serve": "We Serve",
+        "Products": "Products",
+        "Affiliate": "Affiliate",
+        "Tutorials": "Tutorials",
+        "Support": "Support"
+    },
+    "homePage": {
+        "title": "Tap, Order, Pay and Eat",
+        "about": "Create a Smart menu suitable for any type of business. Engage more with your customers.",
+        "joinNow": "Join Now",
+        "faildFetchFuature": "Failed to fetch feature data. Please try again.",
+        "faildFetchClient":"Failed to fetch client data. Please try again.",
+        "ourFeatures": "Our Features",
+        "whoWeServe": "Who We Serve",
+        "businessesPowered":"Businesses powered",
+        "ordersProccessed":"Orders processed",
+        "ourClients":"Our Clients",
+        "tryNow":"Try Now",
+        "scanQRcode":"Just open the camera on your phone and scan the QR code below!",
+        "QRcodeCopied":"'QR code copied to clipboard!'"
+    },
+    "Restaurant": "Restaurant",
+    "Cloud Kitchen": "Cloud Kitchen",
+    "Café": "Café",
+    "Hotel Resto": "Hotel Resto",
+    "Fast Food": "Fast Food",
+    "Pastry Shop": "Pastry Shop",
+    "Pizza Outlet": "Pizza Outlet",
+    "Bakery Shop": "Bakery Shop",
+    "Food Truck": "Food Truck",
+    "Fruits Store": "Fruits Store",
+    "free Plan":"free Plan",
+    "Updated Plan":"Updated Plan",
+    "month":"month",
+    "year":"year",
+    "subscribe":"subscribe"
+}

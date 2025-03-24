@@ -1,0 +1,43 @@
+{
+    "nav": {
+        "pricing": "التسعير",
+        "Home": "بيت",
+        "We Serve": "نحن نخدم",
+        "Products": "منتجات",
+        "Affiliate": "الشريك",
+        "Tutorials": "دروس تعليمية",
+        "Support": "يدعم"
+    },
+    "homePage": {
+        "title": "اضغط، اطلب، ادفع وتناول الطعام",
+        "about": "أنشئ قائمة ذكية تناسب جميع أنواع الأعمال. تواصل أكثر مع عملائك.",
+        "joinNow": "انضم الآن",
+        "faildFetchFuature": "تعذّر جلب بيانات الميزة. يُرجى المحاولة مرة أخرى.",
+        "faildFetchClient":"Failed to fetch client data. Please try again.",
+        "failedFetchPricing":"Failed to fetch pricing data. Please try again.",
+        "ourFeatures": "مميزاتنا",
+        "whoWeServe": "من نخدم؟",
+        "businessesPowered":"الشركات التي تعمل بالطاقة",
+        "ordersProccessed":"الطلبات التي تمت معالجتها",
+        "ourClients":"عملائنا",
+        "tryNow":"جرب الان",
+        "scanQRcode":"فقط افتح الكاميرا على هاتفك وامسح رمز الاستجابة السريعة أدناه!",
+        "QRcodeCopied":"تم نسخ رمز الاستجابة السريعة إلى الحافظة!"
+    },
+    "Restaurant": "مطعم",
+    "Cloud Kitchen": "مطبخ السحاب",
+    "Café": "مقهى",
+    "Hotel Resto": "فندق ريستو",
+    "Fast Food": "الوجبات السريعة",
+    "Pastry Shop": "محل الحلويات",
+    "Pizza Outlet": "بيتزا أوتلت",
+    "Bakery Shop": "مخبز",
+    "Food Truck": "شاحنة طعام",
+    "Fruits Store": "متجر الفواكه",
+    "free Plan":"خطة مجانية",
+    "Updated Plan":"الخطة المحدثة",
+    "month":"شهر",
+    "year":"السنه",
+    "subscribe":"الاشتراك"
+    
+}

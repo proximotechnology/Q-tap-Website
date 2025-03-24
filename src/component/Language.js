@@ -1,13 +1,21 @@
 "use client";
-import React, { useState } from 'react';
+import React, { startTransition, useState } from 'react';
 import { Box, Menu, MenuItem, Divider } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import { usePathname, useRouter } from '@/i18n/navigation';
+import { useParams } from 'next/navigation';
+import { useLocale } from 'next-intl';
 
 export const Language = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedLanguage, setSelectedLanguage] = useState(null);
     const open = Boolean(anchorEl);
+
+    const router = useRouter()
+    const pathName = usePathname()
+    // const param = useParams()
+    // const locale = useLocale()
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -18,6 +26,7 @@ export const Language = () => {
     const handleClose = (language) => {
         if (language) {
             setSelectedLanguage(language);
+            router.push(pathName, { locale: language });
         }
         setAnchorEl(null);
         console.log("close")
@@ -35,7 +44,7 @@ export const Language = () => {
 
     return (
         <Box sx={{ cursor: "pointer", display: "flex", alignItems: "center" }} >
-            <Box onClick={handleClick} sx={{display:"flex" , alignItems:"center"}}>
+            <Box onClick={handleClick} sx={{ display: "flex", alignItems: "center" }}>
                 {getLanguageIcon()}
                 <KeyboardArrowDownIcon sx={{ fontSize: "15px", color: "white" }} />
             </Box>
