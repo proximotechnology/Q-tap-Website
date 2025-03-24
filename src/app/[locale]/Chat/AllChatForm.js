@@ -34,9 +34,9 @@
 
 "use client";
 import React, { useState } from "react";
-import { FloatingChatButton } from "../Chat/FloatingChatButton";
-import FormFields from "../Chat/FormFields";
-import ChatBox from "../Chat/ChatBox";
+import { FloatingChatButton } from "./FloatingChatButton";
+import FormFields from "./FormFields";
+import ChatBox from "./ChatBox";
 
 export const AllChatForm = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);

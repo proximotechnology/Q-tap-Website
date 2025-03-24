@@ -1,5 +1,5 @@
 "use client";
-import { ordersDetails } from '@/app/categories/data';
+import { ordersDetails } from '@/app/[locale]/categories/data';
 import { Box, Typography, Divider, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 

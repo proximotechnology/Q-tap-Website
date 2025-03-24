@@ -1,5 +1,5 @@
 "use client";
-import { categoryProducts, ingrediants, menuItems, options } from '@/app/categories/data';
+import { categoryProducts, ingrediants, menuItems, options } from '@/app/[locale]/categories/data';
 import { Box, Button, Divider, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react'
-import { Header } from '@/app/payment/Header'
-import { OrderDetails } from '@/app/orderPlaced/OrderDetails';
+import { Header } from '@/app/[locale]/payment/Header'
+import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
 import { Box, Typography, Divider, Avatar, } from '@mui/material';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentModal from './PaymentModal';

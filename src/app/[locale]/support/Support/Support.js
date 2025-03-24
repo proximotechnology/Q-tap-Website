@@ -18,8 +18,8 @@ import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import FeedIcon from "@mui/icons-material/Feed";
 import WifiCalling3Icon from "@mui/icons-material/WifiCalling3";
-import Footer from "@/app/Footer/Footer";
-import { HomeContext } from "@/app/context/homeContext.js";
+import Footer from "@/app/[locale]/Footer/Footer";
+import { HomeContext } from "@/app/[locale]/context/homeContext.js";
 
 export const Support = () => {
   const [expanded, setExpanded] = useState(null);

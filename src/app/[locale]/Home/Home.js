@@ -4,9 +4,11 @@ import { Typography, Box, Button } from '@mui/material';
 import './Home.css'
 import NavBar from './NavBar';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 
 const Home = () => {
+    const t = useTranslations()
     return (
         <Box className="container">
             <NavBar />
@@ -21,7 +23,7 @@ const Home = () => {
                         <Button className="joinButton" sx={{ marginTop: "60px", alignItems: "center" }}>
                             <img src="/assets/plus.svg" alt='plus'
                                 style={{ width: "18px", height: "18px", marginRight: "5px" }} />
-                            Join Now</Button>
+                            {t("joinNow")}</Button>
                     </Link>
                 </Box>
             </Box>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography, Box, Button, Divider } from "@mui/material";
 import "./HomeMenu.css";
-import NavBar from "@/app/Home/NavBar";
+import NavBar from "@/app/[locale]/Home/NavBar";
 
 const HomeMenu = () => {
   return (

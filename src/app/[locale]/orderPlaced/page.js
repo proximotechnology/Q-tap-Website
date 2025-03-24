@@ -1,8 +1,8 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { Header } from '@/app/payment/Header'
-import { OrderDetails } from '@/app/orderPlaced/OrderDetails';
+import { Header } from '@/app/[locale]/payment/Header'
+import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
 import { Box, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
