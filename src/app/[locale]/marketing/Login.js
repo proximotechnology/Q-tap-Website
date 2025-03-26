@@ -59,7 +59,7 @@ export const Login = () => {
             const response = await axios.request(options)
                 .then(res => res)
                 .catch(error => console.log(error))
-            console.log(response);
+            // console.log(response);
 
 
             setIsLoading(false);
@@ -67,6 +67,10 @@ export const Login = () => {
             if (response?.data?.user) {
                 setApiSuccess(t("loginSucc"));
                 localStorage.setItem("userToken", response?.data?.token);
+                localStorage.setItem("userName", response?.data?.user?.name);
+                localStorage.setItem("userEmail", response?.data?.user?.email);
+                
+
 
                 router.push('/')
             } else {

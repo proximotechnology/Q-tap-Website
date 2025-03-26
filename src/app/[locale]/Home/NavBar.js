@@ -52,7 +52,7 @@ function DrawerAppBar(props) {
     const drawer = (
         <Box onClick={handleDrawerToggle}
             sx={{ width: "100%", padding: "20px", textAlign: 'center', backgroundColor: "rgba(0, 0, 0, 0.5)" , zIndex:15 }}>
-            <img src="/Assets/qtapwhite.svg" alt="logo" style={{ width: "120px" }} />
+            <img src="/assets/qtapwhite.svg" alt="logo" style={{ width: "120px" }} />
             <List>
                 {navItems.map((item) => (
                     <Link href={item.path ? item.path : `#${item.id}`}
@@ -166,7 +166,7 @@ function DrawerAppBar(props) {
                             justifyContent: "space-between",
                         }}>
                             <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                                <img src="/Assets/qtapwhite.svg" alt="logo" style={{ width: "100px" }} />
+                                <img src="/assets/qtapwhite.svg" alt="logo" style={{ width: "100px" }} />
                                 <Box sx={{ marginLeft: "30px", display: "flex" }} gap={"10px"}>
                                     {navItems.map((item) => {
                                         if (!item.path && !item.id) {
