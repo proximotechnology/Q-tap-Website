@@ -5,10 +5,11 @@ import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
 import { Box, Typography, Divider, Avatar, } from '@mui/material';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentModal from './PaymentModal';
+import { useTranslations } from 'next-intl';
 
 
 const page = () => {
-
+  const t = useTranslations()
   const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleOpen = () => setIsModalOpen(true);
@@ -71,7 +72,7 @@ const page = () => {
       >
         <Typography
           variant="h6" sx={{ color: "#FFFFFF", fontSize: "16px", fontWeight: "bold", marginBottom: "16px" }} >
-          Tracking
+          {t("tracking")}
         </Typography>
 
         {steps.map((step, index) => (
@@ -99,7 +100,7 @@ const page = () => {
                         fontSize: "14px",
                       }}
                     >
-                      {step.label}
+                      {t(step.label)}
                     </Typography>
 
                     <Typography variant="caption"
@@ -116,11 +117,11 @@ const page = () => {
                         color: step.active ? "#AAAAAA" :" #302E3B"
                       }}
                     >
-                      <Typography sx={{ fontSize: "11px", }}>Prep.Time</Typography>
+                      <Typography sx={{ fontSize: "11px", }}>{t("prepTime")}</Typography>
 
                       <Typography sx={{ fontSize: "14px",color:"white",fontWeight:"900" }}>
                         <span className='icon-chronometer' style={{ fontSize: "16px",marginRight:"5px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span></span>
-                        30 <span style={{color:"#797993",fontWeight:"100" }}>Min</span></Typography>
+                        30 <span style={{color:"#797993",fontWeight:"100" }}>{t("min")}</span></Typography>
                     </Box>
                   )}
                   </Box>
@@ -152,7 +153,7 @@ const page = () => {
                       <Typography 
                       sx={{ fontSize: "11px",display:"flex",flexDirection:"row",alignItems:"center" }}>
                       <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
-                        Payment</Typography>
+                        {t("payment")}</Typography>
 
                         <PaymentModal isOpen={isModalOpen} onClose={handleClose} />
                     </Box>
@@ -186,7 +187,7 @@ const page = () => {
                           color:step.active ? "white": "#575756", 
                         }}></span>
                         
-                        On The Way</Typography>
+                       {t("onTheWay")}</Typography>
                     </Box>
                   </Box>
                 )}

@@ -8,10 +8,11 @@ import { Button, Box, IconButton, Divider, Typography } from '@mui/material';
 import { InputAdornment, TextField } from '@mui/material'
 import MarkunreadOutlinedIcon from '@mui/icons-material/MarkunreadOutlined';
 import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
+import { useTranslations } from 'next-intl';
 
 
 export const ResetPassword = () => {
-
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -67,7 +68,7 @@ export const ResetPassword = () => {
                     textAlign: "center", alignItems: "center"
                 }}>
                     <Typography variant='h1' sx={{ fontSize: { xs: "18px", md: "23px" }, color: "white" }}>
-                        Affiliate Marketing
+                       {t("affiliateMarketing")}
                     </Typography>
 
                     <Divider sx={{
@@ -85,7 +86,7 @@ export const ResetPassword = () => {
                             padding: "0px 10%", color: "white"
                         }}
                     >
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit                     </Typography>
+                        {t("lorem")}</Typography>
 
                     <Link href="/Signup">
                         <Button sx={{
@@ -93,7 +94,7 @@ export const ResetPassword = () => {
                             color: "white", padding: "4px 20px"
                         }}>
                             <PersonAddOutlinedIcon sx={{ fontSize: "15px", marginRight: "5px" }} />
-                            Register
+                            {t("register")}
                         </Button>
                     </Link>
                 </Box>
@@ -112,7 +113,7 @@ export const ResetPassword = () => {
                         fontSize: "13px", color: "#222240", marginBottom: "8px",
                         letterSpacing: "11px",
                     }}>
-                    Password Reset
+                    {t("passwordReset")}
                 </Typography>
 
                 <Box
@@ -129,12 +130,12 @@ export const ResetPassword = () => {
                         color: "#AAAAAA", width: "70%", lineHeight: "20px",
                         marginBottom: 4, fontSize: "13px", textAlign: 'center'
                     }}>
-                    You Will Receive Instructions For Reseting Your Password.
+                    {t("youWillReceiveEmailForResetPass")}
                 </Typography>
 
                 <TextField
                     variant="outlined"
-                    placeholder="Email"
+                    placeholder={t("email")}
                     fullWidth
                     InputProps={{
                         startAdornment: (
@@ -170,7 +171,7 @@ export const ResetPassword = () => {
                         }}
                         endIcon={<ArrowRightOutlinedIcon sx={{ color: "white", fontSize: "18px" }} />}
                     >
-                        Send
+                        {t("send")}
                     </Button>
                 </Link>
             </Box>

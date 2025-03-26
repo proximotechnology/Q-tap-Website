@@ -9,9 +9,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Link from 'next/link';
 import { menuItems, specialOffers } from './data';
 import { Footer } from './Footer';
+import { useTranslations } from 'next-intl';
 
 const page = () => {
-
+    const t = useTranslations();
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
 
@@ -21,7 +22,7 @@ const page = () => {
             }}>
 
                 <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>LOGO</Typography>
+                    <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>{t("logo")}</Typography>
                     <IconButton color="inherit">
                         <span className="icon-menu" sx={{ fontSize: "20px", color: "white" }}></span>
                     </IconButton>
@@ -30,7 +31,7 @@ const page = () => {
                 <Typography variant="body2" display="flex" textAlign="center" alignItems={"center"} justifyContent={"center"}
                     sx={{ fontSize: "12px", color: "#AAAAAA" }}>
                     <LocationOnIcon fontSize="small" sx={{ fontSize: "16px", color: "#797993" }} />
-                    City Here
+                   {t("cityHere")}
                 </Typography>
 
                 <Box mt={1} display="flex" alignItems="center"
@@ -38,7 +39,7 @@ const page = () => {
                     <span className='icon-search' style={{ marginRight: "6px", color: "#797993" }} ></span>
                     <TextField
                         variant="standard"
-                        placeholder="What are you looking for.."
+                        placeholder={t("whatAreYouLookingFor")}
                         InputProps={{
                             disableUnderline: true,
                             style: { color: 'white', width: '100%', fontSize: "11px" }
@@ -56,7 +57,7 @@ const page = () => {
                             fontSize: "11px",
                             backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
-                        }}>Special Offers</span>
+                        }}>{t("specialOffers")}</span>
                     </Typography>
 
                     <Grid container spacing={3} justifyContent="center" sx={{marginTop:"-50px" }}>
@@ -91,7 +92,7 @@ const page = () => {
 
                                     <Box sx={{ padding: "5px 12px" }}>
                                         <Typography sx={{ color: "#797993", fontWeight: "900", fontSize: "14px" }}>{offer.name}</Typography>
-                                        <Typography sx={{ fontSize: "8px", color: "#AAAAAA" }}>Brief</Typography>
+                                        <Typography sx={{ fontSize: "8px", color: "#AAAAAA" }}>{t("brief")}</Typography>
 
                                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                             <Box>
@@ -118,15 +119,15 @@ const page = () => {
 
                 <Box mt={3}>
                     <Box sx={{ display: "flex" }}>
-                        <Typography variant="body1" sx={{ fontSize: "16px", marginRight: "30px" }}>Categories</Typography>
+                        <Typography variant="body1" sx={{ fontSize: "16px", marginRight: "30px" }}>{t("categories")}</Typography>
 
                         <Typography variant="body1" sx={{
                             marginBottom: "10px", display: "flex", fontSize: "10px",
                             backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                             padding: "6px 20px", borderRadius: "20px", cursor: "pointer",
                         }}>
-                            <span class="icon-fire" style={{ fontSize: "17px", marginRight: "6px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
-                            Popular
+                            <span className="icon-fire" style={{ fontSize: "17px", marginRight: "6px" }}><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span></span>
+                            {t("popular")}
                         </Typography>
                         <Box sx={{ marginLeft: "-10px", marginTop: "4px" }}><Arrow /> </Box>
                     </Box>
@@ -135,7 +136,7 @@ const page = () => {
                         {menuItems.map((item, index) => (
                             <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${item.image})` }}>
                                 <div className="overlay">
-                                    <Typography className="menu-title" >{item.title}</Typography>
+                                    <Typography className="menu-title" >{t(item.title)}</Typography>
                                 </div>
                                 <Link href={`/categories/${item.id}`}>
                                     <Box

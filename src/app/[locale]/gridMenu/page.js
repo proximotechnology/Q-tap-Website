@@ -8,10 +8,11 @@ import {  categoryProducts, specialOffers } from '../categories/data';
 import { Footer } from '../categories/Footer';
 import { Categories } from './Categories';
 import { Content } from './Content';
+import { useTranslations } from 'next-intl';
 
 const page = () => {
     const [filteredItems, setFilteredItems] = useState(categoryProducts || []);
-
+    const t = useTranslations()
 
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
@@ -22,7 +23,7 @@ const page = () => {
             }}>
 
                 <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>LOGO</Typography>
+                    <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>{t("logo")}</Typography>
                     <IconButton color="inherit">
                         <span className="icon-menu" sx={{ fontSize: "20px", color: "white" }}></span>
                     </IconButton>
@@ -31,7 +32,7 @@ const page = () => {
                 <Typography variant="body2" display="flex" textAlign="center" alignItems={"center"} justifyContent={"center"}
                     sx={{ fontSize: "12px", color: "#AAAAAA" }}>
                     <LocationOnIcon fontSize="small" sx={{ fontSize: "16px", color: "#797993" }} />
-                    City Here
+                    {t("cityHere")}
                 </Typography>
 
                 <Box mt={1} display="flex" alignItems="center"
@@ -39,8 +40,7 @@ const page = () => {
                     <span className='icon-search' style={{ marginRight: "6px", color: "#797993" }} ></span>
                     <TextField
                         variant="standard"
-                        placeholder="What are you looking for.."
-                        InputProps={{
+                        placeholder={t("whatAreYouLookingFor")}                        InputProps={{
                             disableUnderline: true,
                             style: { color: 'white', width: '100%', fontSize: "11px" }
                         }}
@@ -60,7 +60,7 @@ const page = () => {
                             fontSize: "11px",
                             backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
-                        }}>Special Offers</span>
+                        }}>{t("specialOffers")}</span>
                     </Typography>
 
                     <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
@@ -95,7 +95,7 @@ const page = () => {
 
                                     <Box sx={{ padding: "5px 12px" }}>
                                         <Typography sx={{ color: "#797993", fontWeight: "900", fontSize: "14px" }}>{offer.name}</Typography>
-                                        <Typography sx={{ fontSize: "8px", color: "#AAAAAA" }}>Brief</Typography>
+                                        <Typography sx={{ fontSize: "8px", color: "#AAAAAA" }}>{t("brief")}</Typography>
 
                                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                             <Box>

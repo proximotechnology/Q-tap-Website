@@ -7,9 +7,10 @@ import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const page = () => {
-
+    const t = useTranslations();
     const [cartItems, setCartItems] = useState([]);
     useEffect(() => {
         const storedCartItems = getCartItems();
@@ -32,7 +33,7 @@ const page = () => {
 
     useEffect(() => {
         const storedSizes = JSON.parse(localStorage.getItem('selectedSize')) || {};
-        setSelectedSize(storedSizes || "No size selected");
+        setSelectedSize(storedSizes || t("noSizeSelecte"));
     }, []);
     // ===============================================================================
 
@@ -142,19 +143,19 @@ const page = () => {
                 }}>
 
                     <Typography variant="body1" sx={{ fontSize: "16px", display: "flex", letterSpacing: 1, color: "white" }}>
-                        <ShoppingCartOutlinedIcon sx={{ color: "#797993", marginRight: "7px", fontSize: "24px" }} /> YOUR CART
+                        <ShoppingCartOutlinedIcon sx={{ color: "#797993", marginRight: "7px", fontSize: "24px" }} /> {t("yourCart")}
                     </Typography>
                     <Divider sx={{ width: "25%", height: "0.1px", backgroundColor: "#797993", margin: "5px 0px" }} />
 
                     <Typography variant="body2"
                         sx={{ fontSize: "14px", color: "gray", letterSpacing: 1 }}>
-                        {cartItems.length} Items
+                        {cartItems.length} {t("items")}
                     </Typography>
 
                 </Box>
 
                 {cartItems.length === 0 ? (
-                    <Typography>Your cart is empty.</Typography>
+                    <Typography>{t("yourCartIsEmpty")}</Typography>
                 ) : (
                     cartItems.map((item) => (
                         <>
@@ -185,8 +186,8 @@ const page = () => {
                                         <Typography
                                             variant="body2"
                                             sx={{ fontSize: '12px', color: "#797993", marginTop: '3px' }}>
-                                            <span style={{ color: "#797993" }}>Size | </span>
-                                            {selectedSize[item.id] || "No size selected"}
+                                            <span style={{ color: "#797993" }}>{t("size")} | </span>
+                                            {selectedSize[item.id] || t("noSizeSelecte")}
                                         </Typography>
                                         <Typography variant="body2" sx={{
                                             marginTop: '2px', fontSize: '12px',
@@ -194,10 +195,10 @@ const page = () => {
                                         }}>
                                             {selectedItemOptions[item.id] && selectedItemOptions[item.id].length > 0
                                                 ? selectedItemOptions[item.id].map(option => option.name).join(' , ')
-                                                : ' No options selected'} ,
+                                                : t("noOptionsSelected")} ,
                                             {selectedItemExtra[item.id] && selectedItemExtra[item.id].length > 0
                                                 ? selectedItemExtra[item.id].map(extra => extra.name).join(' , ')
-                                                : ' No options selected'}
+                                                : t("noOptionsSelected")}
 
                                         </Typography>
                                     </Box>
@@ -245,7 +246,7 @@ const page = () => {
                 }}>
                 <Box>
                     <Typography variant="h6" sx={{ fontSize: '11px', fontWeight: "bold", color: 'gray' }}>
-                        Total price
+                        {t("totalPrice")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
                         {calculateTotalPrice(cartItems, getItemCount)}
@@ -275,7 +276,7 @@ const page = () => {
                             }
                         }}
                     >
-                        Confirm <span style={{ fontSize: "17px", marginLeft: "10px" }}>+</span>
+                        {t("confirm")} <span style={{ fontSize: "17px", marginLeft: "10px" }}>+</span>
                     </Button>
                 </Box>
             </Box>

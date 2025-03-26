@@ -2,6 +2,7 @@ import { Box, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useState } from 'react'
 import { categoryProducts } from '../categories/data';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+import { useTranslations } from 'next-intl';
 
 const menuItems = [
     {
@@ -45,7 +46,7 @@ const menuItems = [
 
 export const Categories = ({ setFilteredItems }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-
+    const t =useTranslations()
     const handleClick = (index, categoryId) => {
         setActiveIndex(index);
         filterItems(categoryId);
@@ -107,7 +108,7 @@ export const Categories = ({ setFilteredItems }) => {
                             </ListItemIcon>
 
                             <ListItemText
-                                primary={item.text}
+                                primary={t(item.text)}
                                 primaryTypographyProps={{
                                     sx: {
                                         fontSize: '10px',

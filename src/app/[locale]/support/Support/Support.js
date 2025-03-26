@@ -20,6 +20,7 @@ import FeedIcon from "@mui/icons-material/Feed";
 import WifiCalling3Icon from "@mui/icons-material/WifiCalling3";
 import Footer from "@/app/[locale]/Footer/Footer";
 import { HomeContext } from "@/app/[locale]/context/homeContext.js";
+import { useTranslations } from "next-intl";
 
 export const Support = () => {
   const [expanded, setExpanded] = useState(null);
@@ -27,7 +28,7 @@ export const Support = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { getHomeData } = useContext(HomeContext);
-
+  const t = useTranslations()
   const handleToggle = (panel) => {
     setExpanded(expanded === panel ? null : panel);
   };
@@ -49,7 +50,7 @@ export const Support = () => {
       setFaqData(parsedData);
     //   console.log(parsedData);
 
-      setError("Failed to fetch FAQS  data. Please try again.");
+      setError(t("failedFetchFAQ"));
     } finally {
       setLoading(false);
     }
@@ -126,7 +127,7 @@ export const Support = () => {
               variant="h1"
               sx={{ fontSize: { xs: "20px", md: "30px" }, color: "white" }}
             >
-              Get Support
+              {t("getSupport")}
             </Typography>
 
             <Divider
@@ -149,7 +150,7 @@ export const Support = () => {
                 color: "white",
               }}
             >
-              Your Satisfaction Matters To Us
+              {t("yourSatisfactionMatters")}
             </Typography>
 
             <Paper
@@ -179,7 +180,7 @@ export const Support = () => {
                       variant="body2"
                       sx={{ fontSize: "10px", color: "#AAAAAA" }}
                     >
-                      Live Chat
+                      {t("liveChat")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -193,7 +194,7 @@ export const Support = () => {
                       variant="body2"
                       sx={{ fontSize: "10px", color: "#AAAAAA" }}
                     >
-                      Whatsapp
+                      {t("whatsApp")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -212,7 +213,7 @@ export const Support = () => {
                       variant="body2"
                       sx={{ fontSize: "10px", color: "#AAAAAA" }}
                     >
-                      Terms & Conditions
+                      {t("footer.terms&conditions")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -226,7 +227,7 @@ export const Support = () => {
                       variant="body2"
                       sx={{ fontSize: "10px", color: "#AAAAAA" }}
                     >
-                      Call C.S
+                      {t("callCS")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -262,7 +263,7 @@ export const Support = () => {
                 color: "#222240",
               }}
             >
-              FAQS
+              {t("faq")}
             </Typography>
             <Typography
               variant="body2"
@@ -274,7 +275,7 @@ export const Support = () => {
                 color: "gray",
               }}
             >
-              We Have Answer To Your Questions
+             {t("weHaveAnswerToYourQuestion")}
             </Typography>
 
             <Paper
@@ -314,7 +315,7 @@ export const Support = () => {
                           variant="body1"
                           sx={{ fontSize: "12px", color: "gray" }}
                         >
-                          {question}
+                          {t(question)}
                         </Typography>
                         <IconButton>
                           {expanded === index ? (
@@ -330,10 +331,10 @@ export const Support = () => {
                       timeout="auto"
                       unmountOnExit
                     >
-                      {item?.answer.map((answer, index) => (
+                      {item?.answer.map((answer, ind) => (
                         <Box sx={{ padding: "10px 0", textAlign: "start" }}>
                           <Typography sx={{ fontSize: "12px", color: "gray" }}>
-                            {answer}
+                            {t("answer"+index)}
                           </Typography>
                         </Box>
                       ))}

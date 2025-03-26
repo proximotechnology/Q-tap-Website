@@ -8,9 +8,11 @@ import { Button, Box, IconButton, Divider, Typography } from '@mui/material';
 import { InputAdornment, OutlinedInput, FormControl } from '@mui/material'
 import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import { useTranslations } from 'next-intl';
 
 
 export const NewPassword = () => {
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -66,7 +68,7 @@ export const NewPassword = () => {
                     textAlign: "center", alignItems: "center"
                 }}>
                     <Typography variant='h1' sx={{ fontSize: { xs: "18px", md: "23px" }, color: "white" }}>
-                        Affiliate Marketing
+                        {t("affiliateMarketing")}
                     </Typography>
 
                     <Divider sx={{
@@ -84,7 +86,7 @@ export const NewPassword = () => {
                             padding: "0px 10%", color: "white"
                         }}
                     >
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit                     </Typography>
+                        {t("lorem")}</Typography>
 
                     <Link href="/Signup">
                         <Button sx={{
@@ -92,7 +94,7 @@ export const NewPassword = () => {
                             color: "white", padding: "4px 20px"
                         }}>
                             <PersonAddOutlinedIcon sx={{ fontSize: "15px", marginRight: "5px" }} />
-                            Register
+                            {t("register")}
                         </Button>
                     </Link>
                 </Box>
@@ -112,7 +114,7 @@ export const NewPassword = () => {
                         fontSize: "13px", color: "#222240", marginBottom: "8px",
                         letterSpacing: "11px",
                     }}>
-                    Password Reset
+                    {t("passwordReset")}
                 </Typography>
 
                 <Box
@@ -129,7 +131,7 @@ export const NewPassword = () => {
                         color: "#AAAAAA", width: "70%", lineHeight: "20px",
                         marginBottom: 4, fontSize: "13px", textAlign: 'center'
                     }}>
-                    Enter New Password
+                    {t("enterNewPassword")}
                 </Typography>
 
                 <FormControl sx={{ width: '100%' }} variant="outlined">
@@ -142,7 +144,7 @@ export const NewPassword = () => {
 
                             </InputAdornment>
                         }
-                        placeholder="New Password"
+                        placeholder={t("newPassword")}
                         sx={{ fontSize: "10px", borderRadius: '50px', paddingRight: 3, height: "35px", marginBottom: "10px" }}
                     />
                 </FormControl>
@@ -156,7 +158,7 @@ export const NewPassword = () => {
                                 <LockOpenOutlinedIcon sx={{ fontSize: "18px" }} />
                             </InputAdornment>
                         }
-                        placeholder="Confirm Password"
+                        placeholder={t("confirmPass")}
                         sx={{ borderRadius: '50px', paddingRight: 3, height: "35px", fontSize: "10px" }}
                     />
                 </FormControl>
@@ -178,7 +180,7 @@ export const NewPassword = () => {
                         }}
                         endIcon={<ArrowRightOutlinedIcon sx={{ color: "white", fontSize: "18px" }} />}
                     >
-                        Save
+                        {t("save")}
                     </Button>
                 </Link>
 

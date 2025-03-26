@@ -2,8 +2,10 @@ import React from 'react'
 import { Box, IconButton, Typography } from '@mui/material';
 import Link from 'next/link';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useTranslations } from 'next-intl';
 
 export const Header = () => {
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -71,10 +73,10 @@ export const Header = () => {
                                     display: "inline-block",
                                 }}
                             ></img>
-                            <span>Support</span></Typography>
+                            <span>{t("support")}</span></Typography>
                         <Typography
                             style={{ color: "#AAAAAA", fontSize: "13px", width: "60%" }}
-                        >Please let us know if you have any problems, comments, or suggestions.</Typography>
+                        >{t("plLetUsKnowIFuHaveProblem")}</Typography>
                     </Box>
 
                 </Box>

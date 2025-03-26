@@ -1,5 +1,3 @@
-
-
 import React from 'react'
 import Link from 'next/link';
 import HomeIcon from '@mui/icons-material/Home';
@@ -9,9 +7,11 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { useTranslations } from 'next-intl';
 
 
 export const Welcome = () => {
+  const t = useTranslations()
   return (
     <Box
       >
@@ -83,7 +83,7 @@ export const Welcome = () => {
       lineHeight: "27px"
     }}
   >
-    Hi Partner, Thanks for joining us, your account will be activated soon.
+    {t("yourAccountWillActiveSooner")}
   </Typography>
 
   <Divider
@@ -104,7 +104,7 @@ export const Welcome = () => {
       color: "white"
     }}
   >
-    Get in touch
+   {t("getInTouch")}
   </Typography>
 
   <Box

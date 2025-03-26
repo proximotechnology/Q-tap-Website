@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { HomeContext } from "../context/homeContext.js";
+import { useTranslations } from "next-intl";
 
 export const Test = () => {
   const [expanded, setExpanded] = useState(null);
@@ -14,6 +15,7 @@ export const Test = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { getHomeData } = useContext(HomeContext);
+  const t = useTranslations()
 
   const handleToggle = (panel) => {
     setExpanded(expanded === panel ? null : panel);
@@ -36,7 +38,7 @@ export const Test = () => {
       setFaqData(parsedData);
       // console.log("Parsed FAQ Data:", parsedData);
 
-      setError("Failed to fetch FAQ data. Please try again.");
+      setError(t("failedFetchFAQ"));
     } finally {
       setLoading(false);
     }
@@ -53,7 +55,7 @@ export const Test = () => {
       setTestData(response?.data?.feedback);
       // console.log("Parsed test Data:", response?.data?.feedback);
 
-      setError("Failed to fetch test data. Please try again.");
+      setError(t("failedFetchTestData"));
     } finally {
       setLoading(false);
     }
@@ -98,7 +100,7 @@ export const Test = () => {
                 },
               }}
             >
-              Testimonials
+              {t("testimonials")}
             </Typography>
             <Divider
               sx={{
@@ -235,7 +237,7 @@ export const Test = () => {
               },
             }}
           >
-            FAQs
+            {t("faq")}
           </Typography>
 
           <Box

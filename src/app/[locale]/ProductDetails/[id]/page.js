@@ -11,12 +11,14 @@ const sizes = ["S", "M", "L"];
 
 
 import { addItemToCart } from "../cartUtils";
+import { useTranslations } from 'next-intl';
 const page = ({ params }) => {
+    const t = useTranslations()
     const { id } = params;
     // console.log({ id })
 
     if (!id) {
-        return <p>No product selected.</p>;
+        return <p>{t("noProductSelected")}</p>;
     }
     // البحث عن المنتج بناءً على ID
     let selectedProduct = null;
@@ -35,7 +37,7 @@ const page = ({ params }) => {
     })
 
     if (!selectedProduct) {
-        return <p>Product not found.</p>;
+        return <p>{t("productNotFound")}</p>;
     }
     // console.log(selectedCategory);
     // console.log(selectedProduct);
@@ -207,7 +209,7 @@ const page = ({ params }) => {
                                     color: 'white',
                                     textShadow: '2px 0px #E57C00'
                                 }}>
-                                {selectedCategory.title}
+                                {t(selectedCategory.title)}
                             </Typography>
                         </Box>
                     </Box>
@@ -257,7 +259,7 @@ const page = ({ params }) => {
                                 <span class="icon-calories-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
                                 <Typography variant="body2" color="white" sx={{ fontSize: '13px', marginLeft: "3px" }} >
                                     {selectedProduct.calories}
-                                    <span style={{ fontSize: '12px', marginLeft: "3px", color: "#AAAAAA" }}>Kcal</span></Typography>
+                                    <span style={{ fontSize: '12px', marginLeft: "3px", color: "#AAAAAA" }}>{t("kcal")}</span></Typography>
                             </Box>
 
                             <Box display="flex" alignItems="center">
@@ -265,7 +267,7 @@ const page = ({ params }) => {
                                 <Typography variant="body2" color="white"
                                     sx={{ fontSize: '13px', marginLeft: "3px" }} >
                                     {selectedProduct.prepTime}
-                                    <span style={{ fontSize: '12px', marginLeft: "3px", color: "#AAAAAA" }}>Min</span></Typography>
+                                    <span style={{ fontSize: '12px', marginLeft: "3px", color: "#AAAAAA" }}>{t("min")}</span></Typography>
                             </Box>
                         </Box>
                         <Divider sx={{ width: "100%", height: "0.1px", backgroundColor: "#797993" }} />
@@ -278,7 +280,7 @@ const page = ({ params }) => {
 
                 <Box display="flex" alignItems="center" gap={3} >
                     <Typography variant="h6" sx={{ fontSize: '12px', fontWeight: "bold", color: 'white' }}>
-                        Size
+                        {t("size")}
                     </Typography>
 
                     {sizes.map((size) => {
@@ -299,7 +301,7 @@ const page = ({ params }) => {
                                     },
                                 }}
                             >
-                                {size}
+                                {t(size)}
                             </Button>
                         );
                     })}
@@ -307,7 +309,7 @@ const page = ({ params }) => {
 
                 <Box sx={{ marginTop: "15px" }}>
                     <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
-                        Options <span style={{ fontSize: "9px", fontWeight: '300', color: 'white' }}>(Required)</span>
+                        {t("options")} <span style={{ fontSize: "9px", fontWeight: '300', color: 'white' }}>{t("required)")}</span>
                     </Typography>
 
                     <Box display="flex" flexWrap="wrap" gap={1}>
@@ -335,7 +337,7 @@ const page = ({ params }) => {
                                     {option.name}
                                 </Typography>
                                 <Typography variant="caption" sx={{ marginLeft: "auto", fontSize: "9px", textTransform: "capitalize", fontWeight: "bold" }}>
-                                    {option.price === 0 ? <span style={{ fontWeight: 400 }}>Free</span>
+                                    {option.price === 0 ? <span style={{ fontWeight: 400 }}>{t("free")}</span>
                                         : `+${option.price} EGP`}
                                 </Typography>
                             </Button>
@@ -345,7 +347,7 @@ const page = ({ params }) => {
 
                 <Box sx={{ marginTop: "15px" }} >
                     <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
-                        Extra
+                        {t("extra")}
                     </Typography>
 
                     <Box display="flex" flexWrap="wrap" gap={1}>
@@ -374,7 +376,7 @@ const page = ({ params }) => {
                                 </Typography>
                                 <Typography variant="caption" sx={{ marginLeft: "auto", fontSize: "9px", textTransform: "capitalize", fontWeight: "bold" }}>
 
-                                    {extra.price === 0 ? <span style={{ fontWeight: 400 }}>Free</span>
+                                    {extra.price === 0 ? <span style={{ fontWeight: 400 }}>{t("free")}</span>
                                         : `+${extra.price} EGP`}
                                 </Typography>
                             </Button>
@@ -384,7 +386,7 @@ const page = ({ params }) => {
 
                 <Box sx={{ marginTop: "15px" }} >
                     <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
-                        Ingrediants
+                        {t("ingrediants")}
                     </Typography>
 
                     <Box display="flex" flexWrap="wrap" gap={1}>
@@ -416,11 +418,11 @@ const page = ({ params }) => {
 
                 <Box sx={{ marginTop: "15px", marginBottom: "120px" }} >
                     <Typography variant="h6" sx={{ fontSize: "13px", color: 'white' }}>
-                        Description
+                        {t("description")}
                     </Typography>
 
                     <Typography variant="body2" sx={{ fontSize: "11px", color: '#AAAAAA', width: "100%" }}>
-                        Lorem, ipsum dolor sit perspiciatis magnam pariatur neque repellat veritatis asperiores repellat veritatis asperiores !</Typography>
+                        {t("lorem")}</Typography>
                 </Box>{/* Description */}
 
             </Box>
@@ -435,7 +437,7 @@ const page = ({ params }) => {
                 }}>
                 <Box>
                     <Typography variant="h6" sx={{ fontSize: '11px', fontWeight: "bold", color: 'gray' }}>
-                        price
+                        {t("price")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
                         {selectedProduct.price}
@@ -463,7 +465,7 @@ const page = ({ params }) => {
                             }
                         }}
                     >
-                        Add to Cart <span style={{ fontSize: "17px", marginLeft: "10px" }}>+</span>
+                        {t("addToCart")} <span style={{ fontSize: "17px", marginLeft: "10px" }}>+</span>
                     </Button>
                 </Box>
             </Box>

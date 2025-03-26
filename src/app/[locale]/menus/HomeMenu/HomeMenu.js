@@ -2,8 +2,10 @@ import React from "react";
 import { Typography, Box, Button, Divider } from "@mui/material";
 import "./HomeMenu.css";
 import NavBar from "@/app/[locale]/Home/NavBar";
+import { useTranslations } from "next-intl";
 
 const HomeMenu = () => {
+  const t = useTranslations()
   return (
     <Box className="containerMenu">
       <NavBar />
@@ -17,7 +19,7 @@ const HomeMenu = () => {
               color: "white",
             }}
           >
-            Smart Menu
+            {t("smartMenu")}
           </Typography>
 
           <Divider
@@ -41,11 +43,8 @@ const HomeMenu = () => {
               margin: "0px auto",
             }}
           >
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-            nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-            volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
-            ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
-            consequat. Duis autem vel eum iriure dolor
+            
+            {t("lorem")}
           </Typography>
 
           <Button className="joinButtonMenu" sx={{ marginTop: "60px" }}>
@@ -54,7 +53,7 @@ const HomeMenu = () => {
               alt="plus"
               style={{ width: "18px", height: "18px", marginRight: "6px" }}
             />
-            Join Now
+            {t("joinNow")}
           </Button>
         </Box>
         <img src="/assets/cloud.svg" alt="cloud" className="menu-icon" />

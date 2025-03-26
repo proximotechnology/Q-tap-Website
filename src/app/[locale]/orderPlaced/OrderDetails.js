@@ -1,11 +1,12 @@
 "use client";
 import { ordersDetails } from '@/app/[locale]/categories/data';
 import { Box, Typography, Divider, Grid } from '@mui/material';
+import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react'
 
 
 export const OrderDetails = () => {
-
+    const t = useTranslations()
     const specificOrder = ordersDetails.find(order => order.id === 3218);
     
     const [formData, setFormData] = useState(null);
@@ -90,7 +91,7 @@ export const OrderDetails = () => {
                                 borderRadius: "40px 40px 0px 0px",
                             }}
                         >
-                            Order ID <span style={{ color: "white" }}>#{specificOrder.id}</span>
+                            {t("orderId")} <span style={{ color: "white" }}>#{specificOrder.id}</span>
                         </Typography>
                     </Box>
 
@@ -108,7 +109,7 @@ export const OrderDetails = () => {
 
                             <Typography variant="body2" sx={{ color: "#ED1C24", fontSize: "11px", display: "flex", alignItems: "center" }} >
                                 <img src="/assets/balance.svg" alt="pay icon" style={{ width: "16px ", height: "16px", marginRight: "15px" }} />
-                                {specificOrder.status}
+                                {t(specificOrder.status)}
                             </Typography>
                         </Box>
 
@@ -127,29 +128,29 @@ export const OrderDetails = () => {
                                         {/* Dine Method */}
                                         <Box sx={{ margin: "8px 0px" }}>
                                             <Typography variant="body1" sx={{ fontSize: "12px", color: "white" }}>
-                                                Dine method
+                                                {t("dineMethod")}
                                             </Typography>
                                             
                                             <Typography sx={{ fontSize: "12px", color: "#AAAAAA" }}>
-                                                {renderIcon()} , {formData.selectedOption} 
+                                                {renderIcon()} , {t(formData.selectedOption)} 
                                             </Typography>
                                         </Box>
 
                                         {/* Payment Method */}
                                         <Box>
                                             <Typography variant="body1" sx={{ fontSize: "12px", color: "white" }}>
-                                                Payment method
+                                                {t("paymentMethod")}
                                             </Typography>
                                             <Typography sx={{ fontSize: "12px", color: "#AAAAAA" }}>
                                             <span class="icon-wallet" style={{ fontSize: "16px", marginRight: "6px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
-                                                {formData.selectedValue}</Typography> 
+                                                {t(formData.selectedValue)}</Typography> 
                                         </Box>
                                     </Grid>
 
                                     <Grid item xs={6}>
                                         <Box sx={{marginTop:"40px"}}>
                                             <Typography varint="body1" sx={{ fontSize: "11px", color: "#AAAAAA" }} >
-                                                Total Price
+                                                {t("totalPrice")}
                                             </Typography>
                                             <Typography variant="h4" sx={{ fontSize: "17px", fontWeight: "bold", color: "white" }}>
                                                 {totalPrice} <span style={{ fontSize: "10px", color: "#AAAAAA" }}>EGP</span>

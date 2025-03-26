@@ -11,9 +11,10 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 import done from '/src/animation/done.json';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 const page = () => {
-
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -40,7 +41,7 @@ const page = () => {
                             sx={{ cursor: "pointer", fontSize: "15px", fontWeight: "bold", color: "#AAAAAA", 
                                 textDecoration: "none" }}
                         >
-                            Order Placed
+                            {t("orderPlaced")}
                         </Typography>
                     </Link>
                 </div>

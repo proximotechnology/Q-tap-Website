@@ -6,11 +6,12 @@ import Link from 'next/link';
 // import PhoneInput from 'react-phone-input-2';
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { useTranslations } from 'next-intl';
 
 
 const page = () => {
     const [phone, setPhone] = useState('');
-
+    const t = useTranslations()
     const handlePhoneChange = (value) => {
         setPhone(value);
     };
@@ -32,13 +33,13 @@ const page = () => {
 
             <Box width="90%" sx={{ padding: "0px 20px", position: "relative", top: "29vh", }} >
 
-                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Name</Typography>
+                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("name")}</Typography>
                 <TextField
                     fullWidth
                     variant="outlined"
                     value={selectedName}
                     onChange={(e) => setSelectedName(e.target.value)}
-                    placeholder='Customer Name'
+                    placeholder={t("customerName")}
                     sx={{ marginBottom: "15px" }}
                     InputProps={{
                         sx: {
@@ -47,7 +48,7 @@ const page = () => {
                         }
                     }}
                 />
-                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Email</Typography>
+                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("email")}</Typography>
                 <TextField
                     fullWidth
                     variant="outlined"
@@ -65,7 +66,7 @@ const page = () => {
                 />
             
 
-                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Phone</Typography>
+                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("mobileNumber")}</Typography>
                 <ReactPhoneInput
                     country={'eg'} 
                     value={phone}
@@ -81,7 +82,7 @@ const page = () => {
                 />
 
 
-                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px",marginTop:"15px", color: "White" }}>Your Note</Typography>
+                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px",marginTop:"15px", color: "White" }}>{t("yourNote")}</Typography>
                 <TextField
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
@@ -96,7 +97,7 @@ const page = () => {
                     variant="outlined"
                     multiline
                     rows={4}
-                    placeholder="Please write your note here."
+                    placeholder={t("plWriteYourNoteHere")}
                 />
             </Box>
 
@@ -122,7 +123,7 @@ const page = () => {
                                     backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                                 }
                             }}>
-                            Submit <span className="icon-check1" style={{ marginLeft: "8px", color: "#AAAAAA", fontSize: "18px" }} />
+                            {t("submit")} <span className="icon-check1" style={{ marginLeft: "8px", color: "#AAAAAA", fontSize: "18px" }} />
                         </Button>
                     </Link>
                 </Box>

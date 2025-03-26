@@ -9,6 +9,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import 'react-phone-input-2/lib/style.css';
 import TableBarOutlinedIcon from '@mui/icons-material/TableBarOutlined';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 
 const options = [
@@ -17,7 +18,7 @@ const options = [
     { label: 'Delivery', icon: <span className="icon-scooter" style={{ fontSize: '45px' }}></span>, value: 'delivery' },
 ];
 const page = () => {
-
+    const t = useTranslations()
     const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
@@ -201,7 +202,7 @@ const page = () => {
                                     >
                                         {option.icon}
                                     </IconButton>
-                                    <Typography variant="caption">{option.label}</Typography>
+                                    <Typography variant="caption">{t(option.label)}</Typography>
                                 </Box>
                             ))}
                         </Box>
@@ -219,13 +220,13 @@ const page = () => {
                 {selectedOption && (
                     <Box width="90%" sx={{ padding: "0px 20px" }} >
 
-                        <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Name</Typography>
+                        <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("name")}</Typography>
                         <TextField
                             fullWidth
                             variant="outlined"
                             value={selectedName}
                             onChange={(e) => setSelectedName(e.target.value)}
-                            placeholder='Customer Name'
+                            placeholder={t("customerName")}
                             sx={{ marginBottom: "15px" }}
                             InputProps={{
                                 sx: {
@@ -234,7 +235,7 @@ const page = () => {
                                 }
                             }}
                         />
-                        <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Phone</Typography>
+                        <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("mobileNumber")}</Typography>
                         <PhoneInput
                             country={'eg'}
                             value={phone}
@@ -254,8 +255,8 @@ const page = () => {
                         {selectedOption === 'dinein' && (
                             <>
                                 <Box display={"flex"} justifyContent={"space-between"}>
-                                    <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Table</Typography>
-                                    <Typography variant='body2' sx={{ fontSize: "10px", marginBottom: "3px", color: "white" }}>4 seats</Typography>
+                                    <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("table")}</Typography>
+                                    <Typography variant='body2' sx={{ fontSize: "10px", marginBottom: "3px", color: "white" }}>4 {t("seats")}</Typography>
                                 </Box>
 
                                 <FormControl fullWidth variant="outlined">
@@ -278,12 +279,12 @@ const page = () => {
                                         }
                                     >
                                         <MenuItem value="" disabled sx={{ fontSize: "11px", color: "white", }}>
-                                            Select Table
+                                            {t("selectTable")}
                                         </MenuItem>
-                                        <MenuItem value={2} sx={{ fontSize: "11px", color: "#797993", }}>Table 2</MenuItem>
-                                        <MenuItem value={3} sx={{ fontSize: "11px", color: "#797993", }}>Table 3</MenuItem>
-                                        <MenuItem value={4} sx={{ fontSize: "11px", color: "#797993", }}>Table 4</MenuItem>
-                                        <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>Table 1</MenuItem>
+                                        <MenuItem value={2} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 2</MenuItem>
+                                        <MenuItem value={3} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 3</MenuItem>
+                                        <MenuItem value={4} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 4</MenuItem>
+                                        <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 1</MenuItem>
                                     </Select>
                                 </FormControl>
                             </>
@@ -291,7 +292,7 @@ const page = () => {
 
                         {selectedOption === 'delivery' && (
                             <>
-                                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>City</Typography>
+                                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("city")}</Typography>
                                 <FormControl fullWidth variant="outlined">
                                     <Select
                                         value={selectedCity}
@@ -303,7 +304,7 @@ const page = () => {
                                         }}
                                     >
                                         <MenuItem value="" disabled sx={{ fontSize: "11px", color: "#797993", }}>
-                                            Select City
+                                            {t("selectCity")}
                                         </MenuItem>
                                         <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>City 1</MenuItem>
                                         <MenuItem value={2} sx={{ fontSize: "11px", color: "#797993", }}>City 2</MenuItem>
@@ -311,11 +312,11 @@ const page = () => {
                                         <MenuItem value={4} sx={{ fontSize: "11px", color: "#797993", }}>City 4</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>Address</Typography>
+                                <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("address")}</Typography>
                                 <TextField
                                     fullWidth
                                     variant="outlined"
-                                    placeholder='Street / Building No. / Floor'
+                                    placeholder={t("streetBuildingFloor")}
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
 
@@ -342,7 +343,7 @@ const page = () => {
                                         }
                                     }}>
                                         <span class="icon-map-1" style={{ fontSize: "19px", marginRight: "7px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span></span>
-                                        Pin Your Location</Button>
+                                        {t("pinYourLocation")}</Button>
                                 </Box>
                             </>
                         )}
@@ -366,11 +367,11 @@ const page = () => {
                             variant="outlined"
                             multiline
                             rows={2}
-                            placeholder="Please let us know if you have any specific details about your order."
+                            placeholder={t("orderComment")}
                         />
 
                         <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "White" }}>
-                            Discount Code</Typography>
+                            {t("discountCode")}</Typography>
                         <TextField
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
@@ -398,7 +399,7 @@ const page = () => {
                             }}
                             fullWidth
                             variant="outlined"
-                            placeholder="Enter your Discount Code here."
+                            placeholder={t("enterYourDiscountCodeHere")}
                         />
 
 
@@ -413,21 +414,21 @@ const page = () => {
                 }}>
                 <Box sx={{ width: "90%" }}>
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
-                        Sub Total: <span style={{ color: 'white' }}>0:00 EGP</span>
+                        {t("subTotal")}: <span style={{ color: 'white' }}>0:00 EGP</span>
                     </Typography>
 
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
-                        Tax: <span style={{ color: 'white' }}>0:00 EGP</span>
+                        {t("tax")}: <span style={{ color: 'white' }}>0:00 EGP</span>
                     </Typography>
 
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
-                        DisCount: <span style={{ color: 'white' }}>0:00 EGP</span>
+                        {t("disCount")}: <span style={{ color: 'white' }}>0:00 EGP</span>
                     </Typography>
 
                     <Divider sx={{ margin: "3px 30px 3px 0px", backgroundColor: "#AAAAAA" }} />
 
                     <Typography variant="h6" sx={{ fontSize: '11px', fontWeight: "bold", color: '#AAAAAA' }}>
-                        Total price
+                        {t("totalPrice")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
                         {totalPrice}<span style={{ fontSize: "10px", fontWeight: "400", color: '#AAAAAA' }}>EGP</span>
@@ -450,7 +451,7 @@ const page = () => {
                             label={
                                 <Box display="flex" alignItems="center">
                                     <span class="icon-price-tag" style={{ fontSize: '16px', color: "green" }}></span>
-                                    <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>Cash / Card Terminal</Typography>
+                                    <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>{t("cashCard")}</Typography>
                                 </Box>}
                         />
 
@@ -470,7 +471,7 @@ const page = () => {
                                 label={
                                     <Box display="flex" alignItems="center">
                                         <span class="icon-wallet" style={{ fontSize: '16px', marginRight: "4px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
-                                        <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>Cart</Typography>
+                                        <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>{t("cart")}</Typography>
                                     </Box>}
                             />
                         </Box>
@@ -491,7 +492,7 @@ const page = () => {
                                 label={
                                     <Box display="flex" alignItems="center">
                                         <span class="icon-wallet" style={{ fontSize: '16px', marginRight: "4px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
-                                        <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>Digital Wallet</Typography>
+                                        <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>{t("digitalWallet")}</Typography>
                                     </Box>}
                             />
                         </Box>
@@ -508,7 +509,7 @@ const page = () => {
                                     backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                                 }
                             }}>
-                            Place Order <DoneOutlinedIcon sx={{ fontSize: "20px", ml: 1 }} />
+                            {t("placeOrder")}<DoneOutlinedIcon sx={{ fontSize: "20px", ml: 1 }} />
                         </Button>
                     </Link>
 

@@ -12,6 +12,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
+import { useTranslations } from 'next-intl';
 
 
 export const Signup = () => {
@@ -31,6 +32,8 @@ export const Signup = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [apiSuccess, setApiSuccess] = useState('');
     const router =  useRouter()
+    //
+    const t = useTranslations()
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
@@ -48,15 +51,15 @@ export const Signup = () => {
         }
     
         if (password !== confirmPassword) {
-          setApiError('Passwords do not match!');
+          setApiError(t("allFieldRequired"));
           return;
         }
         if (!day || !month || !year) {
-          setApiError('The birth date field must be a valid date');
+          setApiError(t("birthDateMustValid"));
           return;
         }
         if (!country) {
-          setApiError('The country field is required');
+          setApiError(t("countryFieldRequired"));
           return;
         }
 
@@ -91,15 +94,15 @@ export const Signup = () => {
           setIsLoading(false);
             
           if (response?.data?.status == "success") {
-            setApiSuccess('Registration successful!');
+            setApiSuccess(t("registrationSucc"));
 
             router.push('/marketing')
           } else {
-            setApiError(response?.data?.message || 'check email or phone again may be dublicated!');
+            setApiError(response?.data?.message || t("checkEmailPhoneDublicate"));
           }
         } catch (error) {
           setIsLoading(false);
-          setApiError(error.response?.data?.message || 'Failed to register. Please try again.');
+          setApiError(error.response?.data?.message || t("failedRegisterTryAgain"));
         }
       };
 
@@ -176,7 +179,7 @@ export const Signup = () => {
                         }}
                     >
                         <Typography variant="body2" sx={{ fontSize: "14px", color: "white" }}>
-                            Register As Affiliate User
+                            {t("registerAsAffiliate")}
                         </Typography>
                     </Box>
 
@@ -202,7 +205,7 @@ export const Signup = () => {
                                 required
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
-                                placeholder="Full Name"
+                                placeholder={t("fullName")}
                                 sx={{ borderRadius: '50px', marginTop: "10px", height: '33px', fontSize: "12px" ,padding:"22px 15px" }}
                             />
                         </FormControl>
@@ -212,7 +215,7 @@ export const Signup = () => {
                                 id="outlined-phone"
                                 endAdornment={
                                     <InputAdornment position="end">
-                                        <Typography sx={{ fontSize: "12px", color: "black" }} >Verify</Typography>
+                                        <Typography sx={{ fontSize: "12px", color: "black" }} >{t("verify")}</Typography>
                                     </InputAdornment>
                                 }
                                 startAdornment={
@@ -220,7 +223,7 @@ export const Signup = () => {
                                         <PhoneOutlinedIcon sx={{ fontSize: "20px" }} />
                                     </InputAdornment>
                                 }
-                                placeholder="Mobile Number"
+                                placeholder={t("mobileNumber")}
                                 required
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
@@ -240,7 +243,7 @@ export const Signup = () => {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Email"
+                                placeholder={t("email")}
                                 sx={{ borderRadius: '50px', marginTop: "10px", height: '33px', fontSize: "12px" ,padding:"22px 15px"}}
                             />
                         </FormControl>
@@ -249,7 +252,7 @@ export const Signup = () => {
                             <Grid item xs={12} sm={12} md={12} lg={12}>
                                 <Grid container alignItems="center" sx={{ color: "grey", margin: "5px 2px" }} >
                                     <CalendarMonthOutlinedIcon sx={{ marginRight: 1, fontSize: "20px" }} />
-                                    <Typography variant="body1" sx={{ fontSize: "12px" }}>Date of Birth:</Typography>
+                                    <Typography variant="body1" sx={{ fontSize: "12px" }}>{t("dateOfBirth")}</Typography>
                                 </Grid>
                             </Grid>
 
@@ -263,7 +266,7 @@ export const Signup = () => {
                                         sx={{ borderRadius: '50px', height: '33px', fontSize: "12px", color: "gray", marginRight: "5px",padding:"5px" }}
                                     >
                                         <MenuItem value="" disabled sx={{ fontSize: "12px", color: "gray" }} >
-                                            Month
+                                            {t("month")}
                                         </MenuItem>
                                         <MenuItem value="01" sx={{ fontSize: "10px", color: "gray" }}>01</MenuItem>
                                         <MenuItem value="02" sx={{ fontSize: "10px", color: "gray" }}>02</MenuItem>
@@ -291,7 +294,7 @@ export const Signup = () => {
                                         sx={{ borderRadius: '50px', height: '33px', fontSize: "12px", color: "gray", marginRight: "5px",padding:"5px" }}
                                     >
                                         <MenuItem value="" disabled sx={{ fontSize: "12px", color: "gray" }}>
-                                            Day
+                                            {t("day")}
                                         </MenuItem>
                                         {[...Array(31).keys()].map((i) => (
                                             <MenuItem key={i + 1} value={i + 1} sx={{ fontSize: "10px", color: "gray" }} >
@@ -312,7 +315,7 @@ export const Signup = () => {
                                         sx={{ borderRadius: '50px', height: '33px', fontSize: "12px", color: "gray",padding:"5px" }}
                                     >
                                         <MenuItem value="" disabled sx={{ fontSize: "12px", color: "gray" }}>
-                                            Year
+                                            {t("year")}
                                         </MenuItem>
                                         {Array.from({ length: 2025 - 2000 + 1 }, (_, i) => (
                                             <MenuItem key={i + 2000} value={i + 2000} sx={{ fontSize: "10px", color: "gray" }}>
@@ -338,7 +341,7 @@ export const Signup = () => {
                                 }
                             >
                                 <MenuItem value="" disabled >
-                                    Country
+                                    {t("country")}
                                 </MenuItem>
                                 <MenuItem value="US" sx={{ fontSize: "11px", color: "gray" }} >United States</MenuItem>
                                 <MenuItem value="CA" sx={{ fontSize: "11px", color: "gray" }} >Canada</MenuItem>
@@ -372,7 +375,7 @@ export const Signup = () => {
                                         </IconButton>
                                     </InputAdornment>
                                 }
-                                placeholder="Password"
+                                placeholder={t("password")}
                                 sx={{ borderRadius: '50px', marginTop: "10px", height: '33px', fontSize: "12px",padding:"22px 15px" }}
                             />
                         </FormControl>
@@ -403,7 +406,7 @@ export const Signup = () => {
                                         </IconButton>
                                     </InputAdornment>
                                 }
-                                placeholder="Confirm Password"
+                                placeholder={t("confirmPass")}
                                 sx={{ borderRadius: '50px', marginTop: "10px", height: '33px', fontSize: "12px",padding:"22px 15px" }}
                             />
                         </FormControl>
@@ -415,7 +418,7 @@ export const Signup = () => {
                                     transform: "scale(0.7)"
                                 }}
                             />}
-                            label={<Typography sx={{ fontSize: "12px", color: "gray" }}> I agree to the terms and conditions and privacy policy. Learn More</Typography>}
+                            label={<Typography sx={{ fontSize: "12px", color: "gray" }}> {t("iAgreeToTerms")}</Typography>}
                         />
                         
                                
@@ -440,7 +443,7 @@ export const Signup = () => {
                                 }
                             }}>
 
-                                {isLoading ? 'Loading...' : 'Sign Up'}
+                                {isLoading ? t("loading") : t("signUp")}
                         </Button>
                     </Box>
                 </Box>

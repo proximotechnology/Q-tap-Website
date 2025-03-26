@@ -15,6 +15,7 @@ import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
 import axios from 'axios';
+import { useTranslations } from 'next-intl';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -23,59 +24,59 @@ export const Login = () => {
     const [apiError, setApiError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [apiSuccess, setApiSuccess] = useState('');
-    const router =  useRouter()
+    const router = useRouter()
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-
+    const t = useTranslations()
     // call api to login
     const handleLogin = async () => {
         // API states
         setApiError('');
         setApiSuccess('');
-    
+
         // inputs validate 
-        if (!email || !password ) {
-          setApiError('All fields are required!');
-          return;
+        if (!email || !password) {
+            setApiError(t("allFieldRequired"));
+            return;
         }
 
-         // resive data from user 
+        // resive data from user 
         const data = {
-          email,
-          password,
-          user_type:"qtap_affiliates"
+            email,
+            password,
+            user_type: "qtap_affiliates"
         };
-        
+
         // send data to api 
         try {
-          setIsLoading(true);
-          const options = {
-            method: 'POST',
-            url:"https://highleveltecknology.com/Qtap/api/login",
-            headers: { 'Content-Type': 'application/json' },
-            data
+            setIsLoading(true);
+            const options = {
+                method: 'POST',
+                url: "https://highleveltecknology.com/Qtap/api/login",
+                headers: { 'Content-Type': 'application/json' },
+                data
 
-          }
-          const response = await axios.request(options)
-          .then(res => res )
-          .catch(error => console.log(error))
-          console.log(response);
-          
-         
-          setIsLoading(false);
-            
-          if (response?.data?.user) {
-            setApiSuccess('successful login!');
-            localStorage.setItem("userToken" , response?.data?.token);    
+            }
+            const response = await axios.request(options)
+                .then(res => res)
+                .catch(error => console.log(error))
+            console.log(response);
 
-            router.push('/')
-          } else {
-            setApiError(response?.data?.message || 'check email and password again!');
-          }
+
+            setIsLoading(false);
+
+            if (response?.data?.user) {
+                setApiSuccess(t("loginSucc"));
+                localStorage.setItem("userToken", response?.data?.token);
+
+                router.push('/')
+            } else {
+                setApiError(response?.data?.message || t("checkEmailPasswordAgain"));
+            }
         } catch (error) {
-          setIsLoading(false);
-          setApiError(error.response?.data?.message || 'Failed to login. Please try again.');
+            setIsLoading(false);
+            setApiError(error.response?.data?.message || t("failedLoginTryAgain"));
         }
-      };
+    };
 
     return (
         <Box
@@ -121,17 +122,19 @@ export const Login = () => {
                         </Link>
                     </IconButton>
 
-                    <Box sx={{display:'flex'}}>
+                    <Box sx={{ display: 'flex' }}>
 
                         <AllChatForm />
                         <Language />
                     </Box>
                 </Box>
 
-                <Box sx={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", 
-                    textAlign: "center", alignItems: "center" }}>
+                <Box sx={{
+                    position: "relative", zIndex: 10, display: "flex", flexDirection: "column",
+                    textAlign: "center", alignItems: "center"
+                }}>
                     <Typography variant='h1' sx={{ fontSize: { xs: "20px", md: "30px" }, color: "white" }}>
-                        Affiliate Marketing
+                        {t("affiliateMarketing")}
                     </Typography>
 
                     <Divider sx={{
@@ -149,13 +152,15 @@ export const Login = () => {
                             padding: "0px 10%", color: "white"
                         }}
                     >
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit                     </Typography>
-
+                        {t("lorem")}
+                    </Typography>
                     <Link href="/Signup">
-                        <Button sx={{ fontSize: "15px", backgroundColor: "#E57C00", textTransform: "capitalize", borderRadius: "20px",
-                            color: "white", padding: "4px 35px" }}>
+                        <Button sx={{
+                            fontSize: "15px", backgroundColor: "#E57C00", textTransform: "capitalize", borderRadius: "20px",
+                            color: "white", padding: "4px 35px"
+                        }}>
                             <PersonAddOutlinedIcon sx={{ fontSize: "18px", marginRight: "5px" }} />
-                            Register
+                            {t("register")}
                         </Button>
                     </Link>
                 </Box>
@@ -164,7 +169,7 @@ export const Login = () => {
             <Box sx={{ width: { xs: "60%", md: "22%" }, margin: "50px 0px" }}>
                 <FormControl variant="outlined" fullWidth margin="normal">
                     <OutlinedInput
-                        placeholder='Email'
+                        placeholder={t("email")}
                         onChange={(e) => setEmail(e.target.value)}
                         startAdornment={
                             <InputAdornment position="start">
@@ -173,7 +178,7 @@ export const Login = () => {
                         }
                         required
                         sx={{
-                            borderRadius: '50px', height: "35px",fontSize: "12px", color: "gray", padding:"22px 15px"
+                            borderRadius: '50px', height: "35px", fontSize: "12px", color: "gray", padding: "22px 15px"
                         }}
                     />
                 </FormControl>
@@ -204,22 +209,22 @@ export const Login = () => {
                             </InputAdornment>
                         }
                         required
-                        placeholder="Confirm Password"
+                        placeholder={t("confirmPass")}
                         sx={{
-                            borderRadius: '50px', height: "35px", fontSize: "12px", color: "gray", padding:"22px 15px"
+                            borderRadius: '50px', height: "35px", fontSize: "12px", color: "gray", padding: "22px 15px"
                         }}
                     />
                 </FormControl>
-            
+
 
                 <Link href="/reset-password" style={{ textDecoration: 'none !important', textAlign: "left" }}>
                     <Typography variant="body2"
                         sx={{ color: "#222240", fontSize: "11px", cursor: "pointer", margin: "5px 0px" }}>
-                        <span style={{ fontWeight:"300"}}>Reset Password</span>
+                        <span style={{ fontWeight: "300" }}>{t("resetPass")}</span>
                     </Typography>
                 </Link>
-                         {apiError && <Typography sx={{ color: 'red', fontSize: '12px' }}>{apiError}</Typography>}
-                         {apiSuccess && <Typography sx={{ color: 'green', fontSize: '12px' }}>{apiSuccess}</Typography>}
+                {apiError && <Typography sx={{ color: 'red', fontSize: '12px' }}>{apiError}</Typography>}
+                {apiSuccess && <Typography sx={{ color: 'green', fontSize: '12px' }}>{apiSuccess}</Typography>}
                 <Button
                     onClick={handleLogin}
                     disabled={isLoading}
@@ -230,23 +235,23 @@ export const Login = () => {
                         backgroundColor: "#222240",
                         borderRadius: "50px",
                         textTransform: "capitalize",
-                         padding:"5px 0",
+                        padding: "5px 0",
                         mt: 2,
                         '&:hover': { backgroundColor: '#222240' }
                     }}
                 >
-                    {isLoading? <CircularProgress size={20} /> : "Login"}
+                    {isLoading ? <CircularProgress size={20} /> : t("login")}
                 </Button>
 
                 <FormControlLabel
                     sx={{ display: "flex", justifyContent: "center", mt: 1 }}
                     control={<Checkbox sx={{ color: "#c2bbbb", transform: "scale(0.7)" }} />}
-                    label={<Typography sx={{ fontSize: "10px", color: "gray"  }}>Stay Logged In</Typography>}
+                    label={<Typography sx={{ fontSize: "10px", color: "gray" }}>{t("stayLogIn")}</Typography>}
                 />
             </Box>
-        
-            <Typography sx={{ fontSize: "10px", color:"#fff" ,fontWeight:"500" ,padding:"20px" , position:"absolute" ,bottom:"0px" ,textAlign:"center",width:"100%"}}>@ 2024 All Rights Reserved by Q-Tap</Typography>
-            
+
+            <Typography sx={{ fontSize: "10px", color: "#fff", fontWeight: "500", padding: "20px", position: "absolute", bottom: "0px", textAlign: "center", width: "100%" }}>{t("footer.copyRight")}</Typography>
+
         </Box>
     );
 }

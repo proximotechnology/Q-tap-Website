@@ -1,7 +1,9 @@
 import { Box, Typography, Divider } from '@mui/material';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
 export const Dashboard = () => {
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -66,7 +68,7 @@ export const Dashboard = () => {
 
                     <Typography variant='body1'
                         sx={{ color: "white", fontSize: "25px", marginBottom: "8px" }}>
-                        Dashboard
+                        {t("dashboard")}
                     </Typography>
                     <Divider sx={{
                         width: "12%", height: "3px", borderRadius: "20px",
@@ -75,7 +77,7 @@ export const Dashboard = () => {
 
                     <Typography variant='body2'
                         sx={{ lineHeight: "30px", color: "white", fontSize: "13px" }}>
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+                       {t("lorem")}
                     </Typography>
                 </Box>
 

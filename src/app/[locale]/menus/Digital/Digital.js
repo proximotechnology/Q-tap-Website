@@ -1,7 +1,9 @@
 import { Box, Divider, Typography } from '@mui/material';
 import React from 'react';
 import './Digital.css'
+import { useTranslations } from 'next-intl';
 export const Digital = () => {
+    const t = useTranslations()
     return (
         <Box sx={{
             padding: { xs: "20px", md: "50px 100px 70px 100px" },
@@ -35,21 +37,22 @@ export const Digital = () => {
             />
             <Box sx={{ position: "relative", zIndex: 3 }}>
                 <Typography variant='body1' sx={{ color: "#222240", fontSize: { xs: "24px", md: "28px" }, wordSpacing: "4px" }}>
-                    Why Q-Tap Digital Menu?
+                    {t("menuPage.whyDigitalMenu")}
                 </Typography>
                 <Divider sx={{ width: "5%", height: "3px", borderRadius: "20px", margin: "10px 0px", backgroundColor: "#E57C00" }} />
 
                 <Box sx={{ padding: "10px 30px" }}>
 
                     {[
-                        "Menu (Creative design - editable - easy to use)",
-                        "Table Ordering – Takeaway – delivery",
-                        "Receiving Payment online",
-                        "Updating Orders step by step so can customer be updated",
-                        "Customers can Track their Orders",
-                        "Unique Table signs which Support QR code & NFC, one for each table",
-                        "All orders status and incomes on your mobile Screen one by one",
-                        "Efficient technical support available 24H"
+                        t("menuPage.why1"),
+                        t("menuPage.why2"),
+                        t("menuPage.why3"),
+                        t("menuPage.why4"),
+                        t("menuPage.why5"),
+                        t("menuPage.why6"),
+                        t("menuPage.why7"),
+                        t("menuPage.why8"),
+
                     ].map((item, index) => (
                         <Typography key={index} variant='body2' sx={{ lineHeight: "40px", color: "#949493", alignItems: "center", fontSize: "15px" }}>
                             <img src="/assets/check.svg" alt="check" style={{ width: "16px", height: "16px", marginRight: "6px" }} />

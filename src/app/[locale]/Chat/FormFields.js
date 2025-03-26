@@ -5,13 +5,14 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import { useTranslations } from 'next-intl';
 
 const FormFields = ({ onStartChat }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-
+    const t  = useTranslations()
 
     // enter user data
     const handleSubmit = async (e) => {
@@ -19,7 +20,7 @@ const FormFields = ({ onStartChat }) => {
 
         // Validate required fields
         if (!name || !email || !phone || !address) {
-            alert('Please fill in all fields');
+            alert(t("plFillAllField"));
             return;
         }
 
@@ -56,7 +57,7 @@ const FormFields = ({ onStartChat }) => {
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('There was an error submitting your information. Please try again.');
+            alert(t("errSubmitInfo"));
         }
     };
 
@@ -76,10 +77,10 @@ const FormFields = ({ onStartChat }) => {
                 zIndex: 1000,
                 textAlign: "center", justifyContent: "center"
             }}>
-            <Typography sx={{ color: "#575756", fontSize: "12px", marginBottom: "10px" }}>Please Enter this data to start chatting</Typography>
+            <Typography sx={{ color: "#575756", fontSize: "12px", marginBottom: "10px" }}>{t("plEnterDataToStartChat")}</Typography>
             <Divider sx={{ backgroundColor: "#E57C00", marginBottom: "20px " }} />
 
-            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>Name</Typography>
+            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>{t("name")}</Typography>
             <TextField
                 fullWidth
                 variant="outlined"
@@ -109,7 +110,7 @@ const FormFields = ({ onStartChat }) => {
                     ),
                 }} />
 
-            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>Email</Typography>
+            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>{t("email")}</Typography>
             <TextField
                 fullWidth
                 variant="outlined"
@@ -138,7 +139,7 @@ const FormFields = ({ onStartChat }) => {
                     ),
                 }} />
 
-            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>Phone</Typography>
+            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>{t("phone")}</Typography>
             <TextField
                 fullWidth
                 variant="outlined"
@@ -167,7 +168,7 @@ const FormFields = ({ onStartChat }) => {
                     ),
                 }} />
 
-            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>Address</Typography>
+            <Typography variant='body1' sx={{ fontSize: "11px", marginBottom: "3px", color: "#575756" }}>{t("address")}</Typography>
             <TextField
                 fullWidth
                 variant="outlined"
@@ -211,7 +212,7 @@ const FormFields = ({ onStartChat }) => {
                         backgroundColor: "#cc6e00"
                     }
                 }}>
-                Start Chat
+                {t("startChat")}
             </Button>
 
         </Box>

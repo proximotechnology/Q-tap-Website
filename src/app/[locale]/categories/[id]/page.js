@@ -6,14 +6,15 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Link from 'next/link';
 import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
+import { useTranslations } from 'next-intl';
 
 
 const page = ({ params }) => {
-
+  const t = useTranslations()
   const { id } = params;
 
   if (!id || !categoryProducts[id]) {
-    return <p>No products available for this category.</p>;
+    return <p>{t("noProductAvailableForThisCategory")}</p>;
   }
   const catProduct = menuItems.find((item) => item.id === parseInt(id));
   // console.log(catProduct) 
@@ -82,7 +83,7 @@ const page = ({ params }) => {
               color: 'white',
               textShadow: '2px 0px #E57C00'
             }}>
-            {catProduct.title}
+            {t(catProduct.title)}
           </Typography>
         </Box>
       </Box>

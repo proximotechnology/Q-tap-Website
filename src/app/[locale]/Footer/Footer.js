@@ -4,8 +4,10 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { useTranslations } from 'next-intl';
 
 const Footer = () => {
+    const t = useTranslations()
     return (
         <Box>
             <Box sx={{
@@ -14,7 +16,7 @@ const Footer = () => {
                 justifyContent: "center", textAlign: "center", alignItems: "center", display: "flex"
             }}> 
                 <Typography variant="body2" sx={{ fontSize: { xs: '16px', md: '18px' }, color: "white" }}>
-                    Smart | Easy | Safe
+                    {t("smartEasySafe")}
                 </Typography>
             </Box>
 
@@ -26,11 +28,11 @@ const Footer = () => {
                         </Box>
 
                         <Typography variant='body2' sx={{ fontSize: "12px", width: { xs: '100%', sm: "200px" }, lineHeight: 2 }}>
-                            Create a digital menu for your Restaurant & Cafe.
-                            Engage more with your customers.
+                            {t("footer.text1")}
+                            {t("footer.text2")}
                         </Typography>
                         <Typography variant='body2' sx={{ fontSize: "12px", width: { xs: '100%', sm: "200px" }, lineHeight: 2 }}>
-                            Their mobile is your menu now!
+                        {t("footer.text3")}
                         </Typography>
                     </Grid>
 
@@ -48,7 +50,7 @@ const Footer = () => {
                                     color: 'white', padding: "2px 15px", height: "23px", borderRadius: '20px',
                                     boxShadow: "none", alignItems: "center", whiteSpace: "nowrap"
                                 }}>
-                                Subscribe
+                                {t("subscribe")}
                             </Button>
 
                             <TextField
@@ -69,23 +71,23 @@ const Footer = () => {
                         <Box >
                             <Link href="#" color="inherit" underline="hover"
                                 sx={{ display: 'block', fontSize: "12px", fontFamily: "sans-serif", marginBottom: "10px" }}>
-                                Helpful Links
+                                {t("footer.helpfulLinks")}
                             </Link>
 
                             <Link href="#" color="inherit" underline="hover"
                                 sx={{ display: 'block', marginBottom: "10px", fontSize: "12px", fontFamily: "sans-serif" }}>
-                                Terms and conditions
+                                {t("footer.termsConditions")}
                             </Link>
                             <Link href="#" color="inherit" underline="hover"
                                 sx={{ display: 'block', marginBottom: "10px", fontSize: "12px", fontFamily: "sans-serif" }}>
-                                How it works
+                                {t("footer.howItWork")}
                             </Link>
                         </Box>
                     </Grid>
 
                     <Grid item xs={12} sm={4}
                         sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'end' }, marginTop: { xs: "20px", sm: "70px" } }}>
-                        <Typography variant="body2" sx={{ fontSize: "12px" }}>Contact</Typography>
+                        <Typography variant="body2" sx={{ fontSize: "12px" }}>{t("footer.contact")}</Typography>
 
                         <Typography sx={{ margin: '5px 0', fontSize: "12px" }}>sales@qtap.com</Typography>
                         <Typography sx={{ margin: '5px 0', fontSize: "12px" }}>+201050379784</Typography>
@@ -113,21 +115,21 @@ const Footer = () => {
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between" }}>
                     <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" } }}>
                         <Typography variant="body2" sx={{ fontSize: "10px", marginTop: 2, mr: 3 }}>
-                            Privacy Policy
+                        {t("footer.privacyPolicy")}
                         </Typography>
                         <Typography variant="body2" sx={{ fontSize: "10px", marginTop: 2, mr: 3 }}>
-                            Terms & Conditions
+                        {t("footer.terms&conditions")}
                         </Typography>
                         <Typography variant="body2" sx={{ fontSize: "10px", marginTop: 2, mr: 3 }}>
-                            Cookie Policy
+                        {t("footer.cookiePolicy")}
                         </Typography>
                         <Typography variant="body2" sx={{ fontSize: "10px", marginTop: 2, mr: 3 }}>
-                            Refund & Cancellation
+                        {t("footer.refund&cancellation")}
                         </Typography>
                     </Box>
 
                     <Typography variant="body2" sx={{ fontSize: "10px", marginTop: 2, textAlign: { xs: "center", sm: "right" } }}>
-                        © 2024 All Rights Reserved by Qtap
+                        {t("footer.copyRight")}
                     </Typography>
                 </Box>
             </Box>

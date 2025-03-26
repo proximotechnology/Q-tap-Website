@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Typography, Modal, Divider } from "@mui/material";
 import { ordersDetails } from "../categories/data";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const PaymentModal = ({ isOpen, onClose }) => {
-
+    const t = useTranslations()
     const specificOrder = ordersDetails.find(order => order.id === 3218);
     
     const [formData, setFormData] = useState(null);
@@ -65,12 +66,12 @@ const PaymentModal = ({ isOpen, onClose }) => {
                                 borderRadius: "40px 40px 0px 0px",
                             }}
                         >
-                            Order ID <span style={{ color: "white", }}>#{specificOrder.id}</span>
+                            {t("orderId")} <span style={{ color: "white", }}>#{specificOrder.id}</span>
                         </Typography>
                     </Box>
                 ) : (
                     <Typography variant="h6" color="error">
-                        Order not found
+                        {t("orderNotFound")}
                     </Typography>
                 )}
                 <Box sx={{ padding: "20px 30px", }}>
@@ -84,7 +85,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                         }}
                     >
                         <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
-                        Payment
+                        {t("payment")}
                     </Typography>
 
                     <Typography
@@ -96,7 +97,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                             fontSize: "11px",
                         }}
                     >
-                        Please Pay The Amount Down Below To <br /> Continue Your Order.
+                        {t("plPayAmount")}<br /> {t("continueYourOrder")}
                     </Typography>
 
                     <Divider sx={{ backgroundColor: "#797993", my: 2 }} />
@@ -105,16 +106,16 @@ const PaymentModal = ({ isOpen, onClose }) => {
                     <Box display={"flex"} width={"100%"} justifyContent={"space-between"} >
                         <Box sx={{ width: "90%" }}>
                             <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
-                                Sub Total:
+                               {t("subTotal")}:
                                 <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
                             </Typography>
 
                             <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
-                                Tax: <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
+                                {t("tax")}: <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
                             </Typography>
 
                             <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
-                                DisCount: <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
+                                {t("disCount")}: <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
                             </Typography>
                         </Box>
 
@@ -123,7 +124,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                                 fontSize: '10px', fontWeight: "bold",
                                 color: '#575756'
                             }}>
-                                Total price
+                                {t("totalPrice")}
                             </Typography>
 
                             <Typography variant="h6" sx={{ fontSize: '19px', fontWeight: "bold", color: 'white' }}>
@@ -139,15 +140,15 @@ const PaymentModal = ({ isOpen, onClose }) => {
                         <>
                             <Box >
                                 <Box display={"flex"} textAlign={"center"} alignItems={"center"} justifyContent={"space-between"} >
-                                    <Typography color="white" fontSize="12px"  >Payment Method</Typography>
+                                    <Typography color="white" fontSize="12px"  >{t("paymentMethod")}</Typography>
                                     <Typography>
                                         <span style={{ color: "#AAAAAA", fontSize: "11px", borderBottom: "1px solid #AAAAAA" }}>
-                                            Change</span>
+                                            {t("change")}</span>
                                     </Typography>
                                 </Box>
                                 <Typography color="#AAAAAA" fontSize="12px" margin={"5px 10px"} display={"flex"} alignItems={"center"}>
                                     <span class="icon-wallet" style={{ fontSize: "20px", marginRight: "6px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
-                                    {formData.selectedValue}
+                                    {t(formData.selectedValue)}
                                 </Typography>
                             </Box>
                         </>
@@ -155,7 +156,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                         <Box sx={{
                             color: 'white',
                             width: '100%',
-                        }}> <Typography>No data available</Typography></Box>
+                        }}> <Typography>{t("noDataAvailable")}</Typography></Box>
                     )}
 
                     <Link href="/Feedback" passHref>
@@ -181,7 +182,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                                 src="/assets/balance.svg" alt="pay icon"
                                 style={{ width: "20px ", height: "20px", marginRight: "5px" }}
                             />
-                            pay
+                            {t("pay")}
                         </Button>
                     </Link>
 
@@ -197,7 +198,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                             }}
                         >
                             <span className="icon-close1" style={{ fontSize: "14px", marginRight: "6px" }}></span>
-                            Cancel
+                            {t("cancel")}
                         </Typography>
 
                         <Divider
@@ -218,7 +219,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                             }}
                         >
                             <span className="icon-edit1" style={{ fontSize: "18px", color: "#038E43", marginRight: "6px" }}></span>
-                            Pay
+                            {t("edit")}
                         </Typography>
                     </Box>
                 </Box>

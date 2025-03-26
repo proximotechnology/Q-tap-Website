@@ -2,9 +2,11 @@ import React from 'react'
 import { Box, Divider, IconButton, Typography } from '@mui/material';
 import Link from 'next/link';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useTranslations } from 'next-intl';
 
 
 export const Header = () => {
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -40,7 +42,7 @@ export const Header = () => {
             }}>
                 <Typography sx={{ color: "white", fontSize: "15px", display: "flex", flexDirection: "row", alignItems: "center" }}>
                     <span className='icon-rss' style={{ fontSize: "25px", color: "#797993", marginRight: "6px" }}></span>
-                    <span>Feeds</span>
+                    <span>{t("feeds")}</span>
                 </Typography>
             </Box>
 

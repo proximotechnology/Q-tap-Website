@@ -9,9 +9,11 @@ import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 
 import { ordersDetails } from "../categories/data";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const page = () => {
   const [activeStars, setActiveStars] = useState(2);
+  const t = useTranslations()
 
   const handleStarClick = (index) => {
     setActiveStars(index + 1);
@@ -57,18 +59,18 @@ const page = () => {
         }}
       >
         {specificOrder ? (
-          <Typography sx={{ color: "#575756", fontSize: "15px", marginBottom: "3px" }}> Order Id :
+          <Typography sx={{ color: "#575756", fontSize: "15px", marginBottom: "3px" }}> {t("orderId")} :
             <span style={{ color: "white", marginLeft: "6px" }}> #{specificOrder.id}</span>
           </Typography>
         ) : (<></>)}
 
         {formData ? (
           <>
-            <Typography sx={{ color: "#575756", fontSize: "15px", marginBottom: "3px" }} >Name:
+            <Typography sx={{ color: "#575756", fontSize: "15px", marginBottom: "3px" }} >{t("name")}:
               <span style={{ color: "#949493" }}>{formData.selectedName}</span>
             </Typography>
 
-            <Typography sx={{ color: "#575756", fontSize: "15px", marginBottom: "3px" }} >Phone:
+            <Typography sx={{ color: "#575756", fontSize: "15px", marginBottom: "3px" }} >{t("mobileNumber")}:
               <span style={{ color: "#949493" }}> {formData.phone}</span>
             </Typography>
             <Divider sx={{ margin: "10px 0px", backgroundColor: "#44404D" }} />
@@ -79,7 +81,7 @@ const page = () => {
 
 
         <Box sx={{ marginTop: "15px" }}>
-          <Typography sx={{ fontSize: "13px", fontWeight: "100" }}>Rate</Typography>
+          <Typography sx={{ fontSize: "13px", fontWeight: "100" }}>{t("rate")}</Typography>
 
           <Grid container>
             {Array.from({ length: 5 }).map((_, index) => (
@@ -98,7 +100,7 @@ const page = () => {
         </Box>
 
         <Box sx={{ marginTop: "15px" }}>
-          <Typography sx={{ fontSize: "13px", fontWeight: "100" }}>How much you satisfied with the product?</Typography>
+          <Typography sx={{ fontSize: "13px", fontWeight: "100" }}>{t("howMuchYorSatisfiedWithTheProduct")}</Typography>
 
           <Grid container justifyContent="center" >
             {Array.from({ length: 10 }).map((_, index) => (
@@ -161,7 +163,7 @@ const page = () => {
                   backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                 }
               }}>
-              Submit <span className="icon-check1" style={{ marginLeft: "8px" ,color:"#AAAAAA",fontSize:"18px"}} />
+              {t("submit")} <span className="icon-check1" style={{ marginLeft: "8px" ,color:"#AAAAAA",fontSize:"18px"}} />
             </Button>
           </Link>
         </Box>

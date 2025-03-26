@@ -1,9 +1,20 @@
 
+"use client";
 import { IconButton, Button, Box, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from '@/i18n/navigation';
 
 export default function page() {
+  const t = useTranslations()
+  const router = useRouter()
+  const pathName = usePathname()
+  const handleLangChange = (lang) => {
+
+    console.log(lang)
+    router.push(pathName, { locale: lang });
+  }
   return (
 
     <Box
@@ -85,15 +96,15 @@ export default function page() {
             <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
           </Box>
 
-          <Link href="/categories" passHref style={{ textDecoration: 'none',  textAlign: 'center', width: "100%",  }}> {/* إزالة الخط تحت النص */}
+          <Link href="/categories" passHref style={{ textDecoration: 'none', textAlign: 'center', width: "100%", }}> {/* إزالة الخط تحت النص */}
             <Box
               sx={{
-                color: 'white',     
+                color: 'white',
                 fontWeight: 'bold',
                 transition: 'all 0.3s ease-in-out',
               }}
             >
-              OPEN MENU
+              {t("openMenu")}
             </Box>
           </Link>
         </Button>
@@ -112,7 +123,7 @@ export default function page() {
             '&:hover': {
               border: "1px solid #E57C00",
             }
-          }}>
+          }} onClick={() => handleLangChange("en")}>
             English
           </Button>
           <Button variant="text" sx={{
@@ -121,7 +132,7 @@ export default function page() {
             '&:hover': {
               border: "1px solid #E57C00",
             }
-          }}>
+          }} onClick={() => handleLangChange("ar")}>
             العربية
           </Button>
         </Box>
@@ -129,7 +140,7 @@ export default function page() {
         <Typography sx={{ display: "flex", alignItems: "center", fontSize: "6px", color: "white", marginTop: "20px" }}>
           2024-2025
           <img src='/assets/qtapwhite.svg' style={{ width: "40px", padding: "0px 1px", height: "40px" }} />
-          All Rights Reserved
+          {t("allRightsReserved")}
         </Typography>
       </Box>
 

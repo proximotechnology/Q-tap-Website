@@ -2,8 +2,10 @@ import React from 'react'
 import { Box, IconButton, Typography } from '@mui/material';
 import Link from 'next/link';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useTranslations } from 'next-intl';
 
 export const Header = () => {
+    const t = useTranslations()
     return (
         <Box
             sx={{
@@ -70,10 +72,10 @@ export const Header = () => {
                                     display: "inline-block",
                                 }}
                             ></span>
-                            Feedback</Typography>
+                            {t("feedback")}</Typography>
                         <Typography
                             style={{ color: "#AAAAAA", fontSize: "13px", width: "60%" }}
-                        >Dear customer, we care about your feedback, so please answer the questions down below.</Typography>
+                        >{t("dearCustomerCareAboutFeedback")}</Typography>
                     </Box>
 
                 </Box>
