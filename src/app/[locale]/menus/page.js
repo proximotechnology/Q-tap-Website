@@ -14,8 +14,8 @@ const page = () => {
   return (
     <div>
         <HomeMenu /> 
-        <Video /> 
-        {/* <VideoSlider /> */}
+        {/* <Video />  */}
+        <VideoSlider />
         <Digital /> 
         <Dashboard /> 
         <Signs /> 

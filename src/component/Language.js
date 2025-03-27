@@ -35,9 +35,9 @@ export const Language = () => {
 
     const getLanguageIcon = () => {
         if (selectedLanguage === 'ar') {
-            return <img src="/Assets/arabic.svg" alt="Arabic" style={{ width: "20px", height: "20px", marginRight: '1px' }} />;
+            return <img src="/assets/arabic.svg" alt="Arabic" style={{ width: "20px", height: "20px", marginRight: '1px' }} />;
         } else if (selectedLanguage === 'en') {
-            return <img src="/Assets/english.svg" alt="English" style={{ width: "20px", height: "20px", marginRight: '1px' }} />;
+            return <img src="/assets/english.svg" alt="English" style={{ width: "20px", height: "20px", marginRight: '1px' }} />;
         }
         return <LanguageOutlinedIcon sx={{ fontSize: "20px", color: "#E57C00", marginRight: '1px' }} />;
     };
@@ -57,12 +57,12 @@ export const Language = () => {
 
             >
                 <MenuItem onClick={() => handleClose('en')} >
-                    <img src="/Assets/english.svg" alt="English" style={{ width: "23px", height: "23px", marginRight: '8px' }} />
+                    <img src="/assets/english.svg" alt="English" style={{ width: "23px", height: "23px", marginRight: '8px' }} />
                     <span style={{ fontSize: "12px", color: "#575756" }}>English</span>
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={() => handleClose('ar')}>
-                    <img src="/Assets/arabic.svg" alt="Arabic" style={{ width: "23px", height: "23px", marginRight: '8px' }} />
+                    <img src="/assets/arabic.svg" alt="Arabic" style={{ width: "23px", height: "23px", marginRight: '8px' }} />
                     <span style={{ fontSize: "12px", color: "#575756" }}>Arabic</span>
                 </MenuItem>
             </Menu>

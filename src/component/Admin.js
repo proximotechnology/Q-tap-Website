@@ -68,8 +68,8 @@ export const Admin = () => {
                             <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
                         </Avatar>
                         <Box>
-                            <Typography variant="h6" sx={{ fontSize: "14px" }}>User01</Typography>
-                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">Mail@mail.com</Typography>
+                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("userName")}</Typography>
+                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("userEmail")}</Typography>
                         </Box>
                     </Box>
                     <Divider />

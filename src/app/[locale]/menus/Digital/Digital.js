@@ -61,7 +61,7 @@ export const Digital = () => {
                     ))}
                 </Box>
 
-                <Box sx={{ width: "100%", height: { xs: "150px", md: "200px" }, padding: "10px 30px" }}>
+                <Box sx={{ width: "100%", height: { xs: "150px", md: "200px" }, padding: "10px 30px" , margin:"10px 0 30px 0"}}>
                     <img
                         src="/images/digitMenu.jpg"
                         alt="digitMenu"
@@ -75,7 +75,7 @@ export const Digital = () => {
                             borderRadius: "30px",
                             zIndex: 1,
                             position: "relative",
-                            top: "-200%",
+                            top: "-220%",
                             left: "70%",
                         }}
                     />

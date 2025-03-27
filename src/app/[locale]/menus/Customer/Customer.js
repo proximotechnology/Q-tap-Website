@@ -49,7 +49,7 @@ export const Customer = () => {
 
             <Box
                 sx={{
-                    margin: "90px 0px",
+                    margin: {xs:"80px 0px",lg:"120px 0px",},
                     width: "100%",
                     alignItems: "center",
                     justifyContent: "center",
@@ -60,7 +60,7 @@ export const Customer = () => {
                 <Box
                     sx={{
                         border: "2px solid #E57C00",
-                        height: "150px",
+                        height: "180px",
                         borderRadius: "22px",
                         width: "100%",
                         display: "flex",
@@ -75,7 +75,7 @@ export const Customer = () => {
                             backgroundPosition: "center",
                             borderRadius: "22px",
                             width: "65%",
-                            height: { xs: "200px", md: "320px" },
+                            height: { xs: "250px", md: "300px", lg:"350px" },
 
                         }}
                     />

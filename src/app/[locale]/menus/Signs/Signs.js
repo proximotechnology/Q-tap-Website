@@ -104,7 +104,7 @@ export const Signs = () => {
           />
         </Box>
       </Box>
-      <img src="/assets/qtap.svg" alt="cloud" className="nfc-icon" />
+      <img src="/assets/Qtap.svg" alt="cloud" className="nfc-icon" />
     </Box>
   );
 };

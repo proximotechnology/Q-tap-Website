@@ -66,18 +66,21 @@ export const Dashboard = () => {
                         padding: { xs: "20px 0", md: "0" }
                     }}>
 
-                    <Typography variant='body1'
-                        sx={{ color: "white", fontSize: "25px", marginBottom: "8px" }}>
-                        {t("dashboard")}
-                    </Typography>
-                    <Divider sx={{
-                        width: "12%", height: "3px", borderRadius: "20px",
-                        margin: "6px 0px", backgroundColor: "#E57C00"
-                    }} />
+                    <Box sx={{ direction: 'rtl', padding:"0 30px 30px 0" }}>
+                        <Typography variant='body1'
+                            sx={{ color: "white", fontSize: "25px", marginBottom: "8px" , marginRight:'20px'}}>
+                            {t("dashboard")}
+                        </Typography>
+                        <Divider sx={{
+                            width: "10%", height: "3px", borderRadius: "20px",
+                            margin: "6px 0px", backgroundColor: "#E57C00"
+                        }} />
+                    </Box>
+
 
                     <Typography variant='body2'
                         sx={{ lineHeight: "30px", color: "white", fontSize: "13px" }}>
-                       {t("lorem")}
+                        {t("lorem")}
                     </Typography>
                 </Box>
 
