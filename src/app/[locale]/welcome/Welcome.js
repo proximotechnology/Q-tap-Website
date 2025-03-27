@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import HomeIcon from '@mui/icons-material/Home';
 import Language from '@/component/Language';
 import { Box, IconButton, Divider, Typography } from '@mui/material';

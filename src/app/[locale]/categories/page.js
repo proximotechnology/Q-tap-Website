@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Arrow } from './Arrow';
 import './categories.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import { menuItems, specialOffers } from './data';
 import { Footer } from './Footer';
 import { useTranslations } from 'next-intl';

@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 import done from '/src/animation/done.json';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 
 const page = () => {

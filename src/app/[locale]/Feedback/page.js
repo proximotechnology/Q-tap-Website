@@ -8,7 +8,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 
 import { ordersDetails } from "../categories/data";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation"
 import { useTranslations } from "next-intl";
 
 const page = () => {

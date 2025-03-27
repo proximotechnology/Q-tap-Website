@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, IconButton, Typography } from '@mui/material';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useTranslations } from 'next-intl';
 

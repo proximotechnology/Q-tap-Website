@@ -6,11 +6,12 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Popover, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
+import { useLocale } from 'next-intl';
 
 export const Admin = () => {
     const router = useRouter();
-
+    const locale = useLocale()
     const [anchorElUser, setAnchorElUser] = useState(null);
     const openUserPopover = Boolean(anchorElUser);
     const [isLoggedIn, setIsLoggedIn] = useState(null);
@@ -31,7 +32,7 @@ export const Admin = () => {
     const handleLogoutClick = () => {
         localStorage.removeItem('userToken');
         setIsLoggedIn(false);
-        router.push('/marketing');
+        router.push(`/${locale}/marketing`);
         handleUserClose();
     };
 
@@ -75,7 +76,7 @@ export const Admin = () => {
 
                     <List>
                         <Box
-                            onClick={() => router.push('/')}
+                            onClick={() =>  router.push(`/${locale}`)}
                             sx={{
                                 cursor: "pointer",
                                 backgroundColor: "#222240",
@@ -144,7 +145,7 @@ export const Admin = () => {
                                     if (isLoggedIn) {
                                         handleLogoutClick();
                                     } else {
-                                        router.push('/marketing');
+                                        router.push(`/${locale}/marketing`)
                                     }
                                 }}
                                 primaryTypographyProps={{

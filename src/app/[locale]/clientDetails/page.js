@@ -8,7 +8,7 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import 'react-phone-input-2/lib/style.css';
 import TableBarOutlinedIcon from '@mui/icons-material/TableBarOutlined';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 
 

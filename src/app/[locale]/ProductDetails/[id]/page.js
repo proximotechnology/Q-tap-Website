@@ -5,14 +5,15 @@ import React, { useEffect, useState } from 'react'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 
 const sizes = ["S", "M", "L"];
 
 
 import { addItemToCart } from "../cartUtils";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 const page = ({ params }) => {
+    const locale = useLocale();
     const t = useTranslations()
     const { id } = params;
     // console.log({ id })
@@ -44,7 +45,7 @@ const page = ({ params }) => {
     // ========================================================================
     const handleAddToCart = (product) => {
         addItemToCart(product);
-        window.location.href = '/cart';
+        window.location.href = `/${locale}/cart`;
     };
 
     // ========================================================================

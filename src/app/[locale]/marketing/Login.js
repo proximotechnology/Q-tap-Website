@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Language from '@/component/Language';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
@@ -15,7 +15,7 @@ import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
 import axios from 'axios';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -27,6 +27,7 @@ export const Login = () => {
     const router = useRouter()
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const t = useTranslations()
+    const locale = useLocale()
     // call api to login
     const handleLogin = async () => {
         // API states
@@ -68,7 +69,7 @@ export const Login = () => {
                 setApiSuccess(t("loginSucc"));
                 localStorage.setItem("userToken", response?.data?.token);
 
-                router.push('/')
+                router.push(`/${locale}`)
             } else {
                 setApiError(response?.data?.message || t("checkEmailPasswordAgain"));
             }

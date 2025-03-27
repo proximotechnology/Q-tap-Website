@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { Header } from './Header';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 // import PhoneInput from 'react-phone-input-2';
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';

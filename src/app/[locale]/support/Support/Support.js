@@ -11,7 +11,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import Language from "@/component/Language";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";

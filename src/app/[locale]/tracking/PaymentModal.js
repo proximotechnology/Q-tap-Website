@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography, Modal, Divider } from "@mui/material";
 import { ordersDetails } from "../categories/data";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation"
 import { useTranslations } from "next-intl";
 
 const PaymentModal = ({ isOpen, onClose }) => {

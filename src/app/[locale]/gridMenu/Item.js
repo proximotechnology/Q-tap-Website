@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Typography, } from '@mui/material';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
 export const Item = ({ item }) => {

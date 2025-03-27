@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, IconButton, Typography } from '@mui/material';
 import { categoryProducts, menuItems } from '../data';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslations } from 'next-intl';

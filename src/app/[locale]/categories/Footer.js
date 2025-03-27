@@ -1,6 +1,6 @@
 "use client";
 import { Box, IconButton, Typography } from '@mui/material'
-import Link from 'next/link'
+import {Link} from "@/i18n/navigation"
 import React, { useEffect, useState } from 'react'
 import { getCartItems } from "../ProductDetails/cartUtils";
 

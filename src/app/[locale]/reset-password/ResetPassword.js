@@ -1,6 +1,6 @@
 
 import React from 'react'
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Language from '@/component/Language';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';

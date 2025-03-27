@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Divider } from '@mui/material';
 import { Header } from './Header';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useTranslations } from 'use-intl';
 

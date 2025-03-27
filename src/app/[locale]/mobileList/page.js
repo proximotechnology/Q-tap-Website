@@ -2,7 +2,7 @@
 "use client";
 import { IconButton, Button, Box, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 

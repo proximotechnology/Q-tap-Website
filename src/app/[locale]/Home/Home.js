@@ -3,8 +3,9 @@ import React from 'react';
 import { Typography, Box, Button } from '@mui/material';
 import './Home.css'
 import NavBar from './NavBar';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import {Link} from "@/i18n/navigation"
 
 
 const Home = () => {
@@ -19,7 +20,7 @@ const Home = () => {
                         sx={{ fontSize: "50px", color: "#E57C00", marginBottom: "30px" }}>{t("homePage.title")}</Typography>
                     <Typography variant='body1' sx={{ fontSize: "15px", marginBottom: "40px" }}>
                         {t("homePage.about")}</Typography>
-                    <Link href="mobileList">
+                    <Link href="/mobileList">
                         <Button className="joinButton" sx={{ marginTop: "60px", alignItems: "center" }}>
                             <img src="/assets/plus.svg" alt='plus'
                                 style={{ width: "18px", height: "18px", marginRight: "5px" }} />

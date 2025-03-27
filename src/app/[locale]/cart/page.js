@@ -7,10 +7,11 @@ import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations ,useLocale } from 'next-intl';
 
 const page = () => {
     const t = useTranslations();
+    const locale = useLocale()
     const [cartItems, setCartItems] = useState([]);
     useEffect(() => {
         const storedCartItems = getCartItems();
@@ -258,7 +259,7 @@ const page = () => {
                 <Box sx={{ width: "46%" }}>
                     <Button
                         onClick={() => {
-                            window.location.href = '/clientDetails';
+                            window.location.href = `/${locale}/clientDetails`;
                         }}
                         sx={{
                             backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',

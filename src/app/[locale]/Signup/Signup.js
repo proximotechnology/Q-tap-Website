@@ -1,5 +1,5 @@
 "use client";
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation"
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Language from '@/component/Language';
 import { IconButton, Box, Typography, Button, Checkbox, FormControl, FormControlLabel, Grid, InputAdornment, MenuItem, OutlinedInput, Select, useTheme } from '@mui/material';
@@ -12,7 +12,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 
 export const Signup = () => {
@@ -34,6 +34,7 @@ export const Signup = () => {
     const router =  useRouter()
     //
     const t = useTranslations()
+    const locale = useLocale()
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
@@ -96,7 +97,7 @@ export const Signup = () => {
           if (response?.data?.status == "success") {
             setApiSuccess(t("registrationSucc"));
 
-            router.push('/marketing')
+            router.push(`/${locale}/marketing`)
           } else {
             setApiError(response?.data?.message || t("checkEmailPhoneDublicate"));
           }
