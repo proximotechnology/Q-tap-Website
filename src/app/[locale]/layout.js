@@ -4,6 +4,8 @@ import "/public/assets/icons/style.css";
 import HomeContextProvider from "./context/homeContext.js";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
+import PusherProvider from "./context/PusherProvider";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,17 +28,24 @@ export default async function LocaleLayout({
   params
 }) {
   // Ensure that the incoming `locale` is valid
-  const {locale} = await params;
+  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     // notFound();
   }
-  
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HomeContextProvider><NextIntlClientProvider>{children}</NextIntlClientProvider></HomeContextProvider>
+        <HomeContextProvider>
+          <NextIntlClientProvider>
+            <PusherProvider>
+              {children}
+              <ToastContainer />
+            </PusherProvider>
+          </NextIntlClientProvider>
+        </HomeContextProvider>
       </body>
     </html>
   );
