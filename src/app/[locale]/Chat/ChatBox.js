@@ -17,7 +17,7 @@ const ChatBox = ({ onCloseChat }) => {
             try {
                 // create message data
                 const collectionData = {
-                    sender_id: sessionStorage.getItem("customer_id"),
+                    sender_id: localStorage.getItem("customer_id"),
                     receiver_id: "1", // receiver id (support)
                     sender_type: "customer", // sender type (customer)
                     message: inputValue,
@@ -53,7 +53,7 @@ const ChatBox = ({ onCloseChat }) => {
 
     // fetch messages from server
     const fetchMessages = async () => {
-        const customerId = sessionStorage.getItem("customer_id");
+        const customerId = localStorage.getItem("customer_id");
         if (!customerId) {
             console.error("Customer ID not found in sessionStorage");
             return;

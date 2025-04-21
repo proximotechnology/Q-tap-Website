@@ -19,7 +19,9 @@ export const usePusher = () => {
                     console.log(`📢 notfy: ${data?.message?.title}: ${data?.message?.content}`);
                     break;
                 case "chat":
-                    toast.success(`💬 New Message: ${data?.message?.message}`);
+                    if (String(localStorage.getItem("customer_id")) === String(data?.message?.receiver_id)) {
+                        toast.success(`💬 New Message: ${data?.message?.message}`);
+                    }
                     break;
                 case "add_order":
                     console.log(`🛒 New Order: ${data?.message?.orderId}`);

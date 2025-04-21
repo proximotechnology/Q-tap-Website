@@ -49,7 +49,7 @@ const FormFields = ({ onStartChat }) => {
             if (data.message === "Phone number already exists" || data.message === "Data stored successfully") {
 
                 const userDataFromResponse = data.data;
-                sessionStorage.setItem("customer_id", userDataFromResponse.id);
+                localStorage.setItem("customer_id", userDataFromResponse.id);
 
                 onStartChat(userDataFromResponse);
             } else {
