@@ -47,7 +47,7 @@ const HomeMenu = () => {
             {t("lorem")}
           </Typography>
 
-          <Button className="joinButtonMenu" sx={{ marginTop: "60px" }}>
+          <Button className="joinButton" sx={{ marginTop: "60px" }}>
             <img
               src="/assets/plus.svg"
               alt="plus"

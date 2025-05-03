@@ -82,7 +82,7 @@ export const Signup = () => {
           setIsLoading(true);
           const options = {
             method: 'POST',
-            url:"https://highleveltecknology.com/Qtap/api/register",
+            url:"https://api.qutap.co/api/register",
             headers: { 'Content-Type': 'application/json' },
             data
 

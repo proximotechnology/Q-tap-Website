@@ -35,7 +35,7 @@ const FormFields = ({ onStartChat }) => {
 
         try {
             // send data to backend
-            const response = await fetch("https://highleveltecknology.com/Qtap/api/customer_info", {
+            const response = await fetch("https://api.qutap.co/api/customer_info", {
                 headers: {
                     "Content-Type": "application/json",
                 },

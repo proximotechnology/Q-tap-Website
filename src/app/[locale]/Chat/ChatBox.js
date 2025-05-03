@@ -24,7 +24,7 @@ const ChatBox = ({ onCloseChat }) => {
                 };
 
                 // send message to server
-                const response = await fetch("https://highleveltecknology.com/Qtap/api/chat", {
+                const response = await fetch("https://api.qutap.co/api/chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const ChatBox = ({ onCloseChat }) => {
         }
 
         try {
-            const url = `https://highleveltecknology.com/Qtap/api/chat?customer_id=${customerId}`;
+            const url = `https://api.qutap.co/api/chat?customer_id=${customerId}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
