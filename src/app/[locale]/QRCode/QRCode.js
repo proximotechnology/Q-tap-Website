@@ -23,7 +23,7 @@ const QRCodeComponent = () => {
             justifyContent: 'center',
             alignItems: 'center',
             textAlign: 'center',
-            textAlign: 'center', backgroundColor: '#EAECF2',
+            backgroundColor: '#EAECF2',
             height: "auto", width: "100%", padding: "50px 0px",
         }}>
 
@@ -31,18 +31,26 @@ const QRCodeComponent = () => {
             <Typography variant="body2" sx={{ color: "gray", padding: "0px 20px", fontSize: "15px" }}>
                 {t("homePage.scanQRcode")}</Typography>
 
-
-            <QRCode
-                value={qrCodeText}
-                size={220}  
-                style={{ margin: '30px auto', border: '3px solid #E57C00', padding: "15px", borderRadius: '20px' }}
-            />
+            <Box 
+                sx={{
+                    margin: '30px auto', 
+                    border: '3px solid #E57C00', 
+                    padding: "15px", 
+                    borderRadius: '20px',
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": { transform: "scale(1.05)", cursor: "pointer" }
+                }}
+            >
+                <QRCode
+                    value={qrCodeText}
+                    size={220}
+                />
+            </Box>
             <br />
 
-            <Button onClick={handleCopyToClipboard}
+            <Button className="joinButton" onClick={handleCopyToClipboard}
                 style={{
                     padding: '6px 50px',
-                    // width: { xs: "80%", md: "20%" ,lg:"20%"},
                     backgroundColor: '#E57C00', color: 'white', textTransform: "none",
                     border: 'none', borderRadius: '20px', cursor: 'pointer', fontSize: "15px", alignItems: "center"
                 }}>

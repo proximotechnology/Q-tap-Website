@@ -15,7 +15,7 @@ export const Client = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { getHomeData } = useContext(HomeContext);
-  const t = useTranslations()
+  const t = useTranslations();
   // fetch data
   const getClientData = async () => {
     setLoading(true);
@@ -24,8 +24,8 @@ export const Client = () => {
 
       const parsedData = response?.data?.clients.map((client) => ({
         ...client,
-        img: client.img ? JSON.parse(client.img)[0] : '',
-        title: 'image title',
+        img: client.img ? JSON.parse(client.img)[0] : "",
+        title: "image title",
       }));
 
       setClientData(parsedData);
@@ -62,7 +62,6 @@ export const Client = () => {
           <Paper
             elevation={1}
             sx={{
-              
               height: { xs: "120px", md: "160px" },
               display: "flex",
               alignItems: "center",
@@ -101,20 +100,27 @@ export const Client = () => {
                 marginTop: "25px",
               }}
             >
-            {clientData?.map((client) => ( 
+              {clientData?.map((client) => (
                 <SwiperSlide key={client?.id}>
-                  <img
-                    src={`https://highleveltecknology.com/Qtap/${client?.img}`}
-                    alt={client?.title}
-                    style={{ 
-                      height: "70px",
-                      objectFit: "contain", 
-                      borderRadius: "50%",
-                    }}
-                  />
+                  <Box sx={{ display: "flex", justifyContent: "center",
+                    width: "90px", height: "90px", alignItems: "center",margin: "0 auto",
+                    borderRadius: "50%",
+                    padding: "5px",
+                      "&:hover": {cursor:"pointer", transform: "scale(1.05)", transition: "0.3s" }
+                   }}>
+                    <img
+                      src={`https://highleveltecknology.com/Qtap/public/${client?.img}`}
+                      alt={client?.title}
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        objectFit: "cover",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </Box>
                 </SwiperSlide>
               ))}
-
             </Swiper>
           </Paper>
         </Grid>

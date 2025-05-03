@@ -89,7 +89,10 @@ export const Serves = () => {
                     }} />
                 </Box>
 
-                <Grid container spacing={2} sx={{ width: { xs: "80%", md: "80%" },
+                <Grid container spacing={2} sx={{ 
+                      '@media (min-width: 900px) and (max-width: 1050px)': {
+                        width: "95%", margin: "0 auto", justifyContent: "center", marginBottom: "60px"},
+                    width: { xs: "80%", md: "80%" },
                 margin: "0 auto", justifyContent: "center", marginBottom: "60px" }}  >
                     {categories.map((column, colIndex) => (
                         <Grid item xs={6} sm={4} md={2} key={colIndex} sx={{ textAlign: "center" }}>
@@ -108,6 +111,7 @@ export const Serves = () => {
                                         boxShadow: 3,
                                         mb: 3,
                                         overflow:'hidden',
+                                        "&:hover": {cursor:"pointer", transform: "scale(1.05)", transition: "0.3s" }
                                     }}
                                 >
                                     <Typography variant="body1" sx={{ fontSize: "25px" }}>{category.icon}</Typography>

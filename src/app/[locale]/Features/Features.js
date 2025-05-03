@@ -144,7 +144,8 @@ const Features = () => {
       <Slider {...settings}>
         {featData?.map((feature, index) => {
           const { width, height } = getCardSize(index);
-
+          console.log("Feature Data:", feature);
+          
           return (
             <Box key={index} sx={{ overflow: "visible" }}>
               <Card
@@ -157,12 +158,17 @@ const Features = () => {
                   margin: "20px auto",
                   borderRadius: "12px",
                   overflow: "hidden",
+                  cursor: "pointer",
+                  "&:hover": {
+                    transform: "scale(1.03)",
+                    boxShadow: 3,
+                  },
                 }}
               >
                 <CardMedia
                   component="img"
                   height="50%"
-                  image={`https://highleveltecknology.com/Qtap/${feature?.img}`}
+                  image={`https://highleveltecknology.com/Qtap/public/${feature?.img}`}
                   alt={feature?.titles}
                 />
                 <CardContent>

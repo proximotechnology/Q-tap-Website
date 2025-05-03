@@ -31,6 +31,12 @@
     border-radius: 30px !important;
     text-transform: capitalize !important;
 }
+.joinButton:hover {
+    background-color: #dc8623 !important;
+    transition: background-color 0.3s ease !important;
+    transform: scale(1.08) !important;
+    transition: transform 0.3s ease !important;
+}
 
 /* Media Queries */
 @media (max-width: 768px) {

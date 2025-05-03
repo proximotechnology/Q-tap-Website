@@ -134,6 +134,8 @@ export const Test = () => {
                   width: "60%",
                   height: "100%",
                 },
+                "&:hover": {cursor:"pointer", transform: "scale(1.05)", transition: "0.3s" }
+
               }}
             >
               <Box sx={{ position: "relative", top: "60px" }}>

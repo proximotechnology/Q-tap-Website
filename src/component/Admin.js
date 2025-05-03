@@ -41,7 +41,10 @@ export const Admin = () => {
             <Box
                 aria-describedby={openUserPopover ? 'simple-popover' : undefined}
                 onClick={handleUserClick}
-                sx={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "3px" }}>
+                sx={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "3px" , 
+                    marginRight: { xs: "20px", md: "0px" } // Apply marginRight for smaller screens
+
+                }}> 
                 <IconButton color="inherit" sx={{
                     backgroundColor: '#ef7d00', borderRadius: '30%', padding: '8px',
                     '&:hover': {

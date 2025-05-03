@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Language from '@/component/Language';
 import { Admin } from '@/component/Admin';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation";
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 
@@ -34,6 +34,7 @@ function DrawerAppBar(props) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const router = isClient ? useRouter() : null;
+    const t = useTranslations();
 
     useEffect(() => {
         setIsClient(typeof window !== 'undefined');
@@ -46,29 +47,56 @@ function DrawerAppBar(props) {
     const handleNavigation = (path) => {
         if (router) {
             router.push(path);
+            handleDrawerToggle(); // Close drawer on navigation
         }
     };
-    const t = useTranslations()
+
     const drawer = (
-        <Box onClick={handleDrawerToggle}
-            sx={{ width: "100%", padding: "20px", textAlign: 'center', backgroundColor: "rgba(0, 0, 0, 0.5)" , zIndex:15 }}>
+        <Box
+            onClick={handleDrawerToggle}
+            sx={{
+                width: "100%",
+                padding: "20px",
+                textAlign: 'center',
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                zIndex: 15
+            }}
+        >
             <img src="/assets/qtapwhite.svg" alt="logo" style={{ width: "120px" }} />
             <List>
                 {navItems.map((item) => (
-                    <Link href={item.path ? item.path : `#${item.id}`}
-                        key={item.name} style={{ textDecoration: 'none', }}>
+                    <Link
+                        href={item.path ? item.path : `#${item.id}`}
+                        key={item.name}
+                        style={{ textDecoration: 'none' }}
+                    >
                         <ListItemButton
-                            sx={{ textAlign: 'center', padding: "13px" }}
+                            sx={{ textAlign: 'center', padding: "13px",
+                                    '&::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    height: '2px',
+                                    width: '0%',
+                                    backgroundColor: '#E57C00',
+                                    transition: 'width 0.3s ease-in-out',
+                                },
+                                '&:hover::after': {
+                                    width: '110px',
+                                },
+                             }}
                             onClick={() => handleNavigation(item.path)}
                         >
                             <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
                             <span style={{ marginLeft: '12px', color: "white" }}>
-                                <Typography sx={{ fontSize: "13px", cursor: "pointer" }}>{t("nav."+item.name)}</Typography>
+                                <Typography sx={{ fontSize: "13px", cursor: "pointer" }}>
+                                    {t("nav." + item.name)}
+                                </Typography>
                             </span>
                         </ListItemButton>
                     </Link>
                 ))}
-
             </List>
         </Box>
     );
@@ -77,18 +105,24 @@ function DrawerAppBar(props) {
 
     return (
         <>
-            {/* header (menu icon + setting ) */}
-            <Box sx={{
-                display: { md: 'none', xs: 'block', sm: 'none' },
-                width: "100% !important", padding: "12px 10px",
-                '@media (min-width: 600px) and (max-width: 800px)': {
-                    display: "block",
-                }
-            }}>
+            {/* Header (menu icon + settings) for screens < 950px */}
+            <Box
+                sx={{
+                    
+                    display: { xs: 'block', sm: 'block', md: 'none' },
+                    width: "100% !important",
+                    marginLeft:"20px",
+                    padding: "12px 10px",
+                    '@media (min-width: 950px)': {
+                        display: "none",
+                    }
+                }}
+            >
                 <Box
                     sx={{
+                        zIndex:20,
                         display: "flex",
-                        width: "100% ",
+                        width: "100%",
                         justifyContent: "space-between",
                         alignItems: "center",
                     }}
@@ -104,7 +138,7 @@ function DrawerAppBar(props) {
                     </Box>
 
                     <Box>
-                        <Tooltip >
+                        <Tooltip>
                             <Box sx={{ display: "flex" }} gap={"20px"}>
                                 <Language />
                                 <Typography
@@ -119,14 +153,28 @@ function DrawerAppBar(props) {
                                         fontSize: "12px",
                                         color: "white",
                                         display: "flex",
-                                        alignItems: "center"
+                                        alignItems: "center",
+                                        position: 'relative',
+                                        '&::after': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: 0,
+                                            height: '2px',
+                                            width: '0%',
+                                            backgroundColor: '#E57C00',
+                                            transition: 'width 0.3s ease-in-out',
+                                        },
+                                        '&:hover::after': {
+                                            width: '100%',
+                                        },
                                     }}
                                 >
                                     <img
                                         src='/assets/pricing.svg'
                                         style={{ width: "20px", marginRight: "8px", height: "20px" }}
                                     />
-                                    {t("nav.pricing")} 
+                                    {t("nav.pricing")}
                                 </Typography>
                                 <Admin />
                             </Box>
@@ -135,7 +183,7 @@ function DrawerAppBar(props) {
                 </Box>
             </Box>
 
-
+            {/* Main AppBar for screens >= 950px */}
             <Box
                 sx={{
                     width: "100% !important",
@@ -158,13 +206,18 @@ function DrawerAppBar(props) {
                     }}
                 >
                     <Toolbar>
-                        <Box sx={{
-                            flexGrow: 1,
-                            display: { xs: 'none', md: 'flex' },
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                        }}>
+                        <Box
+                            sx={{
+                                flexGrow: 1,
+                                display: { xs: 'none', sm: 'none', md: 'flex' },
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                '@media (min-width: 950px)': {
+                                    display: "flex",
+                                }
+                            }}
+                        >
                             <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                                 <img src="/assets/qtapwhite.svg" alt="logo" style={{ width: "100px" }} />
                                 <Box sx={{ marginLeft: "30px", display: "flex" }} gap={"10px"}>
@@ -179,10 +232,32 @@ function DrawerAppBar(props) {
                                                 style={{ textDecoration: 'none' }}
                                             >
                                                 <Button
-                                                    sx={{ color: '#fff', fontSize: "11px", textTransform: "capitalize", display: 'flex', alignItems: 'center' }}
+                                                    sx={{
+                                                        position: 'relative',
+                                                        color: '#fff',
+                                                        fontSize: "11px",
+                                                        textTransform: "capitalize",
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        '&::after': {
+                                                            content: '""',
+                                                            position: 'absolute',
+                                                            bottom: 0,
+                                                            left: 0,
+                                                            height: '2px',
+                                                            width: '0%',
+                                                            backgroundColor: '#E57C00',
+                                                            transition: 'width 0.3s ease-in-out',
+                                                        },
+                                                        '&:hover::after': {
+                                                            width: '100%',
+                                                        },
+                                                    }}
                                                 >
                                                     <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
-                                                    <span style={{ marginLeft: '5px', fontSize: "11px" }}>{t("nav."+item.name)}</span>
+                                                    <span style={{ marginLeft: '5px', fontSize: "11px" }}>
+                                                        {t("nav." + item.name)}
+                                                    </span>
                                                 </Button>
                                             </Link>
                                         );
@@ -191,20 +266,51 @@ function DrawerAppBar(props) {
                             </Box>
 
                             <Box>
-                                <Tooltip >
-                                    <Box sx={{ display: "flex" }} gap={"20px"}>
+                                <Tooltip>
+                                    <Box  sx={{
+                                        display: "flex",
+                                        gap: "20px",
+                                          '@media (min-width: 900px) and (max-width: 949px)': {
+                                            gap: "10px", // Reduce spacing
+                                            marginLeft: "-25px !important", // Ensure margin is applied
+                                        },
+                                     }}>
                                         <Language />
                                         <Typography
-                                            onClick={() => {
-                                                const section = document.getElementById("pricing");
-                                                if (section) {
-                                                    section.scrollIntoView({ behavior: "smooth" });
-                                                }
-                                            }}
-                                            sx={{ cursor: "pointer", fontSize: "12px", color: "white", display: "flex", alignItems: "center" }}>
-                                            <img src='/assets/pricing.svg' style={{ width: "20px", marginRight: "8px", height: "20px" }} />
-                                            {t("nav.pricing")}
-                                        </Typography>
+                                    onClick={() => {
+                                        const section = document.getElementById("pricing");
+                                        if (section) {
+                                            section.scrollIntoView({ behavior: "smooth" });
+                                        }
+                                    }}
+                                    sx={{
+                                        cursor: "pointer",
+                                        fontSize: "12px",
+                                        color: "white",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        position: 'relative',
+                                        '&::after': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: 0,
+                                            height: '2px',
+                                            width: '0%',
+                                            backgroundColor: '#E57C00',
+                                            transition: 'width 0.3s ease-in-out',
+                                        },
+                                        '&:hover::after': {
+                                            width: '100%',
+                                        },
+                                    }}
+                                >
+                                    <img
+                                        src='/assets/pricing.svg'
+                                        style={{ width: "20px", marginRight: "8px", height: "20px" }}
+                                    />
+                                    {t("nav.pricing")}
+                                </Typography>
                                         <Admin />
                                     </Box>
                                 </Tooltip>
@@ -223,7 +329,10 @@ function DrawerAppBar(props) {
                             keepMounted: true,
                         }}
                         sx={{
-                            display: { xs: 'block', sm: 'none' },
+                            display: { xs: 'block', sm: 'block', md: 'none' },
+                            '@media (min-width: 950px)': {
+                                display: 'none',
+                            },
                             '& .MuiDrawer-paper': {
                                 boxSizing: 'border-box',
                                 width: drawerWidth,

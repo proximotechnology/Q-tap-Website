@@ -160,7 +160,7 @@ export const Login = () => {
                         {t("lorem")}
                     </Typography>
                     <Link href="/Signup">
-                        <Button sx={{
+                        <Button className='joinButton' sx={{
                             fontSize: "15px", backgroundColor: "#E57C00", textTransform: "capitalize", borderRadius: "20px",
                             color: "white", padding: "4px 35px"
                         }}>

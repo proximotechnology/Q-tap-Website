@@ -88,8 +88,8 @@ export const NewPassword = () => {
                     >
                         {t("lorem")}</Typography>
 
-                    <Link href="/Signup">
-                        <Button sx={{
+                    <Link  href="/Signup">
+                        <Button className="joinButton" sx={{
                             fontSize: "12px", backgroundColor: "#E57C00", textTransform: "capitalize", borderRadius: "20px",
                             color: "white", padding: "4px 20px"
                         }}>
