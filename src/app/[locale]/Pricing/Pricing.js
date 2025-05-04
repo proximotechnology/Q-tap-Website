@@ -69,7 +69,7 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
 
         <Box display="flex" justifyContent="center" mt={6} >
             <Button sx={{backgroundColor:"#222240" , fontSize:"15px" ,padding:"6px 40px", borderRadius:"20px" , color:"white",
-            "&:hover": {backgroundColor:" #22220f" } ,
+            "&:hover": {backgroundColor:"#222240e5" } ,
                 textTransform:"capitalize" , position:"absolute" , bottom:"15px"}}>
             {t("subscribe")} <ArrowForwardIcon sx={{fontSize:"16px" ,marginLeft:"6px"}} />
             </Button>

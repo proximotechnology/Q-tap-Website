@@ -5,7 +5,7 @@ import { Box, Typography, Button } from '@mui/material';
 import { useTranslations } from 'next-intl';
 
 const QRCodeComponent = () => {
-    const qrCodeText = 'https://www.menus.qutap.co/register/user';
+    const qrCodeText = 'https://highleveltecknology.com/';
     const t = useTranslations();
     const handleCopyToClipboard = () => {
         navigator.clipboard.writeText(qrCodeText).then(() => {

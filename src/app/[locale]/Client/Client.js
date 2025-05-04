@@ -109,7 +109,7 @@ export const Client = () => {
                       "&:hover": {cursor:"pointer", transform: "scale(1.05)", transition: "0.3s" }
                    }}>
                     <img
-                      src={`https://highleveltecknology.com/Qtap/public/${client?.img}`}
+                      src={`https://api.qutap.co/${client?.img}`}
                       alt={client?.title}
                       style={{
                         height: "100%",
