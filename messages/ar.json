@@ -230,5 +230,6 @@
     "newPassword": "كلمة المرور الجديدة",
     "save": "حفظ",
     "yourAccountWillActiveSooner": "مرحبًا بك أيها الشريك، شكرًا لانضمامك إلينا، سيتم تفعيل حسابك قريبًا.",
-    "getInTouch": "تواصل معنا"
+    "getInTouch": "تواصل معنا",
+    "SizeCountRequired":"اختيار الحجم و الكميه مطلوب"
 }

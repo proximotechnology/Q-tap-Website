@@ -230,5 +230,6 @@
     "newPassword":"New Password",
     "save":"Save",
     "yourAccountWillActiveSooner": "Hi Partner, Thanks for joining us, your account will be activated soon.",
-    "getInTouch": " Get in touch"
+    "getInTouch": " Get in touch",
+    "SizeCountRequired":"select quantity and size is required"
 }

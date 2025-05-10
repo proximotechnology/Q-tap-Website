@@ -1,5 +1,6 @@
 // تحميل العناصر من localStorage
 export const getCartItems = () => {
+    if (!localStorage.getItem("cartItems")) return [];
     return JSON.parse(localStorage.getItem("cartItems")) || [];
 };
 

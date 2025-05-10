@@ -8,8 +8,14 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import 'react-phone-input-2/lib/style.css';
 import TableBarOutlinedIcon from '@mui/icons-material/TableBarOutlined';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
+import { getCartItems } from '../ProductDetails/cartUtils';
+import axios from 'axios';
+import { BASE_URL, calculateOrderPriceDetailed } from '@/fetchData';
+import MapView from './map';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 
 const options = [
@@ -19,16 +25,48 @@ const options = [
 ];
 const page = () => {
     const t = useTranslations()
+    const [isLoading, setIsLoading] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [tax, setTax] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [subTotal, setSubTotal] = useState(0);
+    const [cartItems, setCartItems] = useState([]);
+    const [table, setTable] = useState([]);
+    const [showMap, setShowMap] = useState(false);
+    const [userPosition,setUserPosition] = useState(null)
+    const router = useRouter()
+    //TODO : form validations
+    
+   
+    const getTable = async () => { // TODO: handle this user suppose to select table based of QR code on the table he set on
+        try {
+
+            const response = await axios.get(`${BASE_URL}tables`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            console.log("Table data response ", response);
+            if (response.data) {
+                setTable(response.data.tables);
+            }
+
+        } catch (error) {
+            console.log("error Table data ", error);
+        }
+    }
 
     useEffect(() => {
-        const getTotalPriceFromLocalStorage = () => {
-            const storedPrice = localStorage.getItem('totalPrice');
-            return storedPrice ? parseFloat(storedPrice) : 0;
-        };
-
-        setTotalPrice(getTotalPriceFromLocalStorage());
+        const storedCartItems = getCartItems();
+        setCartItems(storedCartItems);
+        getTable()
     }, []);
+
+    useEffect(() => {
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
+    }, [cartItems]);
+
 
     // =========================================================================
     const [selectedOption, setSelectedOption] = useState('dinein');
@@ -98,12 +136,28 @@ const page = () => {
             comment,
             address,
             code,
-            selectedValue,
-            selectedOption,
+            paymentWay: selectedValue,
+            servingWay: selectedOption,
+            userPosition
         };
         localStorage.setItem('formData', JSON.stringify(data));
-    }, [phone, selectedTable, selectedCity, selectedName, comment, address, code, selectedValue, selectedOption]);
-
+    }, [phone, selectedTable, selectedCity, selectedName, comment, address, code, selectedValue, selectedOption,userPosition]);
+    
+    const handlePlaceOrderClick = () =>{
+         setIsLoading(true)
+         if(!phone || !selectedName ){
+            toast.error("please fill all field")
+            setIsLoading(false)
+            return;
+         }
+         if(selectedOption === 'delivery' && (!userPosition || !address)){
+            toast.error("please select pos")
+            setIsLoading(false)
+            return;
+         }
+         router.push('/payment')
+                        
+    }
     // =========================================================================
 
 
@@ -281,10 +335,7 @@ const page = () => {
                                         <MenuItem value="" disabled sx={{ fontSize: "11px", color: "white", }}>
                                             {t("selectTable")}
                                         </MenuItem>
-                                        <MenuItem value={2} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 2</MenuItem>
-                                        <MenuItem value={3} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 3</MenuItem>
-                                        <MenuItem value={4} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 4</MenuItem>
-                                        <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} 1</MenuItem>
+                                        {table?.map(item => <MenuItem value={2} sx={{ fontSize: "11px", color: "#797993", }}>{t("table")} {item}</MenuItem>)}
                                     </Select>
                                 </FormControl>
                             </>
@@ -333,18 +384,22 @@ const page = () => {
                                     display: "flex", marginBottom: "20px", textAlign: "center", alignItems: "center",
                                     justifyContent: "center"
                                 }}>
-                                    <Button sx={{
-                                        backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                        color: "white", height: "35px",
-                                        width: "100%", borderRadius: "20px", fontSize: "12px",
-                                        textTransform: "capitalize",
-                                        "&:hover": {
+                                    <Button
+                                        onClick={() => setShowMap(prev => !prev)}
+                                        sx={{
                                             backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                        }
-                                    }}>
+                                            color: "white", height: "35px",
+                                            width: "100%", borderRadius: "20px", fontSize: "12px",
+                                            textTransform: "capitalize",
+                                            "&:hover": {
+                                                backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
+                                            }
+                                        }}>
                                         <span class="icon-map-1" style={{ fontSize: "19px", marginRight: "7px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span></span>
-                                        {t("pinYourLocation")}</Button>
+                                        {showMap ? 'Hide Map' : t("pinYourLocation")}
+                                    </Button>
                                 </Box>
+                                {showMap && <MapView setUserPosition={setUserPosition}/>}
                             </>
                         )}
 
@@ -410,19 +465,19 @@ const page = () => {
             <Box
                 sx={{
                     position: "fixed", bottom: 0, backgroundColor: "#302E3B", width: "90%", padding: "20px",
-                    borderRadius: "30px 30px 0px 0px", display: "flex", justifyContent: "space-between",
+                    borderRadius: "30px 30px 0px 0px", display: "flex", justifyContent: "space-between", zIndex:'30'
                 }}>
                 <Box sx={{ width: "90%" }}>
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
-                        {t("subTotal")}: <span style={{ color: 'white' }}>0:00 EGP</span>
+                        {t("subTotal")}: <span style={{ color: 'white' }}>{subTotal} EGP</span>
                     </Typography>
 
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
-                        {t("tax")}: <span style={{ color: 'white' }}>0:00 EGP</span>
+                        {t("tax")}: <span style={{ color: 'white' }}>{tax} EGP</span>
                     </Typography>
 
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
-                        {t("disCount")}: <span style={{ color: 'white' }}>0:00 EGP</span>
+                        {t("disCount")}: <span style={{ color: 'white' }}>{discount} EGP</span>
                     </Typography>
 
                     <Divider sx={{ margin: "3px 30px 3px 0px", backgroundColor: "#AAAAAA" }} />
@@ -498,8 +553,9 @@ const page = () => {
                         </Box>
                     </RadioGroup>
 
-                    <Link href='/payment'>
+                    {/* <Link href='/payment'> */}
                         <Button
+                        onClick={handlePlaceOrderClick}
                             sx={{
                                 width: "85%", marginTop: "10px",
                                 backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
@@ -508,10 +564,12 @@ const page = () => {
                                 "&:hover": {
                                     backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                                 }
-                            }}>
+                            }}
+                            disabled={isLoading}
+                            >
                             {t("placeOrder")}<DoneOutlinedIcon sx={{ fontSize: "20px", ml: 1 }} />
                         </Button>
-                    </Link>
+                    {/* </Link> */}
 
                 </Box>
             </Box> {/* footer */}

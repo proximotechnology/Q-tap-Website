@@ -1,18 +1,71 @@
 "use client";
-import React from 'react'
-import {Box, Typography, IconButton, TextField, Card, CardMedia,Grid } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
+import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 import { Arrow } from './Arrow';
 import './categories.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import { menuItems, specialOffers } from './data';
 import { Footer } from './Footer';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import { useShop } from './context';
+import {BASE_URL_IMAGE, fetchData} from '../../../fetchData'
 
 const page = () => {
     const t = useTranslations();
+    const [shops, setShops] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const [currentShop, setCurrentShop] = useState(null)
+    const [currentBranch, setCurrentBranch] = useState(null)
+
+    const { setSelectedShop ,selectedShop  } = useShop()
+
+    const searchParams = useSearchParams();
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
+    const router = useRouter();
+
+    if (!shopId || !branchId) {
+        setSelectedShop(shops)
+        router.push(`/shops/`);
+    }
+
+
+    const getData = async (endPoint) => {
+        
+        const data = await fetchData(endPoint,setIsLoading);
+        setShops(data.data.data)
+        setSelectedShop(data.data.data)
+    }
+
+    const handlCatClick = (id) => {
+        if (shopId && branchId) {
+            setSelectedShop(shops)
+            router.push(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`);
+        } else {
+            console.log("Shop or Branch not selected yet");
+        }
+
+    }
+    useEffect(() => {
+        getData('menu_all_restaurants')
+    }, [])
+
+    useEffect(() => {
+
+        const selectedShop = shops?.find(shop => shop.id === Number(shopId));
+        const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
+
+        setCurrentBranch(selectedBranch)
+        setCurrentShop(selectedShop)
+
+    }, [shops])
+
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
 
@@ -31,7 +84,7 @@ const page = () => {
                 <Typography variant="body2" display="flex" textAlign="center" alignItems={"center"} justifyContent={"center"}
                     sx={{ fontSize: "12px", color: "#AAAAAA" }}>
                     <LocationOnIcon fontSize="small" sx={{ fontSize: "16px", color: "#797993" }} />
-                   {t("cityHere")}
+                    {t("cityHere")}
                 </Typography>
 
                 <Box mt={1} display="flex" alignItems="center"
@@ -60,7 +113,7 @@ const page = () => {
                         }}>{t("specialOffers")}</span>
                     </Typography>
 
-                    <Grid container spacing={3} justifyContent="center" sx={{marginTop:"-50px" }}>
+                    <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
                         {specialOffers.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
@@ -133,27 +186,28 @@ const page = () => {
                     </Box>
 
                     <div className="menu-container" style={{ marginTop: "5px", marginBottom: "70px" }}>
-                        {menuItems.map((item, index) => (
-                            <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${item.image})` }}>
+                        {currentBranch?.cat_meal?.map((item, index) => (
+                            <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${BASE_URL_IMAGE}${item.cover})` }}>
                                 <div className="overlay">
-                                    <Typography className="menu-title" >{t(item.title)}</Typography>
+                                    <Typography className="menu-title" >{item.name}</Typography>
                                 </div>
-                                <Link href={`/categories/${item.id}`}>
-                                    <Box
-                                        sx={{
-                                            backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                            width: "30px", height: "30px",
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: "pointer",
-                                            position: 'absolute', bottom: "0", right: "0",
-                                        }}
-                                    >
-                                        <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
-                                    </Box>
-                                </Link>
+
+                                <Box
+                                    sx={{
+                                        backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
+                                        width: "30px", height: "30px",
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: "pointer",
+                                        position: 'absolute', bottom: "0", right: "0",
+                                    }}
+                                    onClick={() => { handlCatClick(item.id) }}
+                                >
+                                    <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
+                                </Box>
+
                             </div>
                         ))}
                     </div>

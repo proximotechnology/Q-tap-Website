@@ -96,7 +96,7 @@ export default function page() {
             <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
           </Box>
 
-          <Link href="/categories" passHref style={{ textDecoration: 'none', textAlign: 'center', width: "100%", }}> {/* إزالة الخط تحت النص */}
+          <Link href="/shops" passHref style={{ textDecoration: 'none', textAlign: 'center', width: "100%", }}> {/* إزالة الخط تحت النص */}
             <Box
               sx={{
                 color: 'white',

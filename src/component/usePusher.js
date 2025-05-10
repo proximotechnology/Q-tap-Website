@@ -27,7 +27,7 @@ export const usePusher = () => {
                     console.log(`🛒 New Order: ${data?.message?.orderId}`);
                     break;
                 default:
-                    alert(JSON.stringify(data));
+                    // alert(JSON.stringify(data));
                     console.warn("   :", data);
             }
         });
