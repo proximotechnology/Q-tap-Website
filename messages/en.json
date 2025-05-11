@@ -231,5 +231,7 @@
     "save":"Save",
     "yourAccountWillActiveSooner": "Hi Partner, Thanks for joining us, your account will be activated soon.",
     "getInTouch": " Get in touch",
-    "SizeCountRequired":"select quantity and size is required"
+    "SizeCountRequired":"select quantity and size is required",
+    "somethingWentWrong":"something went wrong please try again",
+    "pleaseFillAllFields":"please fill all fields"
 }

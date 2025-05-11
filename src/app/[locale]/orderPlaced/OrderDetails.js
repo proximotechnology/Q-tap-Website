@@ -1,5 +1,6 @@
 "use client";
 import { ordersDetails } from '@/app/[locale]/categories/data';
+import { formateDate } from '@/fetchData';
 import { Box, Typography, Divider, Grid } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react'
@@ -8,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 export const OrderDetails = () => {
     const t = useTranslations()
     const [order, setOrder] = useState(null);
-    // TODO: take order? data and show it 
+
     // =============================================================
 
     const renderIcon = () => {
@@ -29,7 +30,7 @@ export const OrderDetails = () => {
         }
     };
     // =============================================================
-
+    
 
     useEffect(() => {
         let myOrder = localStorage.getItem('order')
@@ -83,7 +84,7 @@ export const OrderDetails = () => {
                                 borderRadius: "40px 40px 0px 0px",
                             }}
                         >
-                            {t("orderId")} <span style={{ color: "white" }}>#{order?.id }</span>
+                            {t("orderId")} <span style={{ color: "white" }}>#{order?.id}</span>
                         </Typography>
                     </Box>
 
@@ -96,12 +97,12 @@ export const OrderDetails = () => {
                             }}
                         >
                             <Typography variant="body2" sx={{ marginBottom: "5px", fontSize: "11px", color: "#AAAAAA" }}>
-                                {order?.created_at}  {/* TODO: formate time */}
+                                {formateDate(order?.created_at)}  {/* TODO: formate time */}
                             </Typography>
 
                             <Typography variant="body2" sx={{ color: "#ED1C24", fontSize: "11px", display: "flex", alignItems: "center" }} >
                                 <img src="/assets/balance.svg" alt="pay icon" style={{ width: "16px ", height: "16px", marginRight: "15px" }} />
-                                {/*t(order?.payment_status)  TODO: Where is the status */} 
+                                {/*t(order?.payment_status)  TODO: Where is the status */}
                             </Typography>
                         </Box>
 

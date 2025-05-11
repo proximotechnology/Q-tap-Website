@@ -2,21 +2,28 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography, Modal, Divider } from "@mui/material";
 import { ordersDetails } from "../categories/data";
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import { useTranslations } from "next-intl";
 
 const PaymentModal = ({ isOpen, onClose }) => {
     const t = useTranslations()
     const specificOrder = ordersDetails.find(order => order.id === 3218);
-    
+    const [paymentUrl, setPaymentUrl] = useState(null);
     const [formData, setFormData] = useState(null);
     useEffect(() => {
         const storedData = localStorage.getItem('formData');
         if (storedData) {
             setFormData(JSON.parse(storedData));
         }
+        let payUrl = localStorage.getItem('payment_url')
+        try {
+            payUrl = JSON.parse(payUrl)
+            setPaymentUrl(payUrl)
+        } catch (error) {
+            console.log("parse url error", error)
+        }
     }, []);
-    
+
     // ========================================================================
     const [totalPrice, setTotalPrice] = useState(0);
 
@@ -106,7 +113,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
                     <Box display={"flex"} width={"100%"} justifyContent={"space-between"} >
                         <Box sx={{ width: "90%" }}>
                             <Typography variant="h6" sx={{ fontSize: '12px', color: '#575756' }}>
-                               {t("subTotal")}:
+                                {t("subTotal")}:
                                 <span style={{ color: '#AAAAAA' }}>0:00 EGP</span>
                             </Typography>
 
@@ -159,8 +166,12 @@ const PaymentModal = ({ isOpen, onClose }) => {
                         }}> <Typography>{t("noDataAvailable")}</Typography></Box>
                     )}
 
-                    <Link href="/Feedback" passHref>
+                    {/* <Link href="/Feedback" passHref> */}
+                    <Link href={paymentUrl} passHref>
                         <Button
+                            component="a"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             sx={{
                                 marginTop: "20px",
                                 backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',

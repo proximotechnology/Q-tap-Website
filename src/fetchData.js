@@ -1,5 +1,17 @@
 import axios from "axios"
+export const formateDate = (date) => {
+    const newDate = new Date(date);
 
+    return (
+
+        newDate.toLocaleString('en-US', {
+            timeZone: 'Africa/Cairo',
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        })
+
+    );
+}
 export const BASE_URL = 'https://api.qutap.co/api/'
 export const BASE_URL_IMAGE = 'https://api.qutap.co/'
 export const fetchData = async (endPoint, setIsLoading) => {
@@ -23,7 +35,7 @@ export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setD
     let tax = 0;
     let discount = 0;
     let totalPrice = 0;
-    
+
     if (cartItems) {
         cartItems.map(item => {
             let itemSubTotal = 0;

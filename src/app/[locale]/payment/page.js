@@ -24,7 +24,7 @@ const page = () => {
     const [totalPrice, setTotalPrice] = useState(0);
 
     // ============================================================================
-    // TODO: show data
+    
     const makeOrder = async () => {
         try {
             setIsLoading(true) // disable the button untill the request finish
@@ -34,19 +34,19 @@ const page = () => {
             */
             let formdata = localStorage.getItem("formData")
             if (!formdata) {
-                toast.error("something want wrong try again ") // TODO:  make it support arabic
+                toast.error(t("somethingWentWrong")) 
                 return;
             }
             formdata = JSON.parse(formdata)
             console.log("formdata", formdata)
-
+            let payWay = formdata.paymentWay === 'cash' ? 'cash' : "wallet";
             let data = {
                 name: formdata.selectedName,
                 phone: formdata.phone,
                 comments: formdata.comment ? formdata.comment : "-",
                 type: 'takeaway',
-                payment_way: formdata.paymentWay,
-                brunch_id: cartItems?.[0].branchId,
+                payment_way: payWay,
+                brunch_id: cartItems?.[0].branchId,// TODO:  order payment errror TypeError: Cannot read properties of undefined (reading 'branchId')
                 "tax": tax, //may be nullable
                 "total_price": totalPrice,
                 meals: []
@@ -70,7 +70,7 @@ const page = () => {
             if (formdata.servingWay === 'delivery') {
                 data = {
                     ...data,
-                    city:  formdata.selectedCity,
+                    city: formdata.selectedCity,
                     address: formdata.address,
                     type: 'delivery',
                     latitude: formdata.userPosition[0],
@@ -85,7 +85,7 @@ const page = () => {
                     type: 'dinein',
                 }
             }
-            // TODO: add map support 
+            
 
             console.log("firna", data)
             const response = await axios.post(
@@ -101,11 +101,13 @@ const page = () => {
             localStorage.setItem('cartItems', '')
             setCartItems([])
             console.log(response)
-            localStorage.setItem('order', JSON.stringify(response.data.order)) // TODO: add data of order to track it 
+            localStorage.setItem('order', JSON.stringify(response.data.order)) 
+            if(payWay==="wallet" && response.data.payment_url)
+                localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url)) 
             router.push("/orderPlaced")
         } catch (error) {
             console.log('order payment errror', error)
-            toast.error('error')
+            toast.error(t("somethingWentWrong"))
         }
         finally {
             setIsLoading(false)
@@ -159,6 +161,7 @@ const page = () => {
                 color: 'white',
                 backgroundColor: '#1E1E2A',
                 height: "auto",
+                minHeight:'100vh',
                 width: '100%',
             }}>
 

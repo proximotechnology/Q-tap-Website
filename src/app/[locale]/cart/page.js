@@ -237,7 +237,8 @@ const page = () => {
                 <Box sx={{ width: "46%" }}>
                     <Button
                         onClick={() => {
-                            window.location.href = `/${locale}/clientDetails`;
+                            if (cartItems.length>0)
+                                window.location.href = `/${locale}/clientDetails`;
                         }}
                         sx={{
                             backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',

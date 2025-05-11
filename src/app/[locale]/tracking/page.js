@@ -2,32 +2,68 @@
 import React, { useEffect, useState } from 'react'
 import { Header } from '@/app/[locale]/payment/Header'
 import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
-import { Box, Typography, Divider, Avatar, } from '@mui/material';
+import { Box, Typography, Divider, Avatar, Button, } from '@mui/material';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentModal from './PaymentModal';
 import { useTranslations } from 'next-intl';
 import Pusher from 'pusher-js';
+import { formateDate } from '@/fetchData';
 
 
 const page = () => {
   const t = useTranslations()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [order, setOrder] = useState(null);
+  const [pusherOrder, setPusherOrder] = useState(null);
+  const [pusherPhase, setPusherPhase] = useState(null)
 
-
+  const PHASE_TEMP = { Accepted: { status: false, time: "" }, Prepared: { status: false, time: "" }, Closed: { status: false, time: "" } }
   const handleOpen = () => setIsModalOpen(true);
 
   const handleClose = () => {
     setIsModalOpen(false);
   }
-  useEffect(() => {
-   
-  }, []);
+
 
   useEffect(() => {
-     let myOrder = localStorage.getItem('order')
+    if (!pusherOrder || !pusherPhase || !order) {
+      return;
+    }
+    console.log("call the update order")
+    setOrder(prev => {
+      let phase = prev.phase
+      if (phase) {
+        let AcceptProccess;
+        console.log("pusher updata data",pusherOrder)
+        if (pusherPhase === "Accepted") {
+          AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "accepted");
+          phase[pusherPhase].prepareTime = AcceptProccess?.time
+          console.log('pusher updata data AcceptProccess', AcceptProccess)
+        }
+        if (pusherPhase === "Prepared") {
+          AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "prepared");
+          console.log('pusher updata data AcceptProccess', AcceptProccess)
+        }
+
+        phase[pusherPhase].status = true;
+        phase[pusherPhase].time = AcceptProccess?.created_at
+      }
+      console.log("call the update order", { ...pusherOrder, phase })
+      localStorage.setItem('order', JSON.stringify({ ...pusherOrder, phase }))
+      return { ...pusherOrder, phase }
+    }
+    )
+
+    setPusherOrder(null)
+    setPusherPhase(null)
+  }, [pusherOrder, pusherPhase])
+
+  useEffect(() => {
+    let myOrder = localStorage.getItem('order')
     if (myOrder) {
       myOrder = JSON.parse(myOrder)
+      if (!myOrder.phase)
+        myOrder.phase = { ...PHASE_TEMP }
       setOrder(myOrder)
       console.log('track my order', myOrder)
     }
@@ -37,27 +73,28 @@ const page = () => {
     });
 
     const channel = pusher.subscribe('notify-channel');
-    channel.bind('form-submitted',  (data) => {
-      console.log('📢 track Received from Pusher:', data);
+    channel.bind('form-submitted', (data) => {
+      console.log('📢 track page Received from Pusher:', data);
       // accepted_order
       if (data.type === "accepted_order") {
-        if (myOrder?.id  === data?.message?.[0]?.id) {
-          let updatedOrder = data?.message?.[0]
-          updatedOrder.phase = "Accepted"
-          setOrder(updatedOrder)
-          localStorage.setItem('order',JSON.stringify(updatedOrder))
+        console.log('track accepted_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        if (myOrder?.id === data?.message?.[0]?.id) {
+          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          setPusherOrder(data?.message?.[0])
+          setPusherPhase('Accepted')
         }
       }
       // prepared_order
       if (data.type === "prepared_order") {
-        if (myOrder?.id === data?.message?.[0]?.id) {
-          let updatedOrder = data?.message?.[0]
-          updatedOrder.phase = "Prepared"
-          setOrder(updatedOrder)
-          localStorage.setItem('order',JSON.stringify(updatedOrder))
+        console.log('track prepared_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
+          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          setPusherOrder(data?.message?.[0])
+          setPusherPhase('Prepared')
         }
       }
     })
+
   }, [])
 
   const steps = [
@@ -117,7 +154,7 @@ const page = () => {
         </Typography>
 
         {steps.map((step, index) => {
-         index === 0 ? step.active=true : step.active = order?.phase === step.label;
+          index === 0 ? step.active = true : order?.phase[step.label]?.status == true ? step.active = true : step.active = false;
           return (
             <React.Fragment key={index}>
               <Box key={step.id} sx={{ display: "flex", alignItems: "center" }}>
@@ -148,7 +185,7 @@ const page = () => {
 
                       <Typography variant="caption"
                         sx={{ color: step.active ? " #AAAAAA" : "#302E3B", fontSize: "12px", }}>
-                        {step.time}
+                        {order?.phase[step.label]?.time?formateDate(order?.phase[step.label]?.time):<></>}
                       </Typography>
                     </Box>
 
@@ -164,14 +201,14 @@ const page = () => {
 
                           <Typography sx={{ fontSize: "14px", color: "white", fontWeight: "900" }}>
                             <span className='icon-chronometer' style={{ fontSize: "16px", marginRight: "5px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span></span>
-                            30 <span style={{ color: "#797993", fontWeight: "100" }}>{t("min")}</span></Typography>
+                            {order?.phase[step.label]?.prepareTime ? order?.phase[step.label]?.prepareTime : <></>} <span style={{ color: "#797993", fontWeight: "100" }}>{t("min")}</span></Typography>
                         </Box>
                       )}
                     </Box>
 
                   </Box>
                   {/* الخطوة "Accepted" */}
-                  {index === 1 && (
+                  {index === 1 && order?.payment_way === "wallet" && (
                     <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
                       <Divider
                         sx={{
@@ -182,7 +219,6 @@ const page = () => {
                         }}
                       />
                       <Box
-                        onClick={handleOpen}
                         sx={{
                           backgroundImage: step.active ? 'linear-gradient(to right, #302E3B, #48485B)' : 'none',
                           backgroundColor: step.active ? "none" : "#302E3B",
@@ -193,11 +229,14 @@ const page = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography
-                          sx={{ fontSize: "11px", display: "flex", flexDirection: "row", alignItems: "center" }}>
-                          <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
-                          {t("payment")}</Typography>
+                        <Button onClick={handleOpen} disabled={!step.active} sx={{ padding: '0px', margin: '0px' }}>
+                          <Typography
+                            sx={{ fontSize: "11px", display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
+                            {t("payment")}</Typography>
 
+
+                        </Button>
                         <PaymentModal isOpen={isModalOpen} onClose={handleClose} />
                       </Box>
 

@@ -231,5 +231,7 @@
     "save": "حفظ",
     "yourAccountWillActiveSooner": "مرحبًا بك أيها الشريك، شكرًا لانضمامك إلينا، سيتم تفعيل حسابك قريبًا.",
     "getInTouch": "تواصل معنا",
-    "SizeCountRequired":"اختيار الحجم و الكميه مطلوب"
+    "SizeCountRequired":"اختيار الحجم و الكميه مطلوب",
+    "somethingWentWrong":"لقد حدث خطأ ما، يرجى المحاولة مرة أخرى",
+    "pleaseFillAllFields":"يرجى ملء جميع الحقول"
 }

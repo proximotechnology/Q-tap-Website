@@ -35,7 +35,6 @@ const page = () => {
     const [showMap, setShowMap] = useState(false);
     const [userPosition,setUserPosition] = useState(null)
     const router = useRouter()
-    //TODO : form validations
     
    
     const getTable = async () => { // TODO: handle this user suppose to select table based of QR code on the table he set on
@@ -146,12 +145,12 @@ const page = () => {
     const handlePlaceOrderClick = () =>{
          setIsLoading(true)
          if(!phone || !selectedName ){
-            toast.error("please fill all field")
+            toast.error(t("pleaseFillAllFields"))
             setIsLoading(false)
             return;
          }
          if(selectedOption === 'delivery' && (!userPosition || !address)){
-            toast.error("please select pos")
+            toast.error(t("pleaseFillAllFields"))
             setIsLoading(false)
             return;
          }
