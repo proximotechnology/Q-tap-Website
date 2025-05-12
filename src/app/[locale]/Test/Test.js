@@ -15,13 +15,13 @@ export const Test = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { getHomeData } = useContext(HomeContext);
-  const t = useTranslations()
+  const t = useTranslations();
 
   const handleToggle = (panel) => {
     setExpanded(expanded === panel ? null : panel);
   };
 
-  // get faq data from api 
+  // get faq data from api
   const getFaqData = async () => {
     setLoading(true);
     try {
@@ -44,7 +44,6 @@ export const Test = () => {
     }
   };
 
-
   // get testimonials data from api
   const getTestData = async () => {
     setLoading(true);
@@ -63,7 +62,7 @@ export const Test = () => {
 
   useEffect(() => {
     getFaqData();
-    getTestData()
+    getTestData();
   }, []);
 
   return (
@@ -134,13 +133,15 @@ export const Test = () => {
                   width: "60%",
                   height: "100%",
                 },
-                "&:hover": {cursor:"pointer", transform: "scale(1.05)", transition: "0.3s" }
-
+                "&:hover": {
+                  cursor: "pointer",
+                  transform: "scale(1.05)",
+                  transition: "0.3s",
+                },
               }}
             >
               <Box sx={{ position: "relative", top: "60px" }}>
                 <img
-                
                   src="/assets/chef.svg"
                   alt="Chef"
                   style={{
@@ -197,7 +198,7 @@ export const Test = () => {
                     },
                   }}
                 >
-                 {item.comment}
+                  {item.comment}
                 </Typography>
                 <Box sx={{ marginTop: "13px" }}>
                   {[...Array(item.star)].map((_, i) => (
@@ -262,45 +263,41 @@ export const Test = () => {
                   padding: "3px 20px",
                 }}
               >
-                {item?.question.map((question) => (
-                  <Box
-                    key={index}
+                <Box
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleToggle(index)}
+                >
+                  <Typography
+                    variant="body1"
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      cursor: "pointer",
+                      fontSize: "12px",
+                      color: "gray",
+                      width: "100%",
                     }}
-                    onClick={() => handleToggle(index)}
                   >
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontSize: "12px",
-                        color: "gray",
-                        width: "100%",
-                      }}
-                    >
-                      {question}
-                    </Typography>
+                    {t("locale") === "en" ? item.question[0] : item.question[1]}{" "}
+                  </Typography>
 
-                    <IconButton>
-                      {expanded === index ? (
-                        <ExpandMoreIcon sx={{ fontSize: "18px" }} />
-                      ) : (
-                        <ChevronRightIcon sx={{ fontSize: "18px" }} />
-                      )}
-                    </IconButton>
-                  </Box>
-                ))}
+                  <IconButton>
+                    {expanded === index ? (
+                      <ExpandMoreIcon sx={{ fontSize: "18px" }} />
+                    ) : (
+                      <ChevronRightIcon sx={{ fontSize: "18px" }} />
+                    )}
+                  </IconButton>
+                </Box>
                 <Collapse in={expanded === index} timeout="auto" unmountOnExit>
-                  {item?.answer.map((answer, index) => (
-                    <Box key={index} sx={{ padding: "10px 0" }}>
-                      <Typography sx={{ fontSize: "12px", color: "gray" }}>
-                        {answer}
-                      </Typography>
-                    </Box>
-                  ))}
+                  <Box key={index} sx={{ padding: "10px 0" }}>
+                    <Typography sx={{ fontSize: "12px", color: "gray" }}>
+                      {t("locale") === "en" ? item.answer[0] : item.answer[1]}{" "}
+                    </Typography>
+                  </Box>
                 </Collapse>
               </Box>
             ))}

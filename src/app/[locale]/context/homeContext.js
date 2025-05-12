@@ -7,7 +7,8 @@ const HomeContextProvider = (props) => {
   
   const getHomeData = async () => {
     const response = await axios.get(
-      "https://highleveltecknology.com/Qtap/api/home"
+      // "https://highleveltecknology.com/Qtap/api/home"
+      "https://api.qutap.co/api/home"
     );
     return response;
   };
