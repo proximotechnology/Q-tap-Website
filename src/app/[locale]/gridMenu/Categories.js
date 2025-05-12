@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { categoryProducts } from '../categories/data';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import { useTranslations } from 'next-intl';
+import { BASE_URL_IMAGE } from '@/fetchData';
 
 const menuItems = [
     {
@@ -44,22 +45,14 @@ const menuItems = [
     },
 ]
 
-export const Categories = ({ setFilteredItems }) => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const t =useTranslations()
-    const handleClick = (index, categoryId) => {
-        setActiveIndex(index);
-        filterItems(categoryId);
+export const Categories = ({ currentBranch, setSelectedCategory, selectedCategory }) => {
+
+    const t = useTranslations()
+    const handleClick = (item) => {
+       setSelectedCategory(item)
     };
 
-    const filterItems = (categoryId) => {
-        if (categoryId === "Popular") {
-            const allItems = Object.values(categoryProducts).flat();
-            setFilteredItems(allItems);
-        } else {
-            setFilteredItems(categoryProducts[categoryId] || []);
-        }
-    };
+  
     return (
         <Box sx={{ width: "100%" }}>
             <Box sx={{
@@ -73,19 +66,19 @@ export const Categories = ({ setFilteredItems }) => {
                     display: 'none',
                 }
             }} gap={1}>
-                {menuItems.map((item, index) => {
-                    const isActive = activeIndex === index;
+                {currentBranch?.cat_meal?.map((item, index) => {
+                    const isActive = selectedCategory?.id === item.id;
                     const backgroundColor = isActive
                         ? 'linear-gradient(to Bottom, #797993, #48485B)'
-                        : item.bgcolor;
+                        : item?.bgcolor;
                     const backgroundIcon = isActive ? "white" : "";
-                    const textColor = isActive && item.text !== "Popular" ? "white" : "#797993";
-                    const textColor2 = isActive && item.text !== "Popular" ? "white" : item.color;
+                    const textColor = isActive && item.name !== "Popular" ? "white" : "#797993";
+                    const textColor2 = isActive && item.name !== "Popular" ? "white" : item?.color;
 
                     return (
                         <ListItem
                             key={index}
-                            onClick={() => handleClick(index, item.categoryId)}
+                            onClick={() => handleClick(item)}
                             sx={{
                                 flexDirection: 'column',
                                 background: backgroundColor,
@@ -104,11 +97,11 @@ export const Categories = ({ setFilteredItems }) => {
                                 alignItems: "center",
                                 justifyContent: "center",
                             }}>
-                                <span>{item.icon}</span>
+                                <img src={`${BASE_URL_IMAGE}${item.image}`} style={{maxWidth:'50px',aspectRatio:'1/1'}}/>
                             </ListItemIcon>
 
                             <ListItemText
-                                primary={t(item.text)}
+                                primary={item?.name}
                                 primaryTypographyProps={{
                                     sx: {
                                         fontSize: '10px',

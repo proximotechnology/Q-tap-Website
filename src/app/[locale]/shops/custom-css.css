@@ -1,0 +1,4 @@
+/* styles/tailwind-page.css */
+@tailwind components;
+@tailwind utilities;
+/* Don't include @tailwind base to avoid global resets */

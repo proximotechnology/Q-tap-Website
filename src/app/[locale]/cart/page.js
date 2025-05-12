@@ -6,18 +6,31 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { getCartItems } from "../ProductDetails/cartUtils";
-import { useRouter } from 'next/navigation';
-import { useTranslations ,useLocale } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations, useLocale } from 'next-intl';
+import { BASE_URL_IMAGE, calculateOrderPriceDetailed } from '@/fetchData';
 
 const page = () => {
     const t = useTranslations();
     const locale = useLocale()
     const [cartItems, setCartItems] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [tax, setTax] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [subTotal, setSubTotal] = useState(0);
+
+    const searchParams = useSearchParams();
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
+
     useEffect(() => {
         const storedCartItems = getCartItems();
         setCartItems(storedCartItems);
     }, []);
 
+    useEffect(() => {
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
+    }, [cartItems]);
     // const handleRemove = (itemId) => {
     //     const updatedCartItems = removeItemFromCart(itemId);
     //     setCartItems(updatedCartItems);
@@ -27,30 +40,9 @@ const page = () => {
     // console.log(cartItems.map(item => item.image));
 
     // ===============================================================================
-    
-    // ===============================================================================
-
-    const [selectedSize, setSelectedSize] = useState("");
-
-    useEffect(() => {
-        const storedSizes = JSON.parse(localStorage.getItem('selectedSize')) || {};
-        setSelectedSize(storedSizes || t("noSizeSelecte"));
-    }, []);
-    // ===============================================================================
 
     // ===============================================================================
 
-    const [selectedItemOptions, setSelectedItemOptions] = useState({});
-    const [selectedItemExtra, setSelectedItemExtra] = useState({});
-    useEffect(() => {
-        const storedOptions = JSON.parse(localStorage.getItem('selectedItemOptions')) || {};
-        const storedExtra = JSON.parse(localStorage.getItem('selectedItemExtra')) || {};
-
-        setSelectedItemOptions(storedOptions);
-        setSelectedItemExtra(storedExtra);
-    }, []);
-
-    // ===============================================================================
     const [itemCount, setItemCount] = useState([]);
     useEffect(() => {
         try {
@@ -66,45 +58,31 @@ const page = () => {
         return item ? item.count : 1;
     };
 
-    const handleAddItem = (itemId) => {
-        setItemCount((prevItems) => {
-            const existingItem = prevItems.find(item => item.id === itemId);
-            if (existingItem) {
-                return prevItems.map(item =>
-                    item.id === itemId ? { ...item, count: item.count + 1 } : item
-                );
-            } else {
-                return [...prevItems, { id: itemId, count: 1 }];
-            }
-        });
+    const handleAddItem = (index) => {
+        console.log('add item at', index)
+        const newCartItems = cartItems.map((item, i) =>
+            i === index ? { ...item, quantity: item.quantity + 1 } : item
+        );
+        setCartItems(newCartItems)
+        localStorage.setItem('cartItems', JSON.stringify(newCartItems))
+
     };
 
-    const handleMinusItem = (itemId) => {
-        setItemCount((prevItems) => {
-            const existingItem = prevItems.find(item => item.id === itemId);
-            if (existingItem && existingItem.count > 1) {
-                return prevItems.map(item =>
-                    item.id === itemId ? { ...item, count: item.count - 1 } : item
-                );
-            } else {
-                return prevItems.filter(item => item.id !== itemId);
-            }
-        });
+    const handleMinusItem = (index) => {
+        console.log('remove item at', index)
+        let updatedCartItems = cartItems.map(item => ({ ...item })); // Deep copy objects
+
+        if (updatedCartItems[index].quantity > 1) {
+            updatedCartItems[index].quantity -= 1;
+        } else {
+            updatedCartItems.splice(index, 1);
+        }
+
+        setCartItems(updatedCartItems);
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems))
     };
     // ===============================================================================
-    const calculateTotalPrice = (cartItems, getItemCount) => {
-        const total = cartItems.reduce((total, item) => {
-            const itemCount = getItemCount(item.id) || 0;
-            return total + item.price * itemCount;
-        }, 0);
-    
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('totalPrice', total);
-        }
-    
-        return total;
-    };
-    // للحساب ال total price , وتخزينه في local storage . 
+
     // ===============================================================================
     const router = useRouter();
     return (
@@ -126,11 +104,11 @@ const page = () => {
                     padding: '12px 12px 0px 12px',
                 }}
             >
-                    <IconButton
-                        onClick={() => router.back()}
-                        sx={{ color: "white" }}>
-                        <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
-                    </IconButton>
+                <IconButton
+                    onClick={() => router.push(`/categories?shopId=${shopId}&branchId=${branchId}`)}
+                    sx={{ color: "white" }}>
+                    <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
+                </IconButton>
 
                 <IconButton color="inherit">
                     <span className='icon-menu' style={{ fontSize: "22px" }}></span>
@@ -158,7 +136,7 @@ const page = () => {
                 {cartItems.length === 0 ? (
                     <Typography>{t("yourCartIsEmpty")}</Typography>
                 ) : (
-                    cartItems.map((item) => (
+                    cartItems.map((item, index) => (
                         <>
                             <Box
                                 key={item.id}
@@ -173,7 +151,7 @@ const page = () => {
                             >
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <img
-                                        src={item.image}
+                                        src={BASE_URL_IMAGE + item.image}
                                         alt={item.name}
                                         style={{ width: '60px', height: '60px', borderRadius: "10px", marginRight: '10px' }}
                                     />
@@ -188,17 +166,17 @@ const page = () => {
                                             variant="body2"
                                             sx={{ fontSize: '12px', color: "#797993", marginTop: '3px' }}>
                                             <span style={{ color: "#797993" }}>{t("size")} | </span>
-                                            {selectedSize[item.id] || t("noSizeSelecte")}
+                                            {item.selectedSize || t("noSizeSelecte")}
                                         </Typography>
                                         <Typography variant="body2" sx={{
                                             marginTop: '2px', fontSize: '12px',
                                             color: "#AAAAAA"
                                         }}>
-                                            {selectedItemOptions[item.id] && selectedItemOptions[item.id].length > 0
-                                                ? selectedItemOptions[item.id].map(option => option.name).join(' , ')
+                                            {item.selectedOptions && item.selectedOptions.length > 0
+                                                ? item.selectedOptions.map(item => item.name).join(' , ')
                                                 : t("noOptionsSelected")} ,
-                                            {selectedItemExtra[item.id] && selectedItemExtra[item.id].length > 0
-                                                ? selectedItemExtra[item.id].map(extra => extra.name).join(' , ')
+                                            {item.selectedExtra && item.selectedExtra.length > 0
+                                                ? item.selectedExtra.map(item => item.name).join(' , ')
                                                 : t("noOptionsSelected")}
 
                                         </Typography>
@@ -208,17 +186,17 @@ const page = () => {
                                 <Box sx={{ display: 'flex', flexDirection: "column", alignItems: 'center' }}>
                                     <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
                                         <AddCircleOutlinedIcon
-                                            onClick={() => handleAddItem(item.id)}
+                                            onClick={() => handleAddItem(index)}
                                             sx={{ fontSize: "30px", color: "#44404D", cursor: "pointer" }} />
 
                                         <Typography sx={{
                                             fontSize: "12px", fontWeight: 900,
                                             padding: "0px 12px", color: "#44404D"
                                         }}>
-                                            {getItemCount(item.id) || 0} </Typography>
+                                            {item.quantity} </Typography>
 
                                         <RemoveCircleOutlinedIcon
-                                            onClick={() => handleMinusItem(item.id)}
+                                            onClick={() => handleMinusItem(index)}
                                             sx={{ fontSize: "30px", color: "#44404D", cursor: "pointer" }}
                                         />
                                     </Box>
@@ -227,7 +205,7 @@ const page = () => {
                                             marginTop: "5px",
                                             fontSize: '15px', fontWeight: "bold", color: 'white'
                                         }}>
-                                            {item.price} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                            {item.price}x{item.quantity} : {(item.price * item.quantity).toFixed(2)} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -250,7 +228,7 @@ const page = () => {
                         {t("totalPrice")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                        {calculateTotalPrice(cartItems, getItemCount)}
+                        {totalPrice}
                         <span style={{ fontSize: "10px", color: '#575756' }}> EGP</span>
                     </Typography>
                 </Box>
@@ -259,7 +237,8 @@ const page = () => {
                 <Box sx={{ width: "46%" }}>
                     <Button
                         onClick={() => {
-                            window.location.href = `/${locale}/clientDetails`;
+                            if (cartItems.length>0)
+                                window.location.href = `/${locale}/clientDetails`;
                         }}
                         sx={{
                             backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',

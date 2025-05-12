@@ -1,27 +1,105 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Header } from '@/app/[locale]/payment/Header'
 import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
-import { Box, Typography, Divider, Avatar, } from '@mui/material';
+import { Box, Typography, Divider, Avatar, Button, } from '@mui/material';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentModal from './PaymentModal';
 import { useTranslations } from 'next-intl';
+import Pusher from 'pusher-js';
+import { formateDate } from '@/fetchData';
 
 
 const page = () => {
   const t = useTranslations()
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [order, setOrder] = useState(null);
+  const [pusherOrder, setPusherOrder] = useState(null);
+  const [pusherPhase, setPusherPhase] = useState(null)
 
-    const handleOpen = () => setIsModalOpen(true);
+  const PHASE_TEMP = { Accepted: { status: false, time: "" }, Prepared: { status: false, time: "" }, Closed: { status: false, time: "" } }
+  const handleOpen = () => setIsModalOpen(true);
 
-    const handleClose = () => {
-      setIsModalOpen(false);
+  const handleClose = () => {
+    setIsModalOpen(false);
+  }
+
+
+  useEffect(() => {
+    if (!pusherOrder || !pusherPhase || !order) {
+      return;
+    }
+    console.log("call the update order")
+    setOrder(prev => {
+      let phase = prev.phase
+      if (phase) {
+        let AcceptProccess;
+        console.log("pusher updata data",pusherOrder)
+        if (pusherPhase === "Accepted") {
+          AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "accepted");
+          phase[pusherPhase].prepareTime = AcceptProccess?.time
+          console.log('pusher updata data AcceptProccess', AcceptProccess)
+        }
+        if (pusherPhase === "Prepared") {
+          AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "prepared");
+          console.log('pusher updata data AcceptProccess', AcceptProccess)
+        }
+
+        phase[pusherPhase].status = true;
+        phase[pusherPhase].time = AcceptProccess?.created_at
+      }
+      console.log("call the update order", { ...pusherOrder, phase })
+      localStorage.setItem('order', JSON.stringify({ ...pusherOrder, phase }))
+      return { ...pusherOrder, phase }
+    }
+    )
+
+    setPusherOrder(null)
+    setPusherPhase(null)
+  }, [pusherOrder, pusherPhase])
+
+  useEffect(() => {
+    let myOrder = localStorage.getItem('order')
+    if (myOrder) {
+      myOrder = JSON.parse(myOrder)
+      if (!myOrder.phase)
+        myOrder.phase = { ...PHASE_TEMP }
+      setOrder(myOrder)
+      console.log('track my order', myOrder)
     }
 
+    const pusher = new Pusher('63b495891d2c3cff9d36', {
+      cluster: 'eu',
+    });
+
+    const channel = pusher.subscribe('notify-channel');
+    channel.bind('form-submitted', (data) => {
+      console.log('📢 track page Received from Pusher:', data);
+      // accepted_order
+      if (data.type === "accepted_order") {
+        console.log('track accepted_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        if (myOrder?.id === data?.message?.[0]?.id) {
+          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          setPusherOrder(data?.message?.[0])
+          setPusherPhase('Accepted')
+        }
+      }
+      // prepared_order
+      if (data.type === "prepared_order") {
+        console.log('track prepared_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
+          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          setPusherOrder(data?.message?.[0])
+          setPusherPhase('Prepared')
+        }
+      }
+    })
+
+  }, [])
 
   const steps = [
     {
-      id: 1, label: "Order Placed", time: "3:51 PM 04 Aug 2024",
+      id: 1, label: "Order Placed", time: "0:00 PM 00 Mon.Year",
       icon: <span className="icon-online-shop1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span>,
       active: true
     },
@@ -29,23 +107,23 @@ const page = () => {
     {
       id: 2, label: "Accepted", time: "0:00 PM 00 Mon.Year",
       icon: <CheckCircleOutlineIcon />,
-      active: true
+      active: false
     },
 
     {
-      id: 3, label: "Prepared", time: "3:51 PM 04 Aug 2024",
+      id: 3, label: "Prepared", time: "0:00 PM 00 Mon.Year",
       icon: <span className="icon-chef1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span>,
       active: false
     },
 
     {
-      id: 4, label: "Served", time: "3:51 PM 04 Aug 2024",
+      id: 4, label: "Served", time: "0:00 PM 00 Mon.Year",
       icon: <span className="icon-food-delivery1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></span>,
       active: false
     },
 
     {
-      id: 5, label: "Closed", time: "3:51 PM 04 Aug 2024",
+      id: 5, label: "Closed", time: "0:00 PM 00 Mon.Year",
       icon: <span className="icon-double-check1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>,
       active: false
     },
@@ -58,7 +136,7 @@ const page = () => {
         maxWidth: '100%', height: "auto",
       }}>
 
-      <Header/>
+      <Header />
       <OrderDetails />
 
       <Box
@@ -67,7 +145,7 @@ const page = () => {
           color: "#FFFFFF",
           padding: "20px",
           backgroundColor: '#1E1E2A',
-          
+
         }}
       >
         <Typography
@@ -75,138 +153,144 @@ const page = () => {
           {t("tracking")}
         </Typography>
 
-        {steps.map((step, index) => (
-          <React.Fragment key={index}>
-            <Box key={step.id} sx={{ display: "flex", alignItems: "center" }}>
-              <Avatar
-                sx={{
-                  backgroundImage: step.active ? 'linear-gradient(to left, #44404D, #797993)' : 'none',
-                  backgroundColor: step.active ? "none" : "#302E3B",
-                  color: step.active ? "#FFFFFF" : "#575756",
-                  marginRight: "16px", fontSize: "25px", padding: "5px",
-                }}
-              >
-                {step.icon}
-              </Avatar>
+        {steps.map((step, index) => {
+          index === 0 ? step.active = true : order?.phase[step.label]?.status == true ? step.active = true : step.active = false;
+          return (
+            <React.Fragment key={index}>
+              <Box key={step.id} sx={{ display: "flex", alignItems: "center" }}>
+                <Avatar
+                  sx={{
+                    backgroundImage: step.active ? 'linear-gradient(to left, #44404D, #797993)' : 'none',
+                    backgroundColor: step.active ? "none" : "#302E3B",
+                    color: step.active ? "#FFFFFF" : "#575756",
+                    marginRight: "16px", fontSize: "25px", padding: "5px",
+                  }}
+                >
+                  {step.icon}
+                </Avatar>
 
-              <Box sx={{width:"100%", }}>
-                <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"  }}>
-                  <Box>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontWeight: step.active ? "800" : "normal",
-                        color: step.active ? "#FFFFFF" : "#302E3B",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {t(step.label)}
-                    </Typography>
+                <Box sx={{ width: "100%", }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Box>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: step.active ? "800" : "normal",
+                          color: step.active ? "#FFFFFF" : "#302E3B",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {t(step.label)}
+                      </Typography>
 
-                    <Typography variant="caption"
-                      sx={{ color: step.active ? " #AAAAAA" : "#302E3B", fontSize: "12px", }}>
-                      {step.time}
-                    </Typography>
+                      <Typography variant="caption"
+                        sx={{ color: step.active ? " #AAAAAA" : "#302E3B", fontSize: "12px", }}>
+                        {order?.phase[step.label]?.time?formateDate(order?.phase[step.label]?.time):<></>}
+                      </Typography>
+                    </Box>
+
+                    <Box>
+                      {index === 1 && (
+                        <Box
+                          sx={{
+                            textAlign: "right",
+                            color: step.active ? "#AAAAAA" : " #302E3B"
+                          }}
+                        >
+                          <Typography sx={{ fontSize: "11px", }}>{t("prepTime")}</Typography>
+
+                          <Typography sx={{ fontSize: "14px", color: "white", fontWeight: "900" }}>
+                            <span className='icon-chronometer' style={{ fontSize: "16px", marginRight: "5px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span></span>
+                            {order?.phase[step.label]?.prepareTime ? order?.phase[step.label]?.prepareTime : <></>} <span style={{ color: "#797993", fontWeight: "100" }}>{t("min")}</span></Typography>
+                        </Box>
+                      )}
+                    </Box>
+
                   </Box>
+                  {/* الخطوة "Accepted" */}
+                  {index === 1 && order?.payment_way === "wallet" && (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
+                      <Divider
+                        sx={{
+                          height: "1px",
+                          width: "30px",
+                          backgroundColor: step.active ? "white" : "#302E3B",
+                          // margin: "5px 0", 
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          backgroundImage: step.active ? 'linear-gradient(to right, #302E3B, #48485B)' : 'none',
+                          backgroundColor: step.active ? "none" : "#302E3B",
+                          color: step.active ? "#FFFFFF" : "#575756",
+                          borderRadius: "20px",
+                          padding: "5px 35px",
+                          cursor: "pointer",
+                          display: "flex",
+                        }}
+                      >
+                        <Button onClick={handleOpen} disabled={!step.active} sx={{ padding: '0px', margin: '0px' }}>
+                          <Typography
+                            sx={{ fontSize: "11px", display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
+                            {t("payment")}</Typography>
 
-                  <Box> 
-                  {index === 1 && (
-                    <Box
-                      sx={{
-                        textAlign: "right",
-                        color: step.active ? "#AAAAAA" :" #302E3B"
-                      }}
-                    >
-                      <Typography sx={{ fontSize: "11px", }}>{t("prepTime")}</Typography>
 
-                      <Typography sx={{ fontSize: "14px",color:"white",fontWeight:"900" }}>
-                        <span className='icon-chronometer' style={{ fontSize: "16px",marginRight:"5px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span></span>
-                        30 <span style={{color:"#797993",fontWeight:"100" }}>{t("min")}</span></Typography>
+                        </Button>
+                        <PaymentModal isOpen={isModalOpen} onClose={handleClose} />
+                      </Box>
+
                     </Box>
                   )}
-                  </Box>
 
+                  {/* الخطوة "Prepared" */}
+
+                  {index === 2 && (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
+                      <Divider
+                        sx={{
+                          height: "1px",
+                          width: "30px",
+                          backgroundColor: step.active ? "white" : "#302E3B",
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          backgroundImage: step.active ? 'linear-gradient(to right, #302E3B, #48485B)' : 'none',
+                          backgroundColor: step.active ? "none" : "#302E3B",
+                          color: step.active ? "#FFFFFF" : "#575756",
+                          borderRadius: "20px",
+                          padding: "5px 30px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Typography sx={{ fontSize: "11px", display: "flex", flexDirection: "row", alignItems: "center" }}>
+                          <span className='icon-scooter1' style={{
+                            marginRight: "5px", fontSize: "17px",
+                            color: step.active ? "white" : "#575756",
+                          }}></span>
+
+                          {t("onTheWay")}</Typography>
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
-                {/* الخطوة "Accepted" */}
-                {index === 1 && (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
-                    <Divider
-                      sx={{
-                        height: "1px",
-                        width: "30px",
-                        backgroundColor: step.active ? "white" : "#302E3B",
-                        // margin: "5px 0", 
-                      }}
-                    />
-                    <Box
-                      onClick={handleOpen}
-                      sx={{
-                        backgroundImage: step.active ? 'linear-gradient(to right, #302E3B, #48485B)' : 'none',
-                        backgroundColor: step.active ? "none" : "#302E3B",
-                        color: step.active ? "#FFFFFF" : "#575756",
-                        borderRadius: "20px",
-                        padding: "5px 35px",
-                        cursor: "pointer",
-                        display: "flex",
-                      }}
-                    >
-                      <Typography 
-                      sx={{ fontSize: "11px",display:"flex",flexDirection:"row",alignItems:"center" }}>
-                      <img src="/assets/balance.svg" alt="pay icon" style={{ width: "20px ", height: "20px", marginRight: "5px" }} />
-                        {t("payment")}</Typography>
-
-                        <PaymentModal isOpen={isModalOpen} onClose={handleClose} />
-                    </Box>
-
-                  </Box>
-                )}
-
-                {/* الخطوة "Prepared" */}
-
-                {index === 2 && (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
-                    <Divider
-                      sx={{
-                        height: "1px",
-                        width: "30px",
-                        backgroundColor: step.active ? "white" : "#302E3B",
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        backgroundImage: step.active ? 'linear-gradient(to right, #302E3B, #48485B)' : 'none',
-                        backgroundColor: step.active ? "none" : "#302E3B",
-                        color: step.active ? "#FFFFFF" : "#575756",
-                        borderRadius: "20px",
-                        padding: "5px 30px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Typography sx={{ fontSize: "11px",display:"flex",flexDirection:"row",alignItems:"center"  }}>
-                        <span className='icon-scooter1' style={{ marginRight: "5px", fontSize:"17px" ,
-                          color:step.active ? "white": "#575756", 
-                        }}></span>
-                        
-                       {t("onTheWay")}</Typography>
-                    </Box>
-                  </Box>
-                )}
               </Box>
-            </Box>
 
-            {/* Vertical Line */}
-            {index < steps.length - 1 && (
-              <Box
-                sx={{
-                  width: "2px",
-                  height: "35px",
-                  backgroundColor: step.active ? "white" : "#302E3B",
-                  margin: "6px 20px",
-                }}
-              />
-            )}
-          </React.Fragment>
-        ))}
+              {/* Vertical Line */}
+              {index < steps.length - 1 && (
+                <Box
+                  sx={{
+                    width: "2px",
+                    height: "35px",
+                    backgroundColor: step.active ? "white" : "#302E3B",
+                    margin: "6px 20px",
+                  }}
+                />
+              )}
+            </React.Fragment>
+          )
+        })}
       </Box>
     </Box>
   )

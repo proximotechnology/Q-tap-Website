@@ -173,9 +173,9 @@ export const NewPassword = () => {
                             backgroundColor: "#222240",
                             textTransform: 'none',
                             padding: "8px 0", fontSize: "12px",
-                            '&:hover': {
-                                backgroundColor: "#222240",
-                            },
+                            '&:hover': {    
+                                transform: "scale(1.02) !important",
+                               transition: "transform 0.3s ease !important" },
                             color: "#fff"
                         }}
                         endIcon={<ArrowRightOutlinedIcon sx={{ color: "white", fontSize: "18px" }} />}

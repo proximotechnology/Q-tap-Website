@@ -52,7 +52,7 @@ export const Login = () => {
             setIsLoading(true);
             const options = {
                 method: 'POST',
-                url: "https://highleveltecknology.com/Qtap/api/login",
+                url: "https://api.qutap.co/api/login",
                 headers: { 'Content-Type': 'application/json' },
                 data
 
@@ -242,7 +242,9 @@ export const Login = () => {
                         textTransform: "capitalize",
                         padding: "5px 0",
                         mt: 2,
-                        '&:hover': { backgroundColor: '#222240' }
+                        '&:hover': {    
+                             transform: "scale(1.02) !important",
+                            transition: "transform 0.3s ease !important" }
                     }}
                 >
                     {isLoading ? <CircularProgress size={20} /> : t("login")}

@@ -1,8 +1,9 @@
 "use client";
 import { Box, IconButton, Typography } from '@mui/material'
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import React, { useEffect, useState } from 'react'
 import { getCartItems } from "../ProductDetails/cartUtils";
+import { useSearchParams } from 'next/navigation';
 
 export const Footer = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -12,6 +13,9 @@ export const Footer = () => {
     }, []);
 
     const count = cartItems.length;
+    const searchParams = useSearchParams();
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
     return (
         <Box display="flex" justifyContent="space-around" alignItems="center"
             sx={{
@@ -24,7 +28,7 @@ export const Footer = () => {
                 </IconButton>
             </Link>
 
-            <Link href='/cart'>
+            <Link href={`/cart?shopId=${shopId}&branchId=${branchId}`}>
                 <IconButton color="inherit">
                     <span className='icon-shopping-cart' style={{ color: "gray", fontSize: "22px" }}></span>
                     <Box sx={{ fontSize: "11px", color: "gray", marginTop: "-20px" }}>{count}</Box>
@@ -39,7 +43,7 @@ export const Footer = () => {
                 <span className='icon-show' ></span>
             </IconButton>
 
-            <Link href='/gridMenu'>
+            <Link href={ `/gridMenu?shopId=${shopId}&branchId=${branchId}`}>
                 <IconButton color="inherit">
                     <span className='icon-rss' style={{ color: "gray", }} ></span>
                     <span style={{ padding: "4px", borderRadius: "50%", backgroundColor: "#F19909", marginTop: "-20px" }}></span>

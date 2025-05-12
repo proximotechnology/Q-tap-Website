@@ -1,18 +1,64 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 import '../categories/categories.css';
-import {  categoryProducts, specialOffers } from '../categories/data';
+import { categoryProducts, specialOffers } from '../categories/data';
 import { Footer } from '../categories/Footer';
 import { Categories } from './Categories';
 import { Content } from './Content';
 import { useTranslations } from 'next-intl';
+import { fetchData } from '@/fetchData';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const page = () => {
-    const [filteredItems, setFilteredItems] = useState(categoryProducts || []);
     const t = useTranslations()
+
+    const [shops, setShops] = useState(null)
+    const [currentBranch, setCurrentBranch] = useState(null)
+    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+
+
+    const searchParams = useSearchParams();
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
+    const router = useRouter();
+
+
+    if (!shopId || !branchId) {
+        setSelectedShop(shops)
+        router.push(`/shops/`);
+    }
+
+    const getData = async (endPoint) => {
+
+        const data = await fetchData(endPoint, setIsLoading);
+
+        setShops(data.data.data)
+    }
+
+    useEffect(() => {
+        getData('menu_all_restaurants')
+    }, [])
+
+    useEffect(() => {
+
+        const selectedShop = shops?.find(shop => shop.id === Number(shopId));
+        const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
+        console.log("selectedBranch", selectedBranch)
+
+        console.log('check setSelectedCategory',Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal?.length > 0) 
+        if (Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal.length > 0) {
+            setSelectedCategory(selectedBranch?.cat_meal[0])
+            console.log('setSelectedCategory')
+        }
+
+        setCurrentBranch(selectedBranch)
+
+    }, [shops])
+
 
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
@@ -40,7 +86,7 @@ const page = () => {
                     <span className='icon-search' style={{ marginRight: "6px", color: "#797993" }} ></span>
                     <TextField
                         variant="standard"
-                        placeholder={t("whatAreYouLookingFor")}                        InputProps={{
+                        placeholder={t("whatAreYouLookingFor")} InputProps={{
                             disableUnderline: true,
                             style: { color: 'white', width: '100%', fontSize: "11px" }
                         }}
@@ -53,7 +99,7 @@ const page = () => {
             {/* offers, categories */}
             <Box sx={{ padding: '30px 25px' }}>
 
-                {/* offers */}
+                {/* offers TODO: specific offers handle  */}
                 <Box mt={2} sx={{ paddingTop: '100px' }}>
                     <Typography variant="body1" sx={{ marginBottom: "10px", }}>
                         <span style={{
@@ -124,10 +170,10 @@ const page = () => {
                 <Box mt={3}>
                     <Box >
                         <Box sx={{ display: 'flex', flexDirection: "column" }}>
-                            <Categories  setFilteredItems={setFilteredItems}/>
+                            <Categories currentBranch={currentBranch} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
 
                             <Box sx={{ flex: 1 }}>
-                                <Content  items={filteredItems}/>
+                                <Content selectedCategory={selectedCategory} />
                             </Box>
                         </Box>
                     </Box>

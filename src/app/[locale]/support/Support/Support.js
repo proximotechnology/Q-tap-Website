@@ -21,6 +21,7 @@ import WifiCalling3Icon from "@mui/icons-material/WifiCalling3";
 import Footer from "@/app/[locale]/Footer/Footer";
 import { HomeContext } from "@/app/[locale]/context/homeContext.js";
 import { useTranslations } from "next-intl";
+import { AllChatSupport } from "./AllChatSupport";
 
 export const Support = () => {
   const [expanded, setExpanded] = useState(null);
@@ -59,6 +60,7 @@ export const Support = () => {
   useEffect(() => {
     getFaqData();
   }, []);
+
   return (
     <Box>
       <Box
@@ -173,9 +175,7 @@ export const Support = () => {
                   sx={{ textAlign: "center", alignItems: "center" }}
                 >
                   <Box sx={{ cursor: "pointer" }}>
-                    <ModeCommentIcon
-                      sx={{ fontSize: "25px", color: "#575756" }}
-                    />
+                    <AllChatSupport />
                     <Typography
                       variant="body2"
                       sx={{ fontSize: "10px", color: "#AAAAAA" }}
@@ -188,11 +188,20 @@ export const Support = () => {
                 <Grid item xs={3} sx={{ textAlign: "center" }}>
                   <Box sx={{ cursor: "pointer" }}>
                     <WhatsAppIcon
-                      style={{ fontSize: "27px", color: "#575756" }}
+                      sx={{
+                        fontSize: "27px",
+                        color: "#575756",
+                        "&:hover": {
+                          color: "#E57C00",
+                          transform: "scale(1.1)",
+                          transition: "all 0.3s",
+
+                        },
+                      }}
                     />
                     <Typography
                       variant="body2"
-                      sx={{ fontSize: "10px", color: "#AAAAAA" }}
+                      sx={{ fontSize: "10px", color: "#AAAAAA"}}
                     >
                       {t("whatsApp")}
                     </Typography>
@@ -208,6 +217,15 @@ export const Support = () => {
                     <span
                       className="icon-terms-and-conditions1"
                       style={{ fontSize: "25px", color: "#575756" }}
+                      onMouseEnter={(e) => {
+                        e.target.style.color = "#E57C00";
+                        // e.target.style.fontSize = "26px";
+                        e.target.style.transition = "all 0.3s";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.color = "#575756";
+                        // e.target.style.fontSize = "25px";
+                      }}
                     ></span>
                     <Typography
                       variant="body2"
@@ -222,6 +240,15 @@ export const Support = () => {
                     <span
                       className="icon-viber1"
                       style={{ fontSize: "25px", color: "#575756" }}
+                      onMouseEnter={(e) => {
+                        e.target.style.color = "#E57C00";
+                        // e.target.style.fontSize = "26px";
+                        e.target.style.transition = "all 0.3s";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.color = "#575756";
+                        // e.target.style.fontSize = "25px";
+                      }}
                     ></span>
                     <Typography
                       variant="body2"
@@ -334,7 +361,7 @@ export const Support = () => {
                       {item?.answer.map((answer, ind) => (
                         <Box sx={{ padding: "10px 0", textAlign: "start" }}>
                           <Typography sx={{ fontSize: "12px", color: "gray" }}>
-                            {t("answer"+index)}
+                            {answer}
                           </Typography>
                         </Box>
                       ))}

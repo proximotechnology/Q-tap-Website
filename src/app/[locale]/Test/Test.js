@@ -133,16 +133,13 @@ export const Test = () => {
                   width: "60%",
                   height: "100%",
                 },
-                "&:hover": {
-                  cursor: "pointer",
-                  transform: "scale(1.05)",
-                  transition: "0.3s",
-                },
+                "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.5s" }
+
               }}
             >
               <Box sx={{ position: "relative", top: "60px" }}>
                 <img
-                  src="/assets/chef.svg"
+                  src={item.client.img && item.client.img.trim() !== "" ? `https://api.qutap.co/${item.client.img}` : "/assets/chef.svg"}
                   alt="Chef"
                   style={{
                     width: "75px",
@@ -184,7 +181,7 @@ export const Test = () => {
                     },
                   }}
                 >
-                  {item.emoji}
+                  {item.client.name}
                 </Typography>
 
                 <Typography
@@ -200,15 +197,18 @@ export const Test = () => {
                 >
                   {item.comment}
                 </Typography>
-                <Box sx={{ marginTop: "13px" }}>
-                  {[...Array(item.star)].map((_, i) => (
-                    <StarIcon
-                      key={i}
-                      sx={{ color: "#E57C00", fontSize: "18px" }}
-                    />
-                  ))}
+                 <Box sx={{ marginTop: "13px" }}>
+                {[...Array(item.star)].map((_, i) => (
+                  <StarIcon
+                    key={i}
+                    sx={{ color: "#E57C00", fontSize: "18px" }}
+                  />
+                ))}
+                {item.star < 5 && (
                   <StarBorderIcon sx={{ color: "#E57C00", fontSize: "18px" }} />
-                </Box>
+                )}
+              </Box>
+
               </Box>
             </Box>
           ))}

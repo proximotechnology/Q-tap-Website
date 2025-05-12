@@ -21,7 +21,7 @@ export const Header = () => {
     const renderIcon = () => {
         if (!formData) return null;
 
-        switch (formData.selectedOption) {
+        switch (formData.servingWay) {
             case 'dinein':
                 return <span className='icon-table' style={{ fontSize: '70px', color: "#aaaaaa2c" }}></span>;
 
