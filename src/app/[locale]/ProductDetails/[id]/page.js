@@ -12,7 +12,7 @@ const sizes = ["S", "M", "L"];
 
 import { addItemToCart } from "../cartUtils";
 import { useLocale, useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE, fetchData } from '@/fetchData';
+import { BASE_URL_IMAGE, fetchData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 const page = ({ params }) => {

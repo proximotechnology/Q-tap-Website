@@ -9,7 +9,7 @@ import { Footer } from '../categories/Footer';
 import { Categories } from './Categories';
 import { Content } from './Content';
 import { useTranslations } from 'next-intl';
-import { fetchData } from '@/fetchData';
+import { fetchData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const page = () => {

@@ -4,7 +4,7 @@ import { Box, Typography, } from '@mui/material';
 import { Link } from "@/i18n/navigation"
 import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
-import { BASE_URL_IMAGE } from '@/fetchData';
+import { BASE_URL_IMAGE } from '@/utils';
 import { useSearchParams } from 'next/navigation';
 export const Item = ({ item ,selectedCategory}) => {
     const searchParams = useSearchParams();

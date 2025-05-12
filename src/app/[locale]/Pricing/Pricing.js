@@ -141,7 +141,7 @@ export const Pricing = () => {
                 {pricingData.map((plan) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={plan.id}>
                         <PricingCard
-                            title={t(plan.name)}
+                            title={plan.name}
                             priceMonthly={plan.monthly_price}
                             priceYearly={plan.yearly_price}
                             description={plan.description}

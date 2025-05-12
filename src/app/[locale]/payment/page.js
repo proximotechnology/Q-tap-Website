@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation"
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useTranslations } from 'use-intl';
 import axios from 'axios';
-import { BASE_URL, calculateOrderPriceDetailed } from '@/fetchData';
+import { BASE_URL, calculateOrderPriceDetailed } from '@/utils';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 

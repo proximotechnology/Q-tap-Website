@@ -1,5 +1,5 @@
 {
-    "locale":"ar",
+    "locale": "ar",
     "nav": {
         "pricing": "التسعير",
         "Home": "بيت",
@@ -232,7 +232,9 @@
     "save": "حفظ",
     "yourAccountWillActiveSooner": "مرحبًا بك أيها الشريك، شكرًا لانضمامك إلينا، سيتم تفعيل حسابك قريبًا.",
     "getInTouch": "تواصل معنا",
-    "SizeCountRequired":"اختيار الحجم و الكميه مطلوب",
-    "somethingWentWrong":"لقد حدث خطأ ما، يرجى المحاولة مرة أخرى",
-    "pleaseFillAllFields":"يرجى ملء جميع الحقول"
+    "SizeCountRequired": "اختيار الحجم و الكميه مطلوب",
+    "somethingWentWrong": "لقد حدث خطأ ما، يرجى المحاولة مرة أخرى",
+    "pleaseFillAllFields": "يرجى ملء جميع الحقول",
+    "failedFetchTestData": "failedFetchTestData",
+    "city": "المدينه"
 }

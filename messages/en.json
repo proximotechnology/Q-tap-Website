@@ -234,5 +234,7 @@
     "getInTouch": " Get in touch",
     "SizeCountRequired":"select quantity and size is required",
     "somethingWentWrong":"something went wrong please try again",
-    "pleaseFillAllFields":"please fill all fields"
+    "pleaseFillAllFields":"please fill all fields",
+    "failedFetchTestData":"failedFetchTestData",
+    "city":"city"
 }

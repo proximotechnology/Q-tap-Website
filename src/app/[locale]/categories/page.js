@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
-import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid } from '@mui/material';
+import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid, Button } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 import { Arrow } from './Arrow';
@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useShop } from './context';
-import {BASE_URL_IMAGE, fetchData} from '../../../fetchData'
+import { BASE_URL_IMAGE, fetchData } from '../../../utils'
 
 const page = () => {
     const t = useTranslations();
@@ -23,7 +23,7 @@ const page = () => {
     const [currentShop, setCurrentShop] = useState(null)
     const [currentBranch, setCurrentBranch] = useState(null)
 
-    const { setSelectedShop ,selectedShop  } = useShop()
+
 
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
@@ -31,21 +31,25 @@ const page = () => {
     const router = useRouter();
 
     if (!shopId || !branchId) {
-        setSelectedShop(shops)
         router.push(`/shops/`);
     }
 
 
     const getData = async (endPoint) => {
-        
-        const data = await fetchData(endPoint,setIsLoading);
-        setShops(data.data.data)
-        setSelectedShop(data.data.data)
+        try {
+            const data = await fetchData(endPoint, setIsLoading);
+            setShops(data.data.data)
+        } catch (error) {
+            console.log('categories getData fn error :', error)
+        }
+
     }
+    const prefetchTarget = (id) => {
+        router.prefetch(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`); // Next.js caches this
+    };
 
     const handlCatClick = (id) => {
         if (shopId && branchId) {
-            setSelectedShop(shops)
             router.push(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`);
         } else {
             console.log("Shop or Branch not selected yet");
@@ -57,12 +61,17 @@ const page = () => {
     }, [])
 
     useEffect(() => {
+        if (!shops) return;
 
         const selectedShop = shops?.find(shop => shop.id === Number(shopId));
         const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
 
-        setCurrentBranch(selectedBranch)
+        console.log(selectedShop, " ", selectedBranch)
+        localStorage.setItem("selectedShopID", selectedShop.id)
+        localStorage.setItem("selectedBranchID", selectedBranch.id)
+
         setCurrentShop(selectedShop)
+        setCurrentBranch(selectedBranch)
 
     }, [shops])
 
@@ -192,10 +201,12 @@ const page = () => {
                                     <Typography className="menu-title" >{item.name}</Typography>
                                 </div>
 
-                                <Box
+                                <Button
                                     sx={{
                                         backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                                         width: "30px", height: "30px",
+                                        padding: '0px', margin: '0px',
+                                        minWidth: '0px',
                                         borderRadius: '50%',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -204,9 +215,9 @@ const page = () => {
                                         position: 'absolute', bottom: "0", right: "0",
                                     }}
                                     onClick={() => { handlCatClick(item.id) }}
-                                >
+                                    onMouseEnter={() => { prefetchTarget(item.id) }}>
                                     <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
-                                </Box>
+                                </Button>
 
                             </div>
                         ))}

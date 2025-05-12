@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { categoryProducts } from '../categories/data';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import { useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE } from '@/fetchData';
+import { BASE_URL_IMAGE } from '@/utils';
 
 const menuItems = [
     {

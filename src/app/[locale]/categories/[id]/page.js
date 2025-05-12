@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useShop } from '../context';
-import { BASE_URL_IMAGE, fetchData } from '@/fetchData';
+import { BASE_URL_IMAGE, fetchData } from '@/utils';
 
 
 const page = ({ params }) => {

@@ -12,7 +12,7 @@ import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 import { getCartItems } from '../ProductDetails/cartUtils';
 import axios from 'axios';
-import { BASE_URL, calculateOrderPriceDetailed } from '@/fetchData';
+import { BASE_URL, calculateOrderPriceDetailed, egyptCities } from '@/utils';
 import MapView from './map';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -33,10 +33,10 @@ const page = () => {
     const [cartItems, setCartItems] = useState([]);
     const [table, setTable] = useState([]);
     const [showMap, setShowMap] = useState(false);
-    const [userPosition,setUserPosition] = useState(null)
+    const [userPosition, setUserPosition] = useState(null)
     const router = useRouter()
-    
-   
+
+
     const getTable = async () => { // TODO: handle this user suppose to select table based of QR code on the table he set on
         try {
 
@@ -140,22 +140,22 @@ const page = () => {
             userPosition
         };
         localStorage.setItem('formData', JSON.stringify(data));
-    }, [phone, selectedTable, selectedCity, selectedName, comment, address, code, selectedValue, selectedOption,userPosition]);
-    
-    const handlePlaceOrderClick = () =>{
-         setIsLoading(true)
-         if(!phone || !selectedName ){
+    }, [phone, selectedTable, selectedCity, selectedName, comment, address, code, selectedValue, selectedOption, userPosition]);
+
+    const handlePlaceOrderClick = () => {
+        setIsLoading(true)
+        if (!phone || !selectedName) {
             toast.error(t("pleaseFillAllFields"))
             setIsLoading(false)
             return;
-         }
-         if(selectedOption === 'delivery' && (!userPosition || !address)){
+        }
+        if (selectedOption === 'delivery' && (!userPosition || !address)) {
             toast.error(t("pleaseFillAllFields"))
             setIsLoading(false)
             return;
-         }
-         router.push('/payment')
-                        
+        }
+        router.push('/payment')
+
     }
     // =========================================================================
 
@@ -356,10 +356,7 @@ const page = () => {
                                         <MenuItem value="" disabled sx={{ fontSize: "11px", color: "#797993", }}>
                                             {t("selectCity")}
                                         </MenuItem>
-                                        <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>City 1</MenuItem>
-                                        <MenuItem value={2} sx={{ fontSize: "11px", color: "#797993", }}>City 2</MenuItem>
-                                        <MenuItem value={3} sx={{ fontSize: "11px", color: "#797993", }}>City 3</MenuItem>
-                                        <MenuItem value={4} sx={{ fontSize: "11px", color: "#797993", }}>City 4</MenuItem>
+                                        {egyptCities.map(city => <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>{city.name}</MenuItem>)}
                                     </Select>
                                 </FormControl>
                                 <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("address")}</Typography>
@@ -394,11 +391,11 @@ const page = () => {
                                                 backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                                             }
                                         }}>
-                                        <span class="icon-map-1" style={{ fontSize: "19px", marginRight: "7px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span></span>
+                                        <span className="icon-map-1" style={{ fontSize: "19px", marginRight: "7px" }}><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span><span className="path5"></span><span className="path6"></span><span className="path7"></span><span className="path8"></span><span className="path9"></span><span className="path10"></span><span className="path11"></span><span className="path12"></span><span className="path13"></span><span className="path14"></span><span className="path15"></span></span>
                                         {showMap ? 'Hide Map' : t("pinYourLocation")}
                                     </Button>
                                 </Box>
-                                {showMap && <MapView setUserPosition={setUserPosition}/>}
+                                {showMap && <MapView setUserPosition={setUserPosition} />}
                             </>
                         )}
 
@@ -464,7 +461,7 @@ const page = () => {
             <Box
                 sx={{
                     position: "fixed", bottom: 0, backgroundColor: "#302E3B", width: "90%", padding: "20px",
-                    borderRadius: "30px 30px 0px 0px", display: "flex", justifyContent: "space-between", zIndex:'30'
+                    borderRadius: "30px 30px 0px 0px", display: "flex", justifyContent: "space-between", zIndex: '30'
                 }}>
                 <Box sx={{ width: "90%" }}>
                     <Typography variant="h6" sx={{ fontSize: '12px', color: '#AAAAAA' }}>
@@ -504,7 +501,7 @@ const page = () => {
                             }
                             label={
                                 <Box display="flex" alignItems="center">
-                                    <span class="icon-price-tag" style={{ fontSize: '16px', color: "green" }}></span>
+                                    <span className="icon-price-tag" style={{ fontSize: '16px', color: "green" }}></span>
                                     <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>{t("cashCard")}</Typography>
                                 </Box>}
                         />
@@ -524,7 +521,7 @@ const page = () => {
                                 }
                                 label={
                                     <Box display="flex" alignItems="center">
-                                        <span class="icon-wallet" style={{ fontSize: '16px', marginRight: "4px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+                                        <span className="icon-wallet" style={{ fontSize: '16px', marginRight: "4px" }}><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span><span className="path5"></span><span className="path6"></span><span className="path7"></span><span className="path8"></span><span className="path9"></span><span className="path10"></span><span className="path11"></span><span className="path12"></span></span>
                                         <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>{t("cart")}</Typography>
                                     </Box>}
                             />
@@ -545,7 +542,7 @@ const page = () => {
                                 }
                                 label={
                                     <Box display="flex" alignItems="center">
-                                        <span class="icon-wallet" style={{ fontSize: '16px', marginRight: "4px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+                                        <span className="icon-wallet" style={{ fontSize: '16px', marginRight: "4px" }}><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span><span className="path5"></span><span className="path6"></span><span className="path7"></span><span className="path8"></span><span className="path9"></span><span className="path10"></span><span className="path11"></span><span className="path12"></span></span>
                                         <Typography sx={{ fontSize: '12px', color: "#AAAAAA" }}>{t("digitalWallet")}</Typography>
                                     </Box>}
                             />
@@ -553,21 +550,21 @@ const page = () => {
                     </RadioGroup>
 
                     {/* <Link href='/payment'> */}
-                        <Button
+                    <Button
                         onClick={handlePlaceOrderClick}
-                            sx={{
-                                width: "85%", marginTop: "10px",
+                        sx={{
+                            width: "85%", marginTop: "10px",
+                            backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
+                            color: "white", textTransform: "capitalize", fontSize: "12px",
+                            borderRadius: "20px", height: "30px",
+                            "&:hover": {
                                 backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                color: "white", textTransform: "capitalize", fontSize: "12px",
-                                borderRadius: "20px", height: "30px",
-                                "&:hover": {
-                                    backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                }
-                            }}
-                            disabled={isLoading}
-                            >
-                            {t("placeOrder")}<DoneOutlinedIcon sx={{ fontSize: "20px", ml: 1 }} />
-                        </Button>
+                            }
+                        }}
+                        disabled={isLoading}
+                    >
+                        {t("placeOrder")}<DoneOutlinedIcon sx={{ fontSize: "20px", ml: 1 }} />
+                    </Button>
                     {/* </Link> */}
 
                 </Box>

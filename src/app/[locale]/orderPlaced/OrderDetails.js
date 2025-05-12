@@ -1,6 +1,6 @@
 "use client";
 import { ordersDetails } from '@/app/[locale]/categories/data';
-import { formateDate } from '@/fetchData';
+import { formateDate } from '@/utils';
 import { Box, Typography, Divider, Grid } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react'

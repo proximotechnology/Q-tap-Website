@@ -8,7 +8,7 @@ import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { BASE_URL_IMAGE, calculateOrderPriceDetailed } from '@/fetchData';
+import { BASE_URL_IMAGE, calculateOrderPriceDetailed } from '@/utils';
 
 const page = () => {
     const t = useTranslations();
@@ -20,8 +20,13 @@ const page = () => {
     const [subTotal, setSubTotal] = useState(0);
 
     const searchParams = useSearchParams();
-    const shopId = searchParams.get('shopId')
-    const branchId = searchParams.get('branchId')
+    let shopId = searchParams.get('shopId')
+    let branchId = searchParams.get('branchId')
+
+    if (!shopId || !branchId) {
+        shopId = localStorage.getItem("selectedShopID")
+        branchId = localStorage.getItem("selectedBranchID")
+    }
 
     useEffect(() => {
         const storedCartItems = getCartItems();
@@ -237,7 +242,7 @@ const page = () => {
                 <Box sx={{ width: "46%" }}>
                     <Button
                         onClick={() => {
-                            if (cartItems.length>0)
+                            if (cartItems.length > 0)
                                 window.location.href = `/${locale}/clientDetails`;
                         }}
                         sx={{

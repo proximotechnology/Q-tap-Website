@@ -6,7 +6,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Popover, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRouter } from 'next/navigation';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import { useLocale } from 'next-intl';
 
 export const Admin = () => {
@@ -15,7 +15,18 @@ export const Admin = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const openUserPopover = Boolean(anchorElUser);
     const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const [userData, setUserData] = useState({
+        name: '',
+        email: ''
+    });
 
+    useEffect(() => {
+        // This code runs only on the client side
+        setUserData({
+            name: localStorage.getItem("userName") || '',
+            email: localStorage.getItem("userEmail") || ''
+        });
+    }, []);
     useEffect(() => {
         // This will only run on the client side
         setIsLoggedIn(localStorage.getItem('userToken'));
@@ -41,10 +52,11 @@ export const Admin = () => {
             <Box
                 aria-describedby={openUserPopover ? 'simple-popover' : undefined}
                 onClick={handleUserClick}
-                sx={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "3px" , 
+                sx={{
+                    cursor: "pointer", display: "flex", alignItems: "center", gap: "3px",
                     marginRight: { xs: "20px", md: "0px" } // Apply marginRight for smaller screens
 
-                }}> 
+                }}>
                 <IconButton color="inherit" sx={{
                     backgroundColor: '#ef7d00', borderRadius: '30%', padding: '8px',
                     '&:hover': {
@@ -71,15 +83,15 @@ export const Admin = () => {
                             <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
                         </Avatar>
                         <Box>
-                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("userName")}</Typography>
-                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("userEmail")}</Typography>
+                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{userData.name}</Typography>
+                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{userData.email}</Typography>
                         </Box>
                     </Box>
                     <Divider />
 
                     <List>
                         <Box
-                            onClick={() =>  router.push(`/${locale}`)}
+                            onClick={() => router.push(`/${locale}`)}
                             sx={{
                                 cursor: "pointer",
                                 backgroundColor: "#222240",
@@ -117,12 +129,12 @@ export const Admin = () => {
                             <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
                                 <ListItemIcon>
                                     <span class="icon-price-tag" style={{ fontSize: "20px" }}></span>
-                            </ListItemIcon>
-                            <ListItemText primary="My Subscription"
-                                primaryTypographyProps={{
-                                    sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: "-30px" }
-                                }} />
-                        </ListItem>
+                                </ListItemIcon>
+                                <ListItemText primary="My Subscription"
+                                    primaryTypographyProps={{
+                                        sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: "-30px" }
+                                    }} />
+                            </ListItem>
                         </Link>
 
                         <Link href="#faq" style={{ textDecoration: 'none' }}>
