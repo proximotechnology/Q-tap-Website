@@ -72,7 +72,7 @@ const FormFields = ({ onStartChat }) => {
                 bottom: 80,
                 right: 20,
                 borderRadius: 2,
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+                boxShadow: '10px 10px 10px rgba(0,0,0,0.5)',
                 backgroundColor: 'white',
                 zIndex: 1000,
                 textAlign: "center", justifyContent: "center"

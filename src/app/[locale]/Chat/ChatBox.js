@@ -109,6 +109,8 @@ const ChatBox = ({ onCloseChat }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 zIndex: 1000,
+                boxShadow: '10px 10px 10px rgba(0,0,0,0.5)',
+            
             }}
         >
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

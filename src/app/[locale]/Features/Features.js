@@ -122,7 +122,7 @@ const Features = () => {
     <Box
       sx={{
         backgroundImage: "url('/images/Rectangle.png')",
-        height: "auto",
+        height: "92vh",
         width: "100%",
         position: "relative",
         backgroundSize: "cover",
