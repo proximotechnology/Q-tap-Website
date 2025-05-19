@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid } from '@mui/material';
+import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid, Button } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 import '../categories/categories.css';
@@ -9,8 +9,9 @@ import { Footer } from '../categories/Footer';
 import { Categories } from './Categories';
 import { Content } from './Content';
 import { useTranslations } from 'next-intl';
-import { fetchData } from '@/utils';
+import { BASE_URL_IMAGE, fetchData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getSpecialOffers, handleSpecialOfferClick } from '../categories/page';
 
 const page = () => {
     const t = useTranslations()
@@ -19,6 +20,7 @@ const page = () => {
     const [currentBranch, setCurrentBranch] = useState(null)
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [offers, setOffers] = useState([])
 
 
     const searchParams = useSearchParams();
@@ -41,6 +43,7 @@ const page = () => {
 
     useEffect(() => {
         getData('menu_all_restaurants')
+        getSpecialOffers(setOffers, branchId)
     }, [])
 
     useEffect(() => {
@@ -49,7 +52,7 @@ const page = () => {
         const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
         console.log("selectedBranch", selectedBranch)
 
-        console.log('check setSelectedCategory',Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal?.length > 0) 
+        console.log('check setSelectedCategory', Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal?.length > 0)
         if (Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal.length > 0) {
             setSelectedCategory(selectedBranch?.cat_meal[0])
             console.log('setSelectedCategory')
@@ -110,7 +113,7 @@ const page = () => {
                     </Typography>
 
                     <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                        {specialOffers.map((offer) => (
+                        {offers.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
                                     backgroundColor: "#48485B", color: "white", width: "40px", height: "40px",
@@ -127,11 +130,11 @@ const page = () => {
                                         borderRadius: '20px',
                                         height: 'auto',
                                     }} >
-
+                                    {console.log(`${BASE_URL_IMAGE}${offer.img}`) /*debug log*/ }
                                     <CardMedia
                                         component="img"
                                         height="90"
-                                        image={offer.imageUrl}
+                                        image={offer.img ? `${BASE_URL_IMAGE}${offer.img}` : ""}
                                         alt={offer.name}
                                         sx={{
                                             borderRadius: '0px 0px 20px 20px',
@@ -145,15 +148,17 @@ const page = () => {
 
                                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                             <Box>
-                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.oldPrice}</Typography>
-                                                <Typography sx={{ fontSize: "15px" }}>{offer.newPrice} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
+                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.before_discount}</Typography>
+                                                <Typography sx={{ fontSize: "15px" }}>{offer.after_discount} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
                                             </Box>
                                             <Box
                                                 sx={{
                                                     width: "27px", height: "27px", backgroundColor: "#797993", color: "white",
                                                     borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", cursor: 'pointer',
                                                 }}>
-                                                <AddIcon sx={{ fontSize: "17px" }} />
+                                                <Button onClick={() => handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)}>
+                                                    <AddIcon sx={{ fontSize: "17px" }} />
+                                                </Button>
                                             </Box>
                                         </Box>
                                     </Box>

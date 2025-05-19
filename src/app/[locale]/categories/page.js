@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useShop } from './context';
-import { BASE_URL_IMAGE, fetchData } from '../../../utils'
+import { BASE_URL, BASE_URL_IMAGE, fetchData } from '../../../utils'
 
 const page = () => {
     const t = useTranslations();
@@ -22,9 +22,9 @@ const page = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [currentShop, setCurrentShop] = useState(null)
     const [currentBranch, setCurrentBranch] = useState(null)
+    const [offers, setOffers] = useState([])
 
-
-
+    console.log(">>>>>>>>>>>>>>>>>", offers)//log debug
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
@@ -44,6 +44,7 @@ const page = () => {
         }
 
     }
+
     const prefetchTarget = (id) => {
         router.prefetch(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`); // Next.js caches this
     };
@@ -58,6 +59,7 @@ const page = () => {
     }
     useEffect(() => {
         getData('menu_all_restaurants')
+        getSpecialOffers(setOffers, branchId)
     }, [])
 
     useEffect(() => {
@@ -66,7 +68,6 @@ const page = () => {
         const selectedShop = shops?.find(shop => shop.id === Number(shopId));
         const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
 
-        console.log(selectedShop, " ", selectedBranch)
         localStorage.setItem("selectedShopID", selectedShop.id)
         localStorage.setItem("selectedBranchID", selectedBranch.id)
 
@@ -123,7 +124,7 @@ const page = () => {
                     </Typography>
 
                     <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                        {specialOffers.map((offer) => (
+                        {offers.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
                                     backgroundColor: "#48485B", color: "white", width: "40px", height: "40px",
@@ -140,11 +141,11 @@ const page = () => {
                                         borderRadius: '20px',
                                         height: 'auto',
                                     }} >
-
+                                    {console.log(`${BASE_URL_IMAGE}${offer.img}`)}
                                     <CardMedia
                                         component="img"
                                         height="90"
-                                        image={offer.imageUrl}
+                                        image={offer.img ? `${BASE_URL_IMAGE}${offer.img}` : ""}
                                         alt={offer.name}
                                         sx={{
                                             borderRadius: '0px 0px 20px 20px',
@@ -166,7 +167,12 @@ const page = () => {
                                                     width: "27px", height: "27px", backgroundColor: "#797993", color: "white",
                                                     borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", cursor: 'pointer',
                                                 }}>
-                                                <AddIcon sx={{ fontSize: "17px" }} />
+                                                <Button onClick={() => {
+                                                    console.log(">>>>> offer", offer)//debug log 
+                                                    handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
+                                                }}>
+                                                    <AddIcon sx={{ fontSize: "17px" }} />
+                                                </Button>
                                             </Box>
                                         </Box>
                                     </Box>
@@ -230,4 +236,66 @@ const page = () => {
     );
 };
 
-export default page; 
+export default page;
+
+export const getSpecialOffers = async (setOffers, branchId) => {
+    try {
+
+        console.log(">>>>>>>>>>>> getOffers") // debug log
+        const response = await axios.get(`${BASE_URL}meals_special_offers`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                brunch_id: branchId
+            }
+        });
+
+        // const response = await axios({
+        //     method: 'get',
+        //     url: `${BASE_URL}${endPoint}`,
+        //     data: {
+        //         brunch_id: branchId,
+        //     },
+        //     headers: {
+
+        //     },
+        // });
+
+        console.log(">>>>>>>>>>>> response", response) // debug log
+        if (response.data) {
+            const formattedOffers = response.data.map(offer => ({
+                id: offer.id,
+                item: offer.meals_id,
+                discount: offer.discount,
+                priceBefore: offer.before_discount,
+                priceAfter: offer.after_discount,
+                name: offer.name || '', // Ensure name is included
+                description: offer.description || '', // Ensure description is included
+                isEditing: false,
+                img: offer.img
+            }));
+            setOffers(formattedOffers);
+        }
+    } catch (error) {
+        console.error('Error fetching discounts:', error);
+    }
+};
+
+export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specialOfferId, currentBranch) => {
+    console.log("special offer click", currentBranch) // debug log
+    const categoryWithMeal = currentBranch.cat_meal
+        .find(category => {
+            console.log(">>>> category", category)// debug log
+            console.log(">>>> mealId", mealId)// debug log
+            return category.meals.some(meal => meal.id === Number(mealId))
+        }
+        );
+    console.log(categoryWithMeal)
+    if (shopId && branchId && categoryWithMeal) {
+        router.push(`/ProductDetails/${mealId}?shopId=${shopId}&branchId=${branchId}&catId=${categoryWithMeal.id}&special=${specialOfferId}`);
+    } else {
+        console.log("Shop or Branch not selected yet");// debug log
+    }
+
+}
