@@ -21,19 +21,35 @@ export const Admin = () => {
     });
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
-        if (!storedToken) {
+        const storedName = localStorage.getItem('userName');
+        const storedEmail = localStorage.getItem('userEmail');
+
+        // فقط نفذ العملية إذا كانت القيم غير موجودة
+        if (!storedToken || !storedName || !storedEmail) {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
+            const name = urlParams.get('name');
+            const email = urlParams.get('email');
+
             if (token) {
                 localStorage.setItem('token', token);
                 console.log('Token stored:', token);
-            } else {
-                console.log('No token found in URL');
+            }
+
+            if (name) {
+                localStorage.setItem('userName', name);
+                console.log('Name stored:', name);
+            }
+
+            if (email) {
+                localStorage.setItem('userEmail', email);
+                console.log('Email stored:', email);
             }
         } else {
-            console.log('Using existing token:', storedToken);
+            console.log('Data already exists in localStorage');
         }
-    }, []); // مصفوفة تبعيات فارغة لتشغيل الكود مرة واحدة فقط
+    }, []);
+
     const currentToken = localStorage.getItem('token');
     useEffect(() => {
         // This code runs only on the client side
@@ -58,8 +74,8 @@ export const Admin = () => {
     const handleLogoutClick = () => {
         // Remove from localStorage
         localStorage.removeItem('token');
-        localStorage.removeItem('clientName');
-        localStorage.removeItem('clientEmail');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
         setIsLoggedIn(null);
         handleUserClose();
 
@@ -101,10 +117,9 @@ export const Admin = () => {
                             <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
                         </Avatar>
                         <Box>
-                            {/* <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("clientName") && localStorage.getItem("clientName") !== "null" ? localStorage.getItem("clientName") : ''}</Typography>
-                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("clientEmail") && localStorage.getItem("clientEmail") !== "null" ? localStorage.getItem("clientEmail") : ''}</Typography> */}
-                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{"client"}</Typography>
-                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{"client@gmail.com"}</Typography>
+                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("userName") && localStorage.getItem("userName") !== "null" ? localStorage.getItem("userName") : ''}</Typography>
+                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("userEmail") && localStorage.getItem("userEmail") !== "null" ? localStorage.getItem("userEmail") : ''}</Typography>
+
                         </Box>
                     </Box>
                     <Divider />
