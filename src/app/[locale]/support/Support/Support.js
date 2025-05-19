@@ -11,7 +11,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import Language from "@/component/Language";
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
@@ -23,44 +23,31 @@ import { HomeContext } from "@/app/[locale]/context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { AllChatSupport } from "./AllChatSupport";
 
+import { useQuery } from "@tanstack/react-query";
+
 export const Support = () => {
   const [expanded, setExpanded] = useState(null);
-  const [faqData, setFaqData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const { getHomeData } = useContext(HomeContext);
-  const t = useTranslations()
+  const t = useTranslations();
+
   const handleToggle = (panel) => {
     setExpanded(expanded === panel ? null : panel);
   };
 
-  // get FAQS data from api
-  const getFaqData = async () => {
-    setLoading(true);
-    try {
-      // return data
-      const response = await getHomeData();
-
-      // set data
-      const parsedData = response?.data?.faq.map((faq) => ({
-        ...faq,
-        question: eval(faq?.question),
-        answer: eval(faq?.answer),
-      }));
-
-      setFaqData(parsedData);
-    //   console.log(parsedData);
-
-      setError(t("failedFetchFAQ"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getFaqData();
-  }, []);
-
+  // جلب البيانات باستخدام useQuery
+  const { data: faqData, isLoading, error } = useQuery({
+    queryKey: ["homeData"],
+    queryFn: getHomeData,
+    select: (response) => {
+      return (
+        response?.data?.faq?.map((faq) => ({
+          ...faq,
+          question: faq.question ? JSON.parse(faq.question) : [],
+          answer: faq.answer ? JSON.parse(faq.answer) : [],
+        })) || []
+      );
+    },
+  });
   return (
     <Box>
       <Box
@@ -201,7 +188,7 @@ export const Support = () => {
                     />
                     <Typography
                       variant="body2"
-                      sx={{ fontSize: "10px", color: "#AAAAAA"}}
+                      sx={{ fontSize: "10px", color: "#AAAAAA" }}
                     >
                       {t("whatsApp")}
                     </Typography>
@@ -302,7 +289,7 @@ export const Support = () => {
                 color: "gray",
               }}
             >
-             {t("weHaveAnswerToYourQuestion")}
+              {t("weHaveAnswerToYourQuestion")}
             </Typography>
 
             <Paper

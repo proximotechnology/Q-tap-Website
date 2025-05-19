@@ -11,12 +11,10 @@ import {
 import "./Features.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
 
 const Features = () => {
   const [activeIndex, setActiveIndex] = useState(1);
-  const [featData, setFeatData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const { getHomeData } = useContext(HomeContext);
   const t = useTranslations();
 
@@ -87,17 +85,20 @@ const Features = () => {
     }
   };
 
-  const getFeatData = async () => {
-    setLoading(true);
-    try {
-      const response = await getHomeData();
-      const parsedData = response?.data?.features.map((feat) => ({
+  // جلب البيانات باستخدام useQuery مع معالجة البيانات
+  const { data: featData, isLoading, error } = useQuery({
+    queryKey: ["homeData"],
+    queryFn: getHomeData,
+    select: (response) => {
+      const parsedData = response?.data?.features?.map((feat) => ({
         ...feat,
         titles: JSON.parse(eval(feat.titles)),
         img: JSON.parse(feat.img)[0],
         descriptions: JSON.parse(eval(feat.descriptions)),
         features: JSON.parse(eval(feat.features)),
-      }));
+      })) || [];
+
+      // التأكد من وجود 6 عناصر على الأقل
       let finalData = parsedData;
       if (parsedData.length < 6) {
         finalData = [];
@@ -105,19 +106,9 @@ const Features = () => {
           finalData.push(parsedData[i % parsedData.length]);
         }
       }
-      setFeatData(finalData);
-    } catch (error) {
-      console.error("Error fetching features:", error);
-      setError(t("homePage.faildFetchFuature"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getFeatData();
-  }, []);
-
+      return finalData;
+    },
+  });
   return (
     <Box
       sx={{

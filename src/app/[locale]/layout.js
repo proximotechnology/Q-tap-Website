@@ -6,6 +6,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
 import PusherProvider from "./context/PusherProvider";
 import { ToastContainer } from "react-toastify";
+import ClientProviders from "@/component/ClientProviders/ClientProviders";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,14 +39,16 @@ export default async function LocaleLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HomeContextProvider>
-          <NextIntlClientProvider>
-            <PusherProvider>
-              {children}
-              <ToastContainer />
-            </PusherProvider>
-          </NextIntlClientProvider>
-        </HomeContextProvider>
+        <ClientProviders >
+          <HomeContextProvider>
+            <NextIntlClientProvider>
+              <PusherProvider>
+                {children}
+                <ToastContainer />
+              </PusherProvider>
+            </NextIntlClientProvider>
+          </HomeContextProvider>
+        </ClientProviders>
       </body>
     </html>
   );

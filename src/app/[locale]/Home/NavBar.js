@@ -17,7 +17,7 @@ import Language from '@/component/Language';
 import { Admin } from '@/component/Admin';
 import { Link } from "@/i18n/navigation";
 import { useRouter } from 'next/router';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 const drawerWidth = "100%";
 const navItems = [
@@ -35,6 +35,7 @@ function DrawerAppBar(props) {
     const [isClient, setIsClient] = useState(false);
     const router = isClient ? useRouter() : null;
     const t = useTranslations();
+    const locale = useLocale()
 
     useEffect(() => {
         setIsClient(typeof window !== 'undefined');
@@ -255,7 +256,7 @@ function DrawerAppBar(props) {
                                                     }}
                                                 >
                                                     <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
-                                                    <span style={{ marginLeft: '5px', fontSize: "11px" }}>
+                                                    <span style={{ marginLeft: '5px', fontSize: "11px", marginRight: locale == "ar" ? "12px":"0px" }}>
                                                         {t("nav." + item.name)}
                                                     </span>
                                                 </Button>
@@ -307,7 +308,7 @@ function DrawerAppBar(props) {
                                 >
                                     <img
                                         src='/assets/pricing.svg'
-                                        style={{ width: "20px", marginRight: "8px", height: "20px" }}
+                                        style={{ width: "18px", marginLeft: locale == "ar" ? "6px":"0px", marginRight: locale == "en" ? "5px":"0px", height: "18px" }}
                                     />
                                     {t("nav.pricing")}
                                 </Typography>
