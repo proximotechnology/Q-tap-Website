@@ -22,6 +22,12 @@ const geistMono = localFont({
 export const metadata = {
   title: "Qtap",
   description: `Tap, Order, Pay and Eat Create a Smart menu suitable for any type of business. Engage more with your customers.`,
+  icons: {
+     icon: [
+      { url: "/images/qtaptap.png", sizes: "32x32" }
+
+    ],
+  }
 };
 
 export default async function LocaleLayout({
