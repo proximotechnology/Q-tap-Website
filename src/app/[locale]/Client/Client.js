@@ -9,40 +9,27 @@ import { Pagination } from "swiper/modules";
 import "./Client.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
 
 export const Client = () => {
-  const [clientData, setClientData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { getHomeData } = useContext(HomeContext);
+const { getHomeData } = useContext(HomeContext);
   const t = useTranslations();
-  // fetch data
-  const getClientData = async () => {
-    setLoading(true);
-    try {
-      const response = await getHomeData();
 
-      const parsedData = response?.data?.clients.map((client) => ({
-        ...client,
-        img: client.img ? JSON.parse(client.img)[0] : "",
-        title: "image title",
-      }));
-
-      setClientData(parsedData);
-      // console.log("Parsed client Data:", parsedData);
-
-      setError(t("homePage.faildFetchClient"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getClientData();
-  }, []);
-
-  // console.log("clientData", clientData);
-
+  // جلب البيانات باستخدام useQuery مع معالجة البيانات
+  const { data: clientData, isLoading, error } = useQuery({
+    queryKey: ["homeData"],
+    queryFn: getHomeData,
+    select: (response) => {
+      // معالجة البيانات لتحويلها إلى الشكل المطلوب
+      return (
+        response?.data?.clients?.map((client) => ({
+          ...client,
+          img: client.img ? JSON.parse(client.img)[0] : "",
+          title: "image title",
+        })) || []
+      );
+    },
+  });
   return (
     <Box
       sx={{
@@ -102,12 +89,13 @@ export const Client = () => {
             >
               {clientData?.map((client) => (
                 <SwiperSlide key={client?.id}>
-                  <Box sx={{ display: "flex", justifyContent: "center",
-                    width: "90px", height: "90px", alignItems: "center",margin: "0 auto",
+                  <Box sx={{
+                    display: "flex", justifyContent: "center",
+                    width: "90px", height: "90px", alignItems: "center", margin: "0 auto",
                     borderRadius: "50%",
                     padding: "5px",
-                      "&:hover": {cursor:"pointer", transform: "scale(1.05)", transition: "0.3s" }
-                   }}>
+                    "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.3s" }
+                  }}>
                     <img
                       src={`https://api.qutap.co/${client?.img}`}
                       alt={client?.title}
@@ -141,7 +129,7 @@ export const Client = () => {
               <Typography
                 variant="h1"
                 sx={{ fontSize: { xs: "40px", md: "55px" } }}
-                // ref={businessesRef}
+              // ref={businessesRef}
               >
                 7K
               </Typography>
@@ -173,7 +161,7 @@ export const Client = () => {
               <Typography
                 variant="h1"
                 sx={{ fontSize: { xs: "40px", md: "55px" } }}
-                // ref={ordersRef}
+              // ref={ordersRef}
               >
                 5M
               </Typography>

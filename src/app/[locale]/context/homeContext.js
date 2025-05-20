@@ -4,8 +4,11 @@ import { createContext } from "react";
 
 export let HomeContext = createContext();
 const HomeContextProvider = (props) => {
+
   const getHomeData = async () => {
     const response = await axios.get("https://api.qutap.co/api/home");
+    console.log("all response" , response);
+    
     return response;
   };
 

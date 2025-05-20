@@ -19,16 +19,38 @@ export const Admin = () => {
         name: '',
         email: ''
     });
-    const params = new URLSearchParams(window.location.search);
-    localStorage.setItem("clientName", params.get("clientName"))
-    localStorage.setItem("clientEmail", params.get("clientEmail"))
-    localStorage.setItem("clientToken", params.get("clientToken"))
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        const storedName = localStorage.getItem('userName');
+        const storedEmail = localStorage.getItem('userEmail');
 
-    console.log(
-        localStorage.getItem("clientName"),
-        localStorage.getItem("clientEmail"),
-        localStorage.getItem("clientToken")
-    )
+        // فقط نفذ العملية إذا كانت القيم غير موجودة
+        if (!storedToken || !storedName || !storedEmail) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const name = urlParams.get('name');
+            const email = urlParams.get('email');
+
+            if (token) {
+                localStorage.setItem('token', token);
+                console.log('Token stored:', token);
+            }
+
+            if (name) {
+                localStorage.setItem('userName', name);
+                console.log('Name stored:', name);
+            }
+
+            if (email) {
+                localStorage.setItem('userEmail', email);
+                console.log('Email stored:', email);
+            }
+        } else {
+            console.log('Data already exists in localStorage');
+        }
+    }, []);
+
+    const currentToken = localStorage.getItem('token');
     useEffect(() => {
         // This code runs only on the client side
         setUserData({
@@ -38,8 +60,8 @@ export const Admin = () => {
     }, []);
     useEffect(() => {
         // This will only run on the client side
-        setIsLoggedIn(localStorage.getItem("clientToken"));
-    }, [params]);
+        setIsLoggedIn(localStorage.getItem("token"));
+    }, []);
 
     const handleUserClick = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -51,19 +73,12 @@ export const Admin = () => {
 
     const handleLogoutClick = () => {
         // Remove from localStorage
-        localStorage.removeItem('clientToken');
-        localStorage.removeItem('clientName');
-        localStorage.removeItem('clientEmail');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
         setIsLoggedIn(null);
         handleUserClose();
 
-        // Remove query parameters from the URL (without reloading)
-        const url = new URL(window.location.href);
-        url.searchParams.delete("clientName");
-        url.searchParams.delete("clientEmail");
-        url.searchParams.delete("clientToken");
-
-        window.history.replaceState({}, document.title, url.pathname + url.search);
     };
 
     return (
@@ -102,8 +117,9 @@ export const Admin = () => {
                             <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
                         </Avatar>
                         <Box>
-                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("clientName") && localStorage.getItem("clientName") !== "null" ? localStorage.getItem("clientName") : ''}</Typography>
-                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("clientEmail") && localStorage.getItem("clientEmail") !== "null" ? localStorage.getItem("clientEmail") : ''}</Typography>
+                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("userName") && localStorage.getItem("userName") !== "null" ? localStorage.getItem("userName") : ''}</Typography>
+                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("userEmail") && localStorage.getItem("userEmail") !== "null" ? localStorage.getItem("userEmail") : ''}</Typography>
+
                         </Box>
                     </Box>
                     <Divider />
@@ -127,13 +143,21 @@ export const Admin = () => {
                             }}>
 
                             <span class="icon-home-icon-silhouette" style={{ color: "#ef7d00", marginRight: "5px", fontSize: "15px" }} ></span>
-                            <Link href="http://localhost:3001/" style={{ textDecoration: 'none' }}  rel="noopener noreferrer">
-                                <Typography sx={{ color: "white", fontSize: "10px", textTransform: "capitalize" }}>
-                                    Dashboard
-                                </Typography>
-                            </Link>
+                            <Typography
+                                sx={{ color: "white", fontSize: "10px", textTransform: "capitalize", cursor: "pointer" }}
+                                onClick={() => {
+                                    window.location.href = "http://localhost:3001"
+                                }}
+                            >
+                                Dashboard
+                            </Typography>
                         </Box>
-                        <a href="http://localhost:3001/setting-client" style={{ textDecoration: "none" }}>
+                        <Typography
+                            onClick={() => {
+                                window.location.href = `http://localhost:3001/test-web-login?token=${localStorage.getItem("token")}`;
+                                // window.location.href = `http://localhost:3001/setting-client?redirectBack=${encodeURIComponent(`http://localhost:3000/en?token=${localStorage.getItem("token")}`)}`;
+                            }}
+                        >
                             <ListItem sx={{ cursor: "pointer" }} >
                                 <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
 
@@ -144,7 +168,7 @@ export const Admin = () => {
                                         sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
                                     }} />
                             </ListItem>
-                        </a>
+                        </Typography>
                         <Link href="#pricing" style={{ textDecoration: 'none' }}>
                             <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
                                 <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
@@ -192,8 +216,12 @@ export const Admin = () => {
                                 />
                             </ListItem>
                         ) : (
-                            <Link Link href="http://localhost:3001/" passHref style={{textDecoration:"none"}}>
-                                <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
+                            <Typography
+                                onClick={() => {
+                                    window.location.href = "http://localhost:3001?redirectBack=http://localhost:3000/en"
+                                }}
+                                style={{ textDecoration: "none" }}>
+                                <ListItem sx={{ cursor: "pointer" }} >
                                     <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
                                         <img
                                             src="/assets/logout.svg"
@@ -213,7 +241,7 @@ export const Admin = () => {
                                         }}
                                     />
                                 </ListItem>
-                            </Link>
+                            </Typography>
                         )}
                     </List>
                 </Box>
