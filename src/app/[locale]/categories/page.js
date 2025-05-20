@@ -159,8 +159,8 @@ const page = () => {
 
                                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                             <Box>
-                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.oldPrice}</Typography>
-                                                <Typography sx={{ fontSize: "15px" }}>{offer.newPrice} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
+                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.priceAfter}</Typography>
+                                                <Typography sx={{ fontSize: "15px" }}>{offer.priceBefore} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
                                             </Box>
                                             <Box
                                                 sx={{

@@ -113,6 +113,7 @@ const page = () => {
                     </Typography>
 
                     <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
+                    {console.log("offers>>>>>>>>>>>>>",offers)}
                         {offers.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
@@ -148,8 +149,8 @@ const page = () => {
 
                                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                             <Box>
-                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.before_discount}</Typography>
-                                                <Typography sx={{ fontSize: "15px" }}>{offer.after_discount} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
+                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.priceAfter}</Typography>
+                                                <Typography sx={{ fontSize: "15px" }}>{offer.priceBefore} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
                                             </Box>
                                             <Box
                                                 sx={{
