@@ -146,7 +146,7 @@ export const Admin = () => {
                             <Typography
                                 sx={{ color: "white", fontSize: "10px", textTransform: "capitalize", cursor: "pointer" }}
                                 onClick={() => {
-                                    window.location.href = "http://localhost:3001"
+                                    window.location.href = "https://dashboard.qutap.co"
                                 }}
                             >
                                 Dashboard
@@ -154,8 +154,8 @@ export const Admin = () => {
                         </Box>
                         <Typography
                             onClick={() => {
-                                window.location.href = `http://localhost:3001/test-web-login?token=${localStorage.getItem("token")}`;
-                                // window.location.href = `http://localhost:3001/setting-client?redirectBack=${encodeURIComponent(`http://localhost:3000/en?token=${localStorage.getItem("token")}`)}`;
+                                window.location.href = `https://dashboard.qutap.co/test-web-login?token=${localStorage.getItem("token")}`;
+                                // window.location.href = `https://dashboard.qutap.co/setting-client?redirectBack=${encodeURIComponent(`https://qutap.co/en?token=${localStorage.getItem("token")}`)}`;
                             }}
                         >
                             <ListItem sx={{ cursor: "pointer" }} >
@@ -218,7 +218,7 @@ export const Admin = () => {
                         ) : (
                             <Typography
                                 onClick={() => {
-                                    window.location.href = "http://localhost:3001?redirectBack=http://localhost:3000/en"
+                                    window.location.href = "https://dashboard.qutap.co?redirectBack=https://qutap.co/en"
                                 }}
                                 style={{ textDecoration: "none" }}>
                                 <ListItem sx={{ cursor: "pointer" }} >
