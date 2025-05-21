@@ -49,7 +49,7 @@ const { getHomeData } = useContext(HomeContext);
           <Paper
             elevation={1}
             sx={{
-              height: { xs: "120px", md: "160px" },
+              height: { xs: "140px", md: "160px" },
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -59,7 +59,7 @@ const { getHomeData } = useContext(HomeContext);
               width: "70%",
               // width: { xs: '90%', md: '70%' },
               zIndex: "20",
-              marginTop: { xs: "-180px", md: "-180px", lg: "-200px" },
+              marginTop: { xs: "-200px", md: "-180px", lg: "-200px" },
             }}
           >
             <Swiper
