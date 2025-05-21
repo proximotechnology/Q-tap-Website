@@ -112,17 +112,21 @@ export const Admin = () => {
                 }}
             >
                 <Box sx={{ width: 200, padding: '10px' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', marginBottom: '20px', gap: '10px' }}>
-                        <Avatar sx={{ bgcolor: '#ef7d00', width: 40, height: 40 }}>
-                            <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
-                        </Avatar>
-                        <Box>
-                            <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("userName") && localStorage.getItem("userName") !== "null" ? localStorage.getItem("userName") : ''}</Typography>
-                            <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("userEmail") && localStorage.getItem("userEmail") !== "null" ? localStorage.getItem("userEmail") : ''}</Typography>
+                    {isLoggedIn && isLoggedIn !== "null" ? <>
+                        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', marginBottom: '20px', gap: '10px' }}>
+                            <Avatar sx={{ bgcolor: '#ef7d00', width: 40, height: 40 }}>
+                                <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
+                            </Avatar>
+                            <Box>
+                                <Typography variant="h6" sx={{ fontSize: "14px" }}>{localStorage.getItem("userName") && localStorage.getItem("userName") !== "null" ? localStorage.getItem("userName") : ''}</Typography>
+                                <Typography variant="body2" sx={{ fontSize: "12px" }} color="textSecondary">{localStorage.getItem("userEmail") && localStorage.getItem("userEmail") !== "null" ? localStorage.getItem("userEmail") : ''}</Typography>
 
+                            </Box>
                         </Box>
-                    </Box>
-                    <Divider />
+                        <Divider /> </>
+                        : ""}
+
+
 
                     <List>
                         <Box
@@ -152,48 +156,51 @@ export const Admin = () => {
                                 Dashboard
                             </Typography>
                         </Box>
-                        <Typography
-                            onClick={() => {
-                                window.location.href = `https://dashboard.qutap.co/test-web-login?token=${localStorage.getItem("token")}`;
-                                // window.location.href = `https://dashboard.qutap.co/setting-client?redirectBack=${encodeURIComponent(`https://qutap.co/en?token=${localStorage.getItem("token")}`)}`;
-                            }}
-                        >
-                            <ListItem sx={{ cursor: "pointer" }} >
-                                <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
+                        {isLoggedIn && isLoggedIn !== "null" ? <>
+                            <Typography
+                                onClick={() => {
+                                    window.location.href = `https://dashboard.qutap.co/test-web-login?token=${localStorage.getItem("token")}`;
+                                    // window.location.href = `https://dashboard.qutap.co/setting-client?redirectBack=${encodeURIComponent(`https://qutap.co/en?token=${localStorage.getItem("token")}`)}`;
+                                }}
+                            >
+                                <ListItem sx={{ cursor: "pointer" }} >
+                                    <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
 
-                                    <img src="/assets/setting.svg" alt="icon" style={{ width: "16px", height: "16px" }} />
-                                </ListItemIcon>
-                                <ListItemText primary="Edit Profile"
-                                    primaryTypographyProps={{
-                                        sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
-                                    }} />
-                            </ListItem>
-                        </Typography>
-                        <Link href="#pricing" style={{ textDecoration: 'none' }}>
-                            <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
-                                <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
+                                        <img src="/assets/setting.svg" alt="icon" style={{ width: "16px", height: "16px" }} />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Edit Profile"
+                                        primaryTypographyProps={{
+                                            sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
+                                        }} />
+                                </ListItem>
+                            </Typography>
 
-                                    <span class="icon-price-tag" style={{ fontSize: "20px" }}></span>
-                                </ListItemIcon>
-                                <ListItemText primary="My Subscription"
-                                    primaryTypographyProps={{
-                                        sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
-                                    }} />
-                            </ListItem>
-                        </Link>
+                            <Link href="#pricing" style={{ textDecoration: 'none' }}>
+                                <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
+                                    <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
 
-                        <Link href="#faq" style={{ textDecoration: 'none' }}>
-                            <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
-                                <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
+                                        <span class="icon-price-tag" style={{ fontSize: "20px" }}></span>
+                                    </ListItemIcon>
+                                    <ListItemText primary="My Subscription"
+                                        primaryTypographyProps={{
+                                            sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
+                                        }} />
+                                </ListItem>
+                            </Link>
 
-                                    <HelpOutlineOutlinedIcon sx={{ fontSize: "20px" }} />
-                                </ListItemIcon>
-                                <ListItemText primary="FAQ"
-                                    primaryTypographyProps={{
-                                        sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
-                                    }} />
-                            </ListItem>
-                        </Link>
+                            <Link href="#faq" style={{ textDecoration: 'none' }}>
+                                <ListItem sx={{ cursor: "pointer" }} onClick={handleUserClose}>
+                                    <ListItemIcon sx={{ marginLeft: locale == 'ar' ? "-30px" : '0px' }}>
+
+                                        <HelpOutlineOutlinedIcon sx={{ fontSize: "20px" }} />
+                                    </ListItemIcon>
+                                    <ListItemText primary="FAQ"
+                                        primaryTypographyProps={{
+                                            sx: { color: '#5D5D5C', fontSize: '12px', marginLeft: locale == 'en' ? "-30px" : '', textAlign: locale == "ar" ? "start" : '' }
+                                        }} />
+                                </ListItem>
+                            </Link>
+                        </> : ""}
                         {isLoggedIn && isLoggedIn !== "null" ? (
                             <ListItem sx={{ cursor: "pointer" }} onClick={handleLogoutClick}>
                                 <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
