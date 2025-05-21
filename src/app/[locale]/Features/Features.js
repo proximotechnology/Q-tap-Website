@@ -17,6 +17,14 @@ const Features = () => {
   const [activeIndex, setActiveIndex] = useState(1);
   const { getHomeData } = useContext(HomeContext);
   const t = useTranslations();
+  const [direction, setDirection] = useState('ltr');
+
+  useEffect(() => {
+    // Sync with HTML direction attribute
+    const htmlDir = document.documentElement.getAttribute('dir');
+    if (direction !== htmlDir)
+      setDirection(htmlDir || 'ltr');
+  }, [direction]);
 
   const handleBeforeChange = (current, next) => {
     const screenWidth = window.innerWidth;
@@ -26,7 +34,7 @@ const Features = () => {
       setActiveIndex(next);
     }
   };
-
+  { console.log("direction === rtl", direction === "rtl") }
   const settings = {
     dots: true,
     infinite: true,
@@ -35,7 +43,7 @@ const Features = () => {
     slidesToScroll: 1,
     centerMode: true,
     centerPadding: "0",
-    rtl: true,
+    rtl: direction === "rtl",
     initialSlide: 0, // Start from the first slide
     afterChange: (current) => console.log("Active slide:", current), // Verify active index
     beforeChange: handleBeforeChange,
@@ -61,7 +69,7 @@ const Features = () => {
     if (sliderRef.current) {
       sliderRef.current.slickGoTo(0); // Ensure the first slide is active initially
     }
-  }, []);
+  }, [direction]);
   const getCardSize = (index) => {
     const screenWidth = window.innerWidth;
     const distanceFromActive = Math.min(
@@ -166,7 +174,7 @@ const Features = () => {
         />
       </Box>
 
-      <Slider ref={sliderRef} {...settings}>
+      <Slider ref={sliderRef}  key={direction} {...settings}>
         {featData?.map((feature, index) => {
           const { width, height } = getCardSize(index);
           return (
@@ -188,6 +196,7 @@ const Features = () => {
                   },
                 }}
               >
+                {index}
                 <CardMedia
                   component="img"
                   height="50%"
