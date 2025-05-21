@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import {
   Box,
@@ -35,6 +35,9 @@ const Features = () => {
     slidesToScroll: 1,
     centerMode: true,
     centerPadding: "0",
+    rtl: true,
+    initialSlide: 0, // Start from the first slide
+    afterChange: (current) => console.log("Active slide:", current), // Verify active index
     beforeChange: handleBeforeChange,
     responsive: [
       {
@@ -51,7 +54,14 @@ const Features = () => {
       },
     ],
   };
+  const sliderRef = useRef(null);
 
+  // Adjusting the active slide after component mounts
+  useEffect(() => {
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(0); // Ensure the first slide is active initially
+    }
+  }, []);
   const getCardSize = (index) => {
     const screenWidth = window.innerWidth;
     const distanceFromActive = Math.min(
@@ -156,7 +166,7 @@ const Features = () => {
         />
       </Box>
 
-      <Slider {...settings}>
+      <Slider ref={sliderRef} {...settings}>
         {featData?.map((feature, index) => {
           const { width, height } = getCardSize(index);
           return (
