@@ -77,19 +77,19 @@ function DrawerAppBar(props) {
                                     content: '""',
                                     position: 'absolute',
                                     bottom: 0,
-                                    left: 0,
+                                    left: locale == "en" ?0:"82%",
                                     height: '2px',
                                     width: '0%',
                                     backgroundColor: '#E57C00',
                                     transition: 'width 0.3s ease-in-out',
                                 },
                                 '&:hover::after': {
-                                    width: '110px',
+                                    width: locale == "en" ?'110px':'90px',
                                 },
                              }}
                             onClick={() => handleNavigation(item.path)}
                         >
-                            <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
+                            <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" , marginLeft:"10px"}}></span>
                             <span style={{ marginLeft: '12px', color: "white" }}>
                                 <Typography sx={{ fontSize: "13px", cursor: "pointer" }}>
                                     {t("nav." + item.name)}
@@ -173,7 +173,7 @@ function DrawerAppBar(props) {
                                 >
                                     <img
                                         src='/assets/pricing.svg'
-                                        style={{ width: "20px", marginRight: "8px", height: "20px" }}
+                                        style={{ width: "18px", marginLeft: locale == "ar" ? "6px":"0px", marginRight: locale == "en" ? "5px":"0px", height: "18px" }}
                                     />
                                     {t("nav.pricing")}
                                 </Typography>
@@ -256,7 +256,7 @@ function DrawerAppBar(props) {
                                                     }}
                                                 >
                                                     <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
-                                                    <span style={{ marginLeft: '5px', fontSize: "11px", marginRight: locale == "ar" ? "12px":"0px" }}>
+                                                    <span style={{ marginLeft: '5px', fontSize: "11px", marginRight: locale == "ar" ? "8px":"0px" }}>
                                                         {t("nav." + item.name)}
                                                     </span>
                                                 </Button>

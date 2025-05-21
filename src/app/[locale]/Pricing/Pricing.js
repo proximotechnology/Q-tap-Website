@@ -283,8 +283,8 @@ export const Pricing = () => {
               sx={{
                 position: "absolute",
                 bottom: "10px",
-                left: { md: "44%", xs: "35%" },
-                width: { xs: "10%", md: "6%" },
+                left: { md: "46%", xs: "43%" },
+                width: { md: "8%", xs: "14%" },
                 borderRadius: "20px",
                 marginTop: "-15px",
                 height: "5px",
