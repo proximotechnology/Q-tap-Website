@@ -123,7 +123,7 @@ export const Admin = () => {
 
                             </Box>
                         </Box>
-                        <Divider /> </>
+                        <Divider /></>
                         : ""}
 
 

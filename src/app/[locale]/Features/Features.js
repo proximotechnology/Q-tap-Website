@@ -196,7 +196,7 @@ const Features = () => {
                   },
                 }}
               >
-                {index}
+                {/* {index} */}
                 <CardMedia
                   component="img"
                   height="50%"
@@ -208,13 +208,13 @@ const Features = () => {
                     variant="body1"
                     sx={{ fontSize: "22px", color: "#E57C00" }}
                   >
-                    {feature?.titles}
+                    {feature?.titles[0]}
                   </Typography>
                   <Typography
                     variant="body2"
                     sx={{ fontSize: "10px", color: "#575756" }}
                   >
-                    {feature?.descriptions}
+                    {feature?.descriptions[0]}
                   </Typography>
                   <Box sx={{ marginTop: height === "420px" || height === "450px" ? "25px" : "10px" }}>
                     {[...feature?.features].map((feat, i) => (
