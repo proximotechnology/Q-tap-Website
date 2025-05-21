@@ -236,5 +236,7 @@
     "somethingWentWrong":"something went wrong please try again",
     "pleaseFillAllFields":"please fill all fields",
     "failedFetchTestData":"failedFetchTestData",
-    "city":"city"
+    "city":"city",
+    "cartNotValid":"your cart not valid",
+    "cartShouldnotbeEmptyAndFromSameBranch":"The cart must contain items only from the same restaurant branch and should not be empty."
 }

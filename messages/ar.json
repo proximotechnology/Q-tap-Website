@@ -236,5 +236,8 @@
     "somethingWentWrong": "لقد حدث خطأ ما، يرجى المحاولة مرة أخرى",
     "pleaseFillAllFields": "يرجى ملء جميع الحقول",
     "failedFetchTestData": "failedFetchTestData",
-    "city": "المدينه"
+    "city": "المدينه",
+    "cartNotValid":"عربه التسوق ليست مناسبه",
+    "cartShouldnotbeEmptyAndFromSameBranch":"يجب أن تحتوي عربة التسوق على عناصر من فرع المطعم نفسه فقط، وألا تكون فارغة."
+
 }

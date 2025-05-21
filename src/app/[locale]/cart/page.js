@@ -9,7 +9,16 @@ import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { BASE_URL_IMAGE, calculateOrderPriceDetailed } from '@/utils';
-
+import { toast } from 'react-toastify';
+/**
+ * 1 - get cart from localStorge
+ * 2 - calc subtotal , tax , discount ,and total price
+ * 3 - special order have its own calculation 
+ * calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
+ * 1 - check if all item come from the same branch 
+ * isAllItemComeFromSameBranch(cartItems, cartItems?.[0]?.branchId)
+ * @returns 
+ */
 const page = () => {
     const t = useTranslations();
     const locale = useLocale()
@@ -47,6 +56,9 @@ const page = () => {
     // ===============================================================================
 
     // ===============================================================================
+    const isAllItemComeFromSameBranch = (cart, branchID) => {
+        return cart.every(item => item.branchId === branchID);
+    }
 
     const [itemCount, setItemCount] = useState([]);
     useEffect(() => {
@@ -242,8 +254,14 @@ const page = () => {
                 <Box sx={{ width: "46%" }}>
                     <Button
                         onClick={() => {
-                            if (cartItems.length > 0)
+                            const isValidCart = isAllItemComeFromSameBranch(cartItems, cartItems?.[0]?.branchId)
+                            console.log("isValid", isValidCart)
+                            if (cartItems.length > 0 && isValidCart)
                                 window.location.href = `/${locale}/clientDetails`;
+                            else {
+                                toast.error(t("cartNotValid"))
+                                toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
+                            }
                         }}
                         sx={{
                             backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',

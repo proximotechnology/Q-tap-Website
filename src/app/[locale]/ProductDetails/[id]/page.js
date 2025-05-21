@@ -15,11 +15,12 @@ import { useLocale, useTranslations } from 'next-intl';
 import { BASE_URL_IMAGE, fetchData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 const page = ({ params }) => {
     const locale = useLocale();
     const t = useTranslations()
 
-    const { id } = params;
+    const { id } = params;//mealid
     const [shopData, setShopData] = useState(null)
     const [mealData, setMealData] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -28,8 +29,21 @@ const page = ({ params }) => {
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
     const catId = searchParams.get('catId')
-
+    const specialID = searchParams.get('special') || null
+    console.log("specialID", specialID)// debug log
     const router = useRouter()
+
+
+    const queryClient = useQueryClient();
+
+    // Get cached data without refetching
+    const offersData = queryClient.getQueryData(['restaurant-offers-data', branchId]);
+    const queryState = queryClient.getQueryState(['restaurant-offers-data', branchId]);
+    console.log('Query state:', queryState);
+    const allCachedQueries = queryClient.getQueryCache().findAll();
+    console.log('All cached queries:', allCachedQueries.map(q => q.queryKey));
+    // Verify your ['restaurant-offers-data', branchId] exists in this list
+    console.log("data", offersData) // debug log
 
     if (!id) {
         return <p>{t("noProductSelected")}</p>;
@@ -96,12 +110,17 @@ const page = ({ params }) => {
             if (selectedSize === "M") currentPrice += Number(mealData?.price_medium)
             if (selectedSize === "L") currentPrice += Number(mealData?.price_large)
 
-        } else {
+        } if (specialID) {
+            const d = offersData?.find(item => item.id === Number(specialID))
+            console.log("DDDDDD", d) // debug log
+            currentPrice += Number(d?.priceAfter)
+        }
+        else {
             currentPrice += Number(mealData?.price)
         }
         let sub = currentPrice;
         /* add discount and tax */
-        if (mealData?.discounts?.discount) {
+        if (mealData?.discounts?.discount && !specialID) {
             sub -= Number(mealData?.discounts?.discount) * currentPrice / 100
         }
 
@@ -146,8 +165,8 @@ const page = ({ params }) => {
         }
     }
     // ========================================================================
-    const addToCart = () => { 
-        if (!selectedSize || count === 0) {
+    const addToCart = () => {
+        if ((!selectedSize && !specialID) || count === 0) {
             toast.error(t("SizeCountRequired"))
             return;
         }
@@ -165,6 +184,8 @@ const page = ({ params }) => {
                 selectedSize === 'M' ?
                     mealData.price_medium :
                     mealData.price_small;
+
+
         if (currentCart.length === 0) {
             let sizePrice =
                 selectedSize === 'L' ?
@@ -186,14 +207,20 @@ const page = ({ params }) => {
                 catId,
                 tax: mealData.Tax,
                 discount: mealData.discounts,
-                sizePrice
+                sizePrice,
+                special: specialID ? offersData.find(item => item.id === Number(specialID)) : null
             })
 
 
         } else {
-            if (currentCart.some(item => item.selectedSize === selectedSize && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions }))) {
+            if (currentCart.some(item => item.selectedSize === selectedSize
+                && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
+                && Number(specialID) === item?.special?.id
+            )) {
                 currentCart.map(item => {
-                    if (item.selectedSize === selectedSize && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })) {
+                    if (item.selectedSize === selectedSize
+                        && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
+                        && Number(specialID) === item?.special?.id) {
                         item.quantity += count;
                     }
                 })
@@ -213,11 +240,13 @@ const page = ({ params }) => {
                     catId,
                     tax: mealData.Tax,
                     discount: mealData.discounts,
-                    sizePrice
+                    sizePrice,
+                    special: specialID ? offersData.find(item => item.id === Number(specialID)) : null
                 })
 
             }
         }
+        console.log("item add to cart ",currentCart)//debug log
         localStorage.setItem("cartItems", JSON.stringify(currentCart))
         setSelectedExtra([])
         setCount(0)
@@ -279,9 +308,9 @@ const page = ({ params }) => {
                                     }}
                                 >
                                     {/* <Link href={`/categories/${catId}?branchId=${branchId}&shopId=${shopId}`}> */}
-                                        <IconButton sx={{ color: "white" }} onClick={router.back}>
-                                            <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
-                                        </IconButton>
+                                    <IconButton sx={{ color: "white" }} onClick={router.back}>
+                                        <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
+                                    </IconButton>
                                     {/* </Link> */}
 
                                     <IconButton color="inherit">
@@ -375,10 +404,10 @@ const page = ({ params }) => {
                     <Box sx={{ position: "relative", top: "330px", padding: "12px 20px" }} >
 
                         <Box display="flex" alignItems="center" gap={3} >
-                            <Typography variant="h6" sx={{ fontSize: '12px', fontWeight: "bold", color: 'white' }}>
+                            {!specialID && <Typography variant="h6" sx={{ fontSize: '12px', fontWeight: "bold", color: 'white' }}>
                                 {t("size")}
-                            </Typography>
-                            {sizes.map((size) => {
+                            </Typography>}
+                            {!specialID && sizes.map((size) => {
                                 return (
                                     <>
                                         <Typography>
@@ -415,7 +444,7 @@ const page = ({ params }) => {
                                 );
                             })}
                         </Box>   {/* size */}
-                        {mealData?.discounts?.discount ? <Typography>discount {mealData?.discounts?.discount} %</Typography> : <></>}
+                        {!specialID && mealData?.discounts?.discount ? <Typography>discount {mealData?.discounts?.discount} %</Typography> : <></>}
                         <Box sx={{ marginTop: "15px" }}>
                             <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
                                 {t("options")} <span style={{ fontSize: "9px", fontWeight: '300', color: 'white' }}>{t("required)")}</span>

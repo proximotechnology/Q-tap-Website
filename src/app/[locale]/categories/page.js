@@ -15,16 +15,16 @@ import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useShop } from './context';
 import { BASE_URL, BASE_URL_IMAGE, fetchData } from '../../../utils'
+import { useQuery } from '@tanstack/react-query';
 
 const page = () => {
     const t = useTranslations();
     const [shops, setShops] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [dataLoading,setIsLoading] = useState(false)
     const [currentShop, setCurrentShop] = useState(null)
     const [currentBranch, setCurrentBranch] = useState(null)
-    const [offers, setOffers] = useState([])
+    // const [offers, setOffers] = useState([])
 
-    console.log(">>>>>>>>>>>>>>>>>", offers)//log debug
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
@@ -38,6 +38,7 @@ const page = () => {
     const getData = async (endPoint) => {
         try {
             const data = await fetchData(endPoint, setIsLoading);
+            console.log("shop data res",data)
             setShops(data.data.data)
         } catch (error) {
             console.log('categories getData fn error :', error)
@@ -57,9 +58,16 @@ const page = () => {
         }
 
     }
+
+    const { data: offers, isLoading, isError, error } = useQuery({
+        queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
+        queryFn: () => getSpecialOffers(branchId)
+    });
+
+
     useEffect(() => {
         getData('menu_all_restaurants')
-        getSpecialOffers(setOffers, branchId)
+        console.log("fech menu data")//debug log
     }, [])
 
     useEffect(() => {
@@ -76,6 +84,9 @@ const page = () => {
 
     }, [shops])
 
+    if (isLoading) return <div>Loading offers...</div>;
+    if (isError) return <div>Error: {error.message}</div>;
+    console.log("shops", shops, "offers", offers)//debug log
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
 
@@ -238,7 +249,7 @@ const page = () => {
 
 export default page;
 
-export const getSpecialOffers = async (setOffers, branchId) => {
+export const getSpecialOffers = async (branchId) => {
     try {
 
         console.log(">>>>>>>>>>>> getOffers") // debug log
@@ -275,10 +286,11 @@ export const getSpecialOffers = async (setOffers, branchId) => {
                 isEditing: false,
                 img: offer.img
             }));
-            setOffers(formattedOffers);
+            return (formattedOffers);
         }
     } catch (error) {
         console.error('Error fetching discounts:', error);
+        return null
     }
 };
 

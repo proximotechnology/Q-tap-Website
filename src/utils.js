@@ -45,14 +45,14 @@ export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setD
     if (cartItems) {
         cartItems.map(item => {
             let itemSubTotal = 0;
-            itemSubTotal += Number(item.sizePrice) * item.quantity
+            itemSubTotal += item.special ? Number(item.special.priceAfter) * item.quantity : Number(item.sizePrice) * item.quantity
             if (item.selectedExtra) item.selectedExtra.map(extra => itemSubTotal += Number(extra.price) * item.quantity)
             if (item.selectedOptions) item.selectedOptions.map(options => itemSubTotal += Number(options.price) * item.quantity)
 
             subTotal += itemSubTotal
 
             if (item.tax) tax += itemSubTotal * Number(item.tax) / 100 * item.quantity
-            if (item.discount) discount += itemSubTotal * Number(item.discount.discount) / 100 * item.quantity
+            if (item.discount) discount += item.special ? 0 : itemSubTotal * Number(item.discount.discount) / 100 * item.quantity
 
         })
     }
@@ -63,52 +63,52 @@ export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setD
 }
 
 export const egyptCities = [
-  { name: "Cairo", region: "Nile Valley & Delta" },
-  { name: "Giza", region: "Nile Valley & Delta" },
-  { name: "Alexandria", region: "Nile Valley & Delta" },
-  { name: "Luxor", region: "Nile Valley & Delta" },
-  { name: "Aswan", region: "Nile Valley & Delta" },
-  { name: "Asyut", region: "Nile Valley & Delta" },
-  { name: "Minya", region: "Nile Valley & Delta" },
-  { name: "Beni Suef", region: "Nile Valley & Delta" },
-  { name: "Qena", region: "Nile Valley & Delta" },
-  { name: "Sohag", region: "Nile Valley & Delta" },
-  
-  { name: "Port Said", region: "Suez Canal & Sinai" },
-  { name: "Suez", region: "Suez Canal & Sinai" },
-  { name: "Ismailia", region: "Suez Canal & Sinai" },
-  { name: "El Arish", region: "Suez Canal & Sinai" },
-  { name: "Sharm El-Sheikh", region: "Suez Canal & Sinai" },
-  { name: "Dahab", region: "Suez Canal & Sinai" },
-  
-  { name: "Siwa Oasis", region: "Western Desert" },
-  { name: "Bahariya Oasis", region: "Western Desert" },
-  { name: "Farafra Oasis", region: "Western Desert" },
-  { name: "Dakhla Oasis", region: "Western Desert" },
-  { name: "Kharga Oasis", region: "Western Desert" },
-  
-  { name: "Hurghada", region: "Red Sea Coast" },
-  { name: "Marsa Alam", region: "Red Sea Coast" },
-  { name: "Safaga", region: "Red Sea Coast" },
-  
-  { name: "Tanta", region: "Delta Cities" },
-  { name: "Mansoura", region: "Delta Cities" },
-  { name: "Zagazig", region: "Delta Cities" },
-  { name: "Damietta", region: "Delta Cities" },
-  { name: "El-Mahalla El-Kubra", region: "Delta Cities" },
-  
-  { name: "New Administrative Capital", region: "New Urban Communities" },
-  { name: "6th of October City", region: "New Urban Communities" },
-  { name: "New Cairo", region: "New Urban Communities" },
-  { name: "Sheikh Zayed City", region: "New Urban Communities" },
-  { name: "Sadat City", region: "New Urban Communities" },
-  { name: "10th of Ramadan City", region: "New Urban Communities" },
-  
-  { name: "Faiyum", region: "Other Notable Cities" },
-  { name: "Kom Ombo", region: "Other Notable Cities" },
-  { name: "Edfu", region: "Other Notable Cities" },
-  { name: "Ras Ghareb", region: "Other Notable Cities" },
-  { name: "St. Catherine", region: "Other Notable Cities" }
+    { name: "Cairo", region: "Nile Valley & Delta" },
+    { name: "Giza", region: "Nile Valley & Delta" },
+    { name: "Alexandria", region: "Nile Valley & Delta" },
+    { name: "Luxor", region: "Nile Valley & Delta" },
+    { name: "Aswan", region: "Nile Valley & Delta" },
+    { name: "Asyut", region: "Nile Valley & Delta" },
+    { name: "Minya", region: "Nile Valley & Delta" },
+    { name: "Beni Suef", region: "Nile Valley & Delta" },
+    { name: "Qena", region: "Nile Valley & Delta" },
+    { name: "Sohag", region: "Nile Valley & Delta" },
+
+    { name: "Port Said", region: "Suez Canal & Sinai" },
+    { name: "Suez", region: "Suez Canal & Sinai" },
+    { name: "Ismailia", region: "Suez Canal & Sinai" },
+    { name: "El Arish", region: "Suez Canal & Sinai" },
+    { name: "Sharm El-Sheikh", region: "Suez Canal & Sinai" },
+    { name: "Dahab", region: "Suez Canal & Sinai" },
+
+    { name: "Siwa Oasis", region: "Western Desert" },
+    { name: "Bahariya Oasis", region: "Western Desert" },
+    { name: "Farafra Oasis", region: "Western Desert" },
+    { name: "Dakhla Oasis", region: "Western Desert" },
+    { name: "Kharga Oasis", region: "Western Desert" },
+
+    { name: "Hurghada", region: "Red Sea Coast" },
+    { name: "Marsa Alam", region: "Red Sea Coast" },
+    { name: "Safaga", region: "Red Sea Coast" },
+
+    { name: "Tanta", region: "Delta Cities" },
+    { name: "Mansoura", region: "Delta Cities" },
+    { name: "Zagazig", region: "Delta Cities" },
+    { name: "Damietta", region: "Delta Cities" },
+    { name: "El-Mahalla El-Kubra", region: "Delta Cities" },
+
+    { name: "New Administrative Capital", region: "New Urban Communities" },
+    { name: "6th of October City", region: "New Urban Communities" },
+    { name: "New Cairo", region: "New Urban Communities" },
+    { name: "Sheikh Zayed City", region: "New Urban Communities" },
+    { name: "Sadat City", region: "New Urban Communities" },
+    { name: "10th of Ramadan City", region: "New Urban Communities" },
+
+    { name: "Faiyum", region: "Other Notable Cities" },
+    { name: "Kom Ombo", region: "Other Notable Cities" },
+    { name: "Edfu", region: "Other Notable Cities" },
+    { name: "Ras Ghareb", region: "Other Notable Cities" },
+    { name: "St. Catherine", region: "Other Notable Cities" }
 ];
 
 // Example usage:
