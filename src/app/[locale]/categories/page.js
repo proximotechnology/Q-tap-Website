@@ -16,11 +16,11 @@ import axios from 'axios';
 import { useShop } from './context';
 import { BASE_URL, BASE_URL_IMAGE, fetchData } from '../../../utils'
 import { useQuery } from '@tanstack/react-query';
+import { fetchShopsData } from '../shops/page';
 
 const page = () => {
     const t = useTranslations();
-    const [shops, setShops] = useState(null)
-    const [dataLoading, setIsLoading] = useState(false)
+    // const [shops, setShops] = useState(null)
     const [currentShop, setCurrentShop] = useState(null)
     const [currentBranch, setCurrentBranch] = useState(null)
     // const [offers, setOffers] = useState([])
@@ -35,17 +35,6 @@ const page = () => {
     }
 
 
-    const getData = async (endPoint) => {
-        try {
-            const data = await fetchData(endPoint, setIsLoading);
-            console.log("shop data res", data)
-            setShops(data.data.data)
-        } catch (error) {
-            console.log('categories getData fn error :', error)
-        }
-
-    }
-
     const prefetchTarget = (id) => {
         router.prefetch(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`); // Next.js caches this
     };
@@ -59,16 +48,19 @@ const page = () => {
 
     }
 
-    const { data: offers, isLoading, isError, error } = useQuery({
+    const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
         queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
         queryFn: () => getSpecialOffers(branchId)
     });
+    const { data: shops, isLoading, isError, error, refetch } = useQuery({
+        queryKey: ['shops'],
+        queryFn: fetchShopsData,
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+    });
 
-
-    useEffect(() => {
-        getData('menu_all_restaurants')
-        console.log("fech menu data")//debug log
-    }, [])
+    
 
     useEffect(() => {
         if (!shops) return;
@@ -84,7 +76,7 @@ const page = () => {
 
     }, [shops])
 
-    if (isLoading) return <div>Loading offers...</div>;
+    if (isLoading) return <div>Loading ...</div>;
     if (isError) return <div>Error: {error.message}</div>;
     console.log("shops", shops, "offers", offers)//debug log
     return (
@@ -135,7 +127,7 @@ const page = () => {
                     </Typography>
 
                     <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                        {offers.map((offer) => (
+                        {offers?.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
                                     backgroundColor: "#48485B", color: "white", width: "40px", height: "40px",
@@ -216,7 +208,7 @@ const page = () => {
 
                             <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${BASE_URL_IMAGE}${item.cover})` }}>
                                 <Button
-                                    sx={{ width: '100%' ,height:'100%'}}
+                                    sx={{ width: '100%', height: '100%' }}
                                     onClick={() => { handlCatClick(item.id) }}
                                     onMouseEnter={() => { prefetchTarget(item.id) }}>
                                     <div className="overlay">

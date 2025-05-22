@@ -4,13 +4,32 @@ import './custom-css.css'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { BASE_URL } from '@/utils';
 
+export const fetchShopsData = async () => {
+    try {
+        // setIsLoading(true)
+        const response = await axios.get(`${BASE_URL}menu_all_restaurants`)
+        console.log(response.data.data) // array of object [{...} , ... , {...}]
+        return response.data.data
+        // setShops(response.data.data)
+    } catch (error) {
+        console.log(error)
+    } 
+}
 const ShopSelect = () => {
-    const [shops, setShops] = useState(null)
+    // const [shops, setShops] = useState(null)
     const [selectedShop, setSelectedShop] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
+    // const [isLoading, setIsLoading] = useState(false)
     const t = useTranslations()
-
+    const { data: shops, isLoading, isError, error, refetch } = useQuery({
+        queryKey: ['shops'],
+        queryFn: fetchShopsData,
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+    });
     const router = useRouter();
 
     const handleSelectShop = (shop) => {
@@ -28,27 +47,20 @@ const ShopSelect = () => {
     const BASE_URL = 'https://api.qutap.co/api/'
     const BASE_URL_IMAGE = 'https://api.qutap.co/'
 
-    const fetchData = async (endPoint) => {
-        try {
-            setIsLoading(true)
-            const response = await axios.get(`${BASE_URL}${endPoint}`)
-            console.log(response.data.data) // array of object [{...} , ... , {...}]
-            setShops(response.data.data)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setIsLoading(false)
-        }
-    }
 
 
-    useEffect(() => {
-        fetchData('menu_all_restaurants')
-    }, [])
+
+    // useEffect(() => {
+    //     fetchData('menu_all_restaurants')
+    // }, [])
 
     const products = [{ name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" },]
     const colors = { bg_main: "bg-[#1E1E2A]", card_bg: 'bg-[#302E3B]', card_title: 'text-[#797993]' }
-
+    if (isError) {
+        return (
+            <div>{isError}</div>
+        )
+    }
     return (
         <>
             <h1 className={`text-center text-white h-[100px] fixed m-0 w-full ${colors.bg_main} z-50 flex items-center justify-center`}>

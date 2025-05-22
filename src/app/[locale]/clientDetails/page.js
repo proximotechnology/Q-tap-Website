@@ -16,11 +16,13 @@ import { BASE_URL, calculateOrderPriceDetailed, egyptCities } from '@/utils';
 import MapView from './map';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { useQuery } from '@tanstack/react-query';
+import { fetchShopsData } from '../shops/page';
 
 
 const options = [
-    { label: 'Takeaway', icon: <span className='icon-takeaway' style={{ fontSize: '45px' }}></span>, value: 'takeaway' },
-    { label: 'Dine In', icon: <span className='icon-table' style={{ fontSize: '45px' }}></span>, value: 'dinein' },
+    { label: 'Takeaway', icon: <span className='icon-takeaway' style={{ fontSize: '45px' }}></span>, value: 'take_away' },
+    { label: 'Dine In', icon: <span className='icon-table' style={{ fontSize: '45px' }}></span>, value: 'dine_in' },
     { label: 'Delivery', icon: <span className="icon-scooter" style={{ fontSize: '45px' }}></span>, value: 'delivery' },
 ];
 const page = () => {
@@ -35,7 +37,40 @@ const page = () => {
     const [showMap, setShowMap] = useState(false);
     const [userPosition, setUserPosition] = useState(null)
     const router = useRouter()
+    const { data: shops, isError, error, refetch } = useQuery({
+        queryKey: ['shops'],
+        queryFn: fetchShopsData,
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+    });
+    const [selectedOption, setSelectedOption] = useState('dine_in');
+    const [branchServigWay,setBranchServingWary] = useState([])
+    useEffect(() => {
+        const storedCartItems = getCartItems();
+        console.log("cartItems>>>>>>>>>>>>>>>>>>>>", storedCartItems)// debug log 
 
+        const branchId = storedCartItems?.[0]?.branchId
+        const shopId = storedCartItems?.[0]?.shopId
+        console.log("cartItems>>>>>>>>>>>>>>>>>>>>", branchId, ">>>", shopId)// debug log 
+
+        const shop = shops?.find(item => Number(item.id) === Number(shopId))
+        console.log("shop>>>>>>>>>>>>>>>>>>>>", shopId, ">>>", shop)// debug log 
+        const branch = shop?.brunchs?.find(item => Number(item.id) === Number(branchId))
+        console.log("branch>>>>>>>>>>>>>>>>>>>>", branchId, ">>>", branch)// debug log 
+        setBranchServingWary(branch?.serving_ways)
+        setSelectedOption(branch?.serving_ways?.[0]?.name)
+        // serving_ways
+        /* 0
+        : 
+        {id: 885, name: 'delivery', brunch_id: 187, tables_number: null, deleted_at: null, …}
+        1
+        : 
+        {id: 886, name: 'take_away', brunch_id: 187, tables_number: null, deleted_at: null, …}
+        2
+        : 
+        {id: 887, name: 'dine_in', brunch_id: 187, tables_number: 12, deleted_at: null, …} */
+    }, [shops])
 
     const getTable = async () => { // TODO: handle this user suppose to select table based of QR code on the table he set on
         try {
@@ -68,7 +103,6 @@ const page = () => {
 
 
     // =========================================================================
-    const [selectedOption, setSelectedOption] = useState('dinein');
 
     // دالة لتحديث العنصر النشط عند الضغط
     const handleClick = (optionValue) => {
@@ -77,16 +111,16 @@ const page = () => {
     const getTransformStyle = (optionValue) => {
         const translateMap = {
             delivery: 'translate(100px, -20px)',
-            dinein: 'translate(-10px, 40px)',  // العنصر النشط دائما في هذا المكان
-            takeaway: 'translate(-120px, -20px)',
+            dine_in: 'translate(-10px, 40px)',  // العنصر النشط دائما في هذا المكان
+            take_away: 'translate(-120px, -20px)',
         };
         if (optionValue === selectedOption) {
-            return translateMap.dinein; // العنصر النشط دائما هنا
+            return translateMap.dine_in; // العنصر النشط دائما هنا
         }
 
         // بالنسبة لبقية العناصر
-        if (optionValue === 'dinein') {
-            return selectedOption === 'takeaway' ? translateMap.takeaway : translateMap.delivery;
+        if (optionValue === 'dine_in') {
+            return selectedOption === 'take_away' ? translateMap.take_away : translateMap.delivery;
         }
 
         return translateMap[optionValue] || 'translate(0, 0)';
@@ -96,10 +130,10 @@ const page = () => {
     const renderIcon = () => {
 
         switch (selectedOption) {
-            case 'dinein':
+            case 'dine_in':
                 return <span className='icon-table' style={{ fontSize: '70px', color: "#aaaaaa2c" }}></span>;
 
-            case 'takeaway':
+            case 'take_away':
                 return <span className='icon-takeaway' style={{ fontSize: '70px', color: "#aaaaaa2c" }}></span>;
 
             case 'delivery':
@@ -216,9 +250,9 @@ const page = () => {
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
                             {renderIcon()}
                         </Box>
-
+{console.log(options)}
                         <Box sx={{ display: "flex", position: 'relative', width: '100%', height: '100%' }}>
-                            {options.map((option) => (
+                            {options.map((option) => ( branchServigWay?.some(item=>item.name === option.value) &&
                                 <Box
                                     onClick={() => handleClick(option.value)}
                                     key={option.value}

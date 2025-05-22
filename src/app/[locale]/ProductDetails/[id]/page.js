@@ -16,14 +16,15 @@ import { BASE_URL_IMAGE, fetchData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchShopsData } from '../../shops/page';
 const page = ({ params }) => {
     const locale = useLocale();
     const t = useTranslations()
 
     const { id } = params;//mealid
-    const [shopData, setShopData] = useState(null)
+    // const [shopData, setShopData] = useState(null)
     const [mealData, setMealData] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
+    // const [isLoading, setIsLoading] = useState(true)
 
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
@@ -50,19 +51,13 @@ const page = ({ params }) => {
     }
     if (!shopId || !branchId || !catId) return <p>{t("noProductSelected")}</p>
 
-    const getData = async () => {
-        try {
-            const responseData = await fetchData("menu_all_restaurants", setIsLoading)
-            setShopData(responseData.data.data)
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-
-    useEffect(() => {
-        getData()
-    }, [])
+      const { data: shopData, isLoading, isError, error, refetch } = useQuery({
+        queryKey: ['shops'],
+        queryFn: fetchShopsData,
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+      });
 
     useEffect(() => {
         if (!shopData) return;
