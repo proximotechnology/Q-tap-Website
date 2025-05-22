@@ -17,6 +17,7 @@ import { useShop } from './context';
 import { BASE_URL, BASE_URL_IMAGE, fetchData } from '../../../utils'
 import { useQuery } from '@tanstack/react-query';
 import { fetchShopsData } from '../shops/page';
+import MySlider from './MySlider';
 
 const page = () => {
     const t = useTranslations();
@@ -60,7 +61,7 @@ const page = () => {
         refetchOnWindowFocus: false,
     });
 
-    
+
 
     useEffect(() => {
         if (!shops) return;
@@ -125,9 +126,12 @@ const page = () => {
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
                         }}>{t("specialOffers")}</span>
                     </Typography>
-
-                    <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                        {offers?.map((offer) => (
+                    <MySlider items={offers} openOffer={(offer) => {
+                        console.log(">>>>> offer", offer)//debug log 
+                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
+                    }} />
+                    {/* <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}> */}
+                    {/* {offers?.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
                                     backgroundColor: "#48485B", color: "white", width: "40px", height: "40px",
@@ -183,8 +187,8 @@ const page = () => {
                                 </Card>
 
                             </Grid>
-                        ))}
-                    </Grid>
+                        ))} */}
+                    {/* </Grid> */}
 
                 </Box>
 
