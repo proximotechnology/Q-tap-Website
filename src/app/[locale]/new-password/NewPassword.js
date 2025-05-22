@@ -1,6 +1,7 @@
 
-import React from 'react'
-import {Link} from "@/i18n/navigation"
+"use client"
+import React, { useState } from 'react'
+import { Link } from "@/i18n/navigation"
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Language from '@/component/Language';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
@@ -9,10 +10,54 @@ import { InputAdornment, OutlinedInput, FormControl } from '@mui/material'
 import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { Mail } from '@mui/icons-material';
+import { BASE_URL } from '@/utils';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 export const NewPassword = () => {
     const t = useTranslations()
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [otp, setOtp] = useState('')
+    const router = useRouter()
+    const handleSubmit = async () => {
+
+        try {
+            if (otp === '' || password === '' || confirmPassword === '') {
+                toast.error('Please fill all field');
+                return; // Stop execution if otp is empty
+            }
+
+            const data = {
+                password: password,
+                password_confirmation: confirmPassword,
+                otp: otp,
+                user_type: 'qtap_affiliate', // qtap_affiliate or qtap_clients
+            };
+
+
+            const response = await axios.post(`${BASE_URL}resetpassword`, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+
+            if (response.data.status === true) {
+                toast.success('reset password success');
+                router.push('/welcome');
+            } else {
+                toast.error('Failed to reset password. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error reset password:', error);
+            toast.error('Failed to reset password. Please try again.');
+        }
+    };
+
     return (
         <Box
             sx={{
@@ -23,7 +68,7 @@ export const NewPassword = () => {
                 position: "absolute", top: 0, left: 0,
                 display: "flex", flexDirection: "column", textAlign: "center", alignItems: "center"
             }}>
-              <Box
+            <Box
                 sx={{
                     position: "relative",
                     zIndex: 5,
@@ -88,7 +133,7 @@ export const NewPassword = () => {
                     >
                         {t("lorem")}</Typography>
 
-                    <Link  href="/Signup">
+                    <Link href="/Signup">
                         <Button className="joinButton" sx={{
                             fontSize: "12px", backgroundColor: "#E57C00", textTransform: "capitalize", borderRadius: "20px",
                             color: "white", padding: "4px 20px"
@@ -136,6 +181,8 @@ export const NewPassword = () => {
 
                 <FormControl sx={{ width: '100%' }} variant="outlined">
                     <OutlinedInput
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         id="new-password"
                         type='password'
                         startAdornment={
@@ -151,6 +198,8 @@ export const NewPassword = () => {
 
                 <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                     <OutlinedInput
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         id="confirm-password"
                         type='password'
                         startAdornment={
@@ -163,26 +212,41 @@ export const NewPassword = () => {
                     />
                 </FormControl>
 
-                <Link href="/welcome" style={{ width: "100%",marginTop:"20px" }}>
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        sx={{
-                            maxWidth: 400,
-                            borderRadius: '50px',
-                            backgroundColor: "#222240",
-                            textTransform: 'none',
-                            padding: "8px 0", fontSize: "12px",
-                            '&:hover': {    
-                                transform: "scale(1.02) !important",
-                               transition: "transform 0.3s ease !important" },
-                            color: "#fff"
-                        }}
-                        endIcon={<ArrowRightOutlinedIcon sx={{ color: "white", fontSize: "18px" }} />}
-                    >
-                        {t("save")}
-                    </Button>
-                </Link>
+                <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+                    <OutlinedInput
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        id="otp"
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <Mail sx={{ fontSize: "18px" }} />
+                            </InputAdornment>
+                        }
+                        placeholder={t("Otp")}
+                        sx={{ borderRadius: '50px', paddingRight: 3, height: "35px", fontSize: "10px" }}
+                    />
+                </FormControl>
+
+                <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                        maxWidth: 400,
+                        borderRadius: '50px',
+                        backgroundColor: "#222240",
+                        textTransform: 'none',
+                        padding: "8px 0", fontSize: "12px",
+                        '&:hover': {
+                            transform: "scale(1.02) !important",
+                            transition: "transform 0.3s ease !important"
+                        },
+                        color: "#fff"
+                    }}
+                    endIcon={<ArrowRightOutlinedIcon sx={{ color: "white", fontSize: "18px" }} />}
+                >
+                    {t("save")}
+                </Button>
 
             </Box>
         </Box>
