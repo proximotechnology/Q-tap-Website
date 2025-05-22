@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import './custom-css.css'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const ShopSelect = () => {
     const [shops, setShops] = useState(null)
     const [selectedShop, setSelectedShop] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const t = useTranslations()
 
     const router = useRouter();
 
@@ -50,7 +52,7 @@ const ShopSelect = () => {
     return (
         <>
             <h1 className={`text-center text-white h-[100px] fixed m-0 w-full ${colors.bg_main} z-50 flex items-center justify-center`}>
-                {selectedShop ? "Branchs" : "Shops"}
+                {selectedShop ? t("branchs") : t("shops")}
             </h1>
             <div className={`${colors.bg_main} min-h-[calc(100vh-1rem)] flex flex-col px-12 pb-4 justify-around`}>
                 {selectedShop ?

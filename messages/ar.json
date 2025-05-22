@@ -238,5 +238,9 @@
     "failedFetchTestData": "تعذر جلب بيانات الاختبار",
     "city": "المدينة",
     "cartNotValid": "عربة التسوق غير صالحة",
-    "cartShouldnotbeEmptyAndFromSameBranch": "يجب أن تحتوي عربة التسوق على عناصر من فرع المطعم نفسه فقط، وألا تكون فارغة."
+    "cartShouldnotbeEmptyAndFromSameBranch": "يجب أن تحتوي عربة التسوق على عناصر من فرع المطعم نفسه فقط، وألا تكون فارغة.",
+    "shops": "المتاجر",
+    "branchs": "الفروع",
+    "search_placeholder": "عمّ تبحث؟",
+    "special_offers": "عروض خاصة"
 }

@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 const page = () => {
     const t = useTranslations();
     const [shops, setShops] = useState(null)
-    const [dataLoading,setIsLoading] = useState(false)
+    const [dataLoading, setIsLoading] = useState(false)
     const [currentShop, setCurrentShop] = useState(null)
     const [currentBranch, setCurrentBranch] = useState(null)
     // const [offers, setOffers] = useState([])
@@ -38,7 +38,7 @@ const page = () => {
     const getData = async (endPoint) => {
         try {
             const data = await fetchData(endPoint, setIsLoading);
-            console.log("shop data res",data)
+            console.log("shop data res", data)
             setShops(data.data.data)
         } catch (error) {
             console.log('categories getData fn error :', error)
@@ -213,30 +213,35 @@ const page = () => {
 
                     <div className="menu-container" style={{ marginTop: "5px", marginBottom: "70px" }}>
                         {currentBranch?.cat_meal?.map((item, index) => (
-                            <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${BASE_URL_IMAGE}${item.cover})` }}>
-                                <div className="overlay">
-                                    <Typography className="menu-title" >{item.name}</Typography>
-                                </div>
 
+                            <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${BASE_URL_IMAGE}${item.cover})` }}>
                                 <Button
-                                    sx={{
-                                        backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                        width: "30px", height: "30px",
-                                        padding: '0px', margin: '0px',
-                                        minWidth: '0px',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        cursor: "pointer",
-                                        position: 'absolute', bottom: "0", right: "0",
-                                    }}
+                                    sx={{ width: '100%' ,height:'100%'}}
                                     onClick={() => { handlCatClick(item.id) }}
                                     onMouseEnter={() => { prefetchTarget(item.id) }}>
-                                    <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
-                                </Button>
+                                    <div className="overlay">
+                                        <Typography className="menu-title" >{item.name}</Typography>
+                                    </div>
 
+                                    <Button
+                                        sx={{
+                                            backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
+                                            width: "30px", height: "30px",
+                                            padding: '0px', margin: '0px',
+                                            minWidth: '0px',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: "pointer",
+                                            position: 'absolute', bottom: "0", right: "0",
+                                        }}
+                                    >
+                                        <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
+                                    </Button>
+                                </Button>
                             </div>
+
                         ))}
                     </div>
                 </Box>
