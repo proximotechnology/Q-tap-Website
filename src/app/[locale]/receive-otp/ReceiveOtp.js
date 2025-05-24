@@ -15,25 +15,25 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils';
 import { useRouter } from 'next/navigation';
 
-export const ResetPassword = () => {
+export const ReceiveOtp = () => {
     const t = useTranslations()
-    const [email, setEmail] = useState('')
+    const [otp, setOtp] = useState('')
     const router = useRouter()
     const handleSubmit = async () => {
 
         try {
-            if (email === '') {
-                toast.error('Please enter your email');
-                return; // Stop execution if email is empty
+            if (otp === '') {
+                toast.error('Please enter your otp');
+                return; // Stop execution if otp is empty
             }
 
             const data = {
-                email: email,
+                otp: otp,
                 user_type: 'qtap_affiliate', // qtap_affiliate or qtap_clients
             };
 
 
-            const response = await axios.post(`${BASE_URL}sendOTP`, data, {
+            const response = await axios.post(`${BASE_URL}receiveOTP`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -41,14 +41,14 @@ export const ResetPassword = () => {
 
 
             if (response.data.status === true) {
-                toast.success('Email sent successfully check your email');
-                router.push('/receive-otp');
-            } else {
-                toast.error('Failed to send email. Please try again.');
+                toast.success('otp sent successfully check your otp');
+                router.push('/new-password');
+            }else{
+                 toast.error('Failed to send otp. Please try again.');
             }
         } catch (error) {
-            console.error('Error sending email:', error);
-            toast.error('Failed to send email. Please try again.');
+            console.error('Error sending otp:', error);
+            toast.error('Failed to send otp. Please try again.');
         }
     };
 
@@ -169,14 +169,14 @@ export const ResetPassword = () => {
                         color: "#AAAAAA", width: "70%", lineHeight: "20px",
                         marginBottom: 4, fontSize: "13px", textAlign: 'center'
                     }}>
-                    {t("youWillReceiveEmailForResetPass")}
+                    {t("check your email and enter OTP you receive")}
                 </Typography>
 
                 <TextField
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
                     variant="outlined"
-                    placeholder={t("email")}
+                    placeholder={t("otp")}
                     fullWidth
                     InputProps={{
                         startAdornment: (

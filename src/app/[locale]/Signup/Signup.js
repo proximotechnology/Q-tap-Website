@@ -97,7 +97,7 @@ export const Signup = () => {
           if (response?.data?.status == "success") {
             setApiSuccess(t("registrationSucc"));
 
-            router.push(`/${locale}/marketing`)
+            router.push(`/${locale}/verfiy-email`)
           } else {
             setApiError(response?.data?.message || t("checkEmailPhoneDublicate"));
           }
