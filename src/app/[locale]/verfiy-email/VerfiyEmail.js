@@ -16,7 +16,6 @@ import { toast } from "react-toastify";
 export const VerfiyEmail = () => {
 
     const [otp, setOtp] = useState('');
-
     const router = useRouter()
     //
     const t = useTranslations()
