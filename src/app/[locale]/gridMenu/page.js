@@ -12,15 +12,15 @@ import { useTranslations } from 'next-intl';
 import { BASE_URL_IMAGE, fetchData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSpecialOffers, handleSpecialOfferClick } from '../categories/page';
+import MyOffersSlider from '../categories/MyOffersSlider';
+import { useQuery } from '@tanstack/react-query';
+import { fetchShopsData } from '../shops/page';
 
 const page = () => {
     const t = useTranslations()
 
-    const [shops, setShops] = useState(null)
     const [currentBranch, setCurrentBranch] = useState(null)
     const [selectedCategory, setSelectedCategory] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
-    const [offers, setOffers] = useState([])
 
 
     const searchParams = useSearchParams();
@@ -34,17 +34,27 @@ const page = () => {
         router.push(`/shops/`);
     }
 
-    const getData = async (endPoint) => {
+    // const getData = async (endPoint) => {
 
-        const data = await fetchData(endPoint, setIsLoading);
+    //     const data = await fetchData(endPoint, setIsLoading);
 
-        setShops(data.data.data)
-    }
+    //     setShops(data.data.data)
+    // }
 
-    useEffect(() => {
-        getData('menu_all_restaurants')
-        getSpecialOffers(setOffers, branchId)
-    }, [])
+    // // useEffect(() => {
+    // //     getData('menu_all_restaurants')
+    // // }, [])
+    const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
+        queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
+        queryFn: () => getSpecialOffers(branchId)
+    });
+    const { data: shops, isLoading, isError, error, refetch } = useQuery({
+        queryKey: ['shops'],
+        queryFn: fetchShopsData,
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+    });
 
     useEffect(() => {
 
@@ -111,9 +121,16 @@ const page = () => {
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
                         }}>{t("specialOffers")}</span>
                     </Typography>
-
-                    <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                    {console.log("offers>>>>>>>>>>>>>",offers)}
+                    {offers && offers.length > 0 ? (<MyOffersSlider items={offers} openOffer={(offer) => {
+                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
+                    }} />) : (<Box> <Typography variant="body1" sx={{ marginBottom: "10px", }}>
+                        <span style={{
+                            fontSize: "11px",
+                            padding: "5px 16px"
+                        }}>{t("noSpecialOffers")}</span>
+                    </Typography></Box>)}
+                    {/* <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
+                        {console.log("offers>>>>>>>>>>>>>", offers)}
                         {offers.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{
@@ -131,7 +148,7 @@ const page = () => {
                                         borderRadius: '20px',
                                         height: 'auto',
                                     }} >
-                                    {console.log(`${BASE_URL_IMAGE}${offer.img}`) /*debug log*/ }
+                                    {console.log(`${BASE_URL_IMAGE}${offer.img}`) /*debug log* /}
                                     <CardMedia
                                         component="img"
                                         height="90"
@@ -168,7 +185,7 @@ const page = () => {
 
                             </Grid>
                         ))}
-                    </Grid>
+                    </Grid> */}
 
                 </Box>
 

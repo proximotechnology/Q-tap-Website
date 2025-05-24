@@ -242,5 +242,6 @@
     "shops": "المتاجر",
     "branchs": "الفروع",
     "search_placeholder": "عمّ تبحث؟",
-    "special_offers": "عروض خاصة"
+    "special_offers": "عروض خاصة",
+    "noSpecialOffers": " لا يوجد عروض خاصة"
 }

@@ -17,7 +17,7 @@ import { useShop } from './context';
 import { BASE_URL, BASE_URL_IMAGE, fetchData } from '../../../utils'
 import { useQuery } from '@tanstack/react-query';
 import { fetchShopsData } from '../shops/page';
-import MySlider from './MySlider';
+import MyOffersSlider from './MyOffersSlider';
 
 const page = () => {
     const t = useTranslations();
@@ -126,10 +126,15 @@ const page = () => {
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
                         }}>{t("specialOffers")}</span>
                     </Typography>
-                    <MySlider items={offers} openOffer={(offer) => {
-                        console.log(">>>>> offer", offer)//debug log 
+                  
+                  { offers && offers.length > 0 ? (  <MyOffersSlider items={offers} openOffer={(offer) => {
                         handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
-                    }} />
+                    }} />) : (<Box> <Typography variant="body1" sx={{ marginBottom: "10px", }}>
+                        <span style={{
+                            fontSize: "11px",
+                            padding: "5px 16px"
+                        }}>{t("noSpecialOffers")}</span>
+                    </Typography></Box>)}
                     {/* <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}> */}
                     {/* {offers?.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
