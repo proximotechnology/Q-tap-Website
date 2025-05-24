@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Divider } from '@mui/material';
+import { Box, Typography, Button, Divider, Menu, MenuItem } from '@mui/material';
 import { Header } from './Header';
 import { Link } from "@/i18n/navigation"
 import { getCartItems } from "../ProductDetails/cartUtils";
@@ -9,6 +9,7 @@ import axios from 'axios';
 import { BASE_URL, calculateOrderPriceDetailed } from '@/utils';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import MapView from '../clientDetails/map';
 
 const page = () => {
     const t = useTranslations()
@@ -22,9 +23,17 @@ const page = () => {
     const [tax, setTax] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
+    // =====================================
+    const [position, setPosition] = useState(null); // null || array with 2 number [ number , number]
+
+    const [isMapOpen, setIsMapOpen] = useState(false);
+    const handleLocationClick = () => {
+        setIsMapOpen(!isMapOpen)
+    }
+    // ============================================================================
+    const [selectedMethod, setSelectedMethod] = useState("cash");
 
     // ============================================================================
-    
     const makeOrder = async () => {
         try {
             setIsLoading(true) // disable the button untill the request finish
@@ -34,12 +43,12 @@ const page = () => {
             */
             let formdata = localStorage.getItem("formData")
             if (!formdata) {
-                toast.error(t("somethingWentWrong")) 
+                toast.error(t("somethingWentWrong"))
                 return;
             }
             formdata = JSON.parse(formdata)
             console.log("formdata", formdata)
-            let payWay = formdata.paymentWay === 'cash' ? 'cash' : "wallet";
+            let payWay = selectedMethod === 'cash' ? 'cash' : "wallet";
             let data = {
                 name: formdata.selectedName,
                 phone: formdata.phone,
@@ -73,8 +82,8 @@ const page = () => {
                     city: formdata.selectedCity,
                     address: formdata.address,
                     type: 'delivery',
-                    latitude: formdata.userPosition[0],
-                    longitude: formdata.userPosition[1]
+                    latitude: position?.[0],
+                    longitude: position?.[1]
 
                 }
             }
@@ -85,8 +94,8 @@ const page = () => {
                     type: 'dinein',
                 }
             }
-            
-            console.log("add_orders data : ",data)
+
+            console.log("add_orders data : ", data)
             console.log("firna", data)
             const response = await axios.post(
                 `${BASE_URL}add_orders`,
@@ -101,9 +110,9 @@ const page = () => {
             localStorage.setItem('cartItems', '')
             setCartItems([])
             console.log(response)
-            localStorage.setItem('order', JSON.stringify(response.data.order)) 
-            if(payWay==="wallet" && response.data.payment_url)
-                localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url)) 
+            localStorage.setItem('order', JSON.stringify(response.data.order))
+            if (payWay === "wallet" && response.data.payment_url)
+                localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
             router.push("/orderPlaced")
         } catch (error) {
             console.log('order payment errror', error)
@@ -131,6 +140,18 @@ const page = () => {
             setFormData(JSON.parse(storedData));
         }
     }, []);
+    useEffect(() => {
+        if (formData && formData.servingWay === 'delivery') {
+            let pos = [
+                formData.userPosition[0],
+                formData.userPosition[1]
+            ]
+            console.log("selected Pos", pos) // debug log 
+            setPosition(pos)
+        }
+        setSelectedMethod(formData?.paymentWay)
+
+    }, [formData]);
     // ============================================================================
     const renderIcon = () => {
         if (!formData) return null;
@@ -161,7 +182,7 @@ const page = () => {
                 color: 'white',
                 backgroundColor: '#1E1E2A',
                 height: "auto",
-                minHeight:'100vh',
+                minHeight: '100vh',
                 width: '100%',
             }}>
 
@@ -266,25 +287,27 @@ const page = () => {
                                     "&:hover": {
                                         backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                                     }
-                                }}>
+                                }} onClick={handleLocationClick}>
                                     <span class="icon-map-1" style={{ fontSize: "15px", marginRight: "5px" }}>
                                         <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span><span class="path13"></span><span class="path14"></span><span class="path15"></span></span>
                                     {t("location")}
                                 </Button> : <></>}
+                                {isMapOpen && <MapView currentPos={position ? [Number(position[0]), Number(position[1])] : null} setUserPosition={setPosition} />}
                             </Box>
                             <Divider sx={{ margin: "10px 0px", backgroundColor: "#44404D" }} />
 
                             <Box>
                                 <Box display={"flex"} textAlign={"center"} alignItems={"center"} justifyContent={"space-between"} >
                                     <Typography color="white" fontSize="12px"  >{t("paymentMethod")}</Typography>
-                                    <Typography>
+                                    {/* <Typography>
                                         <span style={{ color: "#AAAAAA", fontSize: "11px", borderBottom: "1px solid #AAAAAA" }}>
                                             {t("change")}</span>
-                                    </Typography>
+                                    </Typography> */}
+                                    <PaymentMethodSelector setSelectedMethod={setSelectedMethod} />
                                 </Box>
                                 <Typography color="#AAAAAA" fontSize="12px" margin={"5px 10px"} display={"flex"} alignItems={"center"}>
                                     <span class="icon-wallet" style={{ fontSize: "20px", marginRight: "6px" }}><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
-                                    {t(formData.paymentWay)}
+                                    {t(selectedMethod)}
                                 </Typography>
                             </Box>
 
@@ -399,3 +422,55 @@ const page = () => {
 }
 
 export default page;
+
+
+
+const PaymentMethodSelector = ({ setSelectedMethod }) => {
+    const t = useTranslations()
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (method) => {
+        if (method) {
+            setSelectedMethod(method);
+        }
+        setAnchorEl(null);
+    };
+
+    const paymentMethods = ["cash", "wallet"];
+    // const paymentMethods = ["cash", "wallet", "card"];
+
+    return (
+        <>
+            <Typography>
+                <span
+                    onClick={handleClick}
+                    style={{
+                        color: "#AAAAAA",
+                        fontSize: "11px",
+                        borderBottom: "1px solid #AAAAAA",
+                        cursor: "pointer",
+                    }}
+                >
+                    {t("change")}
+                </span>
+            </Typography>
+
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => handleClose()}
+                keepMounted
+            >
+                {paymentMethods.map((method) => (
+                    <MenuItem key={method} onClick={() => handleClose(method)}>
+                        {t(method)}
+                    </MenuItem>
+                ))}
+            </Menu>
+        </>
+    );
+};

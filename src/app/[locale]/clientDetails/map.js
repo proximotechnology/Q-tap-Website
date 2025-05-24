@@ -15,12 +15,13 @@ L.Icon.Default.mergeOptions({
     shadowUrl: markerShadow.src,
 });
 // Component to handle map clicks
-function LocationMarker({ onSelect }) {
-    const [position, setPosition] = useState(null);
+function LocationMarker({ onSelect, defaultPos = null }) {
+    const [position, setPosition] = useState(defaultPos);
 
     useMapEvents({
         click(e) {
             const coords = [e.latlng.lat, e.latlng.lng];
+            console.log("coords", coords)
             setPosition(coords);
             onSelect(coords);
         },
@@ -30,7 +31,7 @@ function LocationMarker({ onSelect }) {
         <Marker position={position}>
             <Popup>
                 You selected this location: <br />
-                Lat: {position[0].toFixed(5)}, Lng: {position[1].toFixed(5)}
+                {/* Lat: {position[0].toFixed(5)}, Lng: {position[1].toFixed(5)} */}
             </Popup>
         </Marker>
     ) : null;
@@ -46,7 +47,7 @@ function RecenterMap({ position }) {
     return null;
 }
 
-export default function MapView({ setUserPosition }) {
+export default function MapView({ setUserPosition, currentPos = null }) {
     const [position, setPosition] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
     useEffect(() => {
@@ -54,16 +55,25 @@ export default function MapView({ setUserPosition }) {
             console.warn('Geolocation not supported');
             return;
         }
+        console.log("MapView currentPos obj", currentPos)//debug log
+        if (!currentPos) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const coords = [pos.coords.latitude, pos.coords.longitude];
+                    setPosition(coords);
+                },
+                (err) => {
+                    console.warn('Geolocation error:', err);
+                }
+            );
+        }
+        else {
+            const coords = [currentPos[0], currentPos[1]];
 
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const coords = [pos.coords.latitude, pos.coords.longitude];
-                setPosition(coords);
-            },
-            (err) => {
-                console.warn('Geolocation error:', err);
-            }
-        );
+            console.log("MapView useEffect update pos by currentPos props  ", coords)//debug log
+            setSelectedLocation(coords);
+            setPosition(coords);
+        }
     }, []);
     return (
         <div>
@@ -72,7 +82,11 @@ export default function MapView({ setUserPosition }) {
                     attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <LocationMarker onSelect={(coords) => { setSelectedLocation(coords); setUserPosition(coords) }} />
+                <LocationMarker defaultPos={currentPos} onSelect={(coords) => {
+                    setSelectedLocation(coords);
+                    setUserPosition(coords);
+                    console.log("locaiton selected ", coords) // debug log
+                }} />
                 <RecenterMap position={position} />
             </MapContainer>
 
