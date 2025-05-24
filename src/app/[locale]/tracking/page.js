@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Header } from '@/app/[locale]/payment/Header'
 import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
 import { Box, Typography, Divider, Avatar, Button, } from '@mui/material';
@@ -16,15 +16,50 @@ const page = () => {
   const [order, setOrder] = useState(null);
   const [pusherOrder, setPusherOrder] = useState(null);
   const [pusherPhase, setPusherPhase] = useState(null)
+  // ui dynamic header
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+    useEffect(() => {
+    if (!headerRef.current) return;
 
-  const PHASE_TEMP = { Accepted: { status: false, time: "" }, Prepared: { status: false, time: "" }, Closed: { status: false, time: "" } }
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setHeaderHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(headerRef.current);
+
+    // Cleanup on unmount
+    return () => resizeObserver.disconnect();
+  }, []);
+/*
+PHASE_TEMP represents the different stages an order goes through.
+
+  Each phase (Accepted, Prepared, Delivered/Served, Closed) has:
+  - status: a boolean indicating if the phase is complete (true = completed)
+  - time: a timestamp of when the phase was completed (empty if not completed)
+
+  These phases are used to control UI icons. 
+  Icons are marked active or inactive based on the status of each phase:
+  if PHASE_TEMP[phaseLabel].status === true → the icon is active
+  icons in steps array
+ */ const PHASE_TEMP = {
+    Accepted: { status: false, time: "" },
+    Prepared: { status: false, time: "" },
+    Delivered: { status: false, time: "" },
+    Closed: { status: false, time: "" }
+  }
   const handleOpen = () => setIsModalOpen(true);
 
   const handleClose = () => {
     setIsModalOpen(false);
   }
 
-
+  // This useEffect listens for updates from Pusher useEffect regarding the order status.
+  // When a new update is received, it updates the order's phase status
+  // using the logic defined in the PHASE_TEMP object.
+  // this logic controll icons show in ui 
   useEffect(() => {
     if (!pusherOrder || !pusherPhase || !order) {
       return;
@@ -34,7 +69,7 @@ const page = () => {
       let phase = prev.phase
       if (phase) {
         let AcceptProccess;
-        console.log("pusher updata data",pusherOrder)
+        console.log("pusher updata data", pusherOrder)
         if (pusherPhase === "Accepted") {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "accepted");
           phase[pusherPhase].prepareTime = AcceptProccess?.time
@@ -44,7 +79,14 @@ const page = () => {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "prepared");
           console.log('pusher updata data AcceptProccess', AcceptProccess)
         }
-
+        if (pusherPhase === "Delivered") {
+          AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "delivered");
+          console.log('pusher updata data AcceptProccess', AcceptProccess)
+        }
+        if (pusherPhase === "Closed") {
+          AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "done");
+          console.log('pusher updata data AcceptProccess', AcceptProccess)
+        }
         phase[pusherPhase].status = true;
         phase[pusherPhase].time = AcceptProccess?.created_at
       }
@@ -93,6 +135,22 @@ const page = () => {
           setPusherPhase('Prepared')
         }
       }
+      if (data.type === 'delivered_order') {
+        console.log('track delivered_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
+          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          setPusherOrder(data?.message?.[0])
+          setPusherPhase('Served')
+        }
+      }
+      if (data.type === 'done_order') {
+        console.log('track delivered_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
+          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          setPusherOrder(data?.message?.[0])
+          setPusherPhase('Closed')
+        }
+      }
     })
 
   }, [])
@@ -134,18 +192,34 @@ const page = () => {
       sx={{
         backgroundColor: '#1E1E2A',
         maxWidth: '100%', height: "auto",
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        position: "relative",
       }}>
+      <Box className="iam here" ref={headerRef}
+        sx={{
+          position: "fixed",
+          overflow: 'hidden',
+          backgroundColor: '#1E1E2A',
+          top: 0,
+          left: 0,
+          width: '100%',
+          zIndex: 1000,
+          overflowY:'hidden'
+        }}>
 
-      <Header />
-      <OrderDetails />
 
+        <Header />
+        <OrderDetails />
+      </Box>
+      <Box sx={{ height: `${headerHeight}px` }} />
       <Box
         sx={{
-          position: "relative", top: "45vh",
+          position: "relative",
           color: "#FFFFFF",
           padding: "20px",
           backgroundColor: '#1E1E2A',
-
         }}
       >
         <Typography
@@ -185,7 +259,7 @@ const page = () => {
 
                       <Typography variant="caption"
                         sx={{ color: step.active ? " #AAAAAA" : "#302E3B", fontSize: "12px", }}>
-                        {order?.phase[step.label]?.time?formateDate(order?.phase[step.label]?.time):<></>}
+                        {order?.phase[step.label]?.time ? formateDate(order?.phase[step.label]?.time) : <></>}
                       </Typography>
                     </Box>
 
@@ -296,4 +370,6 @@ const page = () => {
   )
 }
 
-export default page; 
+export default page;
+
+

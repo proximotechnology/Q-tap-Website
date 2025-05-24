@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchShopsData } from '../../shops/page';
+import { getSpecialOffers } from '../../categories/page';
 const page = ({ params }) => {
     const locale = useLocale();
     const t = useTranslations()
@@ -35,14 +36,21 @@ const page = ({ params }) => {
     const router = useRouter()
 
 
-    const queryClient = useQueryClient();
-
+    const { data: offersData, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
+        queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
+        queryFn: () => getSpecialOffers(branchId),
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+    });
+    // const offersData  = []
+    // const queryClient = useQueryClient();
     // Get cached data without refetching
-    const offersData = queryClient.getQueryData(['restaurant-offers-data', branchId]);
-    const queryState = queryClient.getQueryState(['restaurant-offers-data', branchId]);
-    console.log('Query state:', queryState);
-    const allCachedQueries = queryClient.getQueryCache().findAll();
-    console.log('All cached queries:', allCachedQueries.map(q => q.queryKey));
+    // const offersData = queryClient.getQueryData(['restaurant-offers-data', branchId]);
+    // const queryState = queryClient.getQueryState(['restaurant-offers-data', branchId]);
+    // console.log('Query state:', queryState);
+    // const allCachedQueries = queryClient.getQueryCache().findAll();
+    // console.log('All cached queries:', allCachedQueries.map(q => q.queryKey));
     // Verify your ['restaurant-offers-data', branchId] exists in this list
     console.log("data", offersData) // debug log
 
@@ -51,13 +59,13 @@ const page = ({ params }) => {
     }
     if (!shopId || !branchId || !catId) return <p>{t("noProductSelected")}</p>
 
-      const { data: shopData, isLoading, isError, error, refetch } = useQuery({
+    const { data: shopData, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['shops'],
         queryFn: fetchShopsData,
         staleTime: 1000 * 60 * 15, // 15 minutes
         refetchOnMount: true,
         refetchOnWindowFocus: false,
-      });
+    });
 
     useEffect(() => {
         if (!shopData) return;
@@ -106,9 +114,12 @@ const page = ({ params }) => {
             if (selectedSize === "L") currentPrice += Number(mealData?.price_large)
 
         } if (specialID) {
-            const d = offersData?.find(item => item.id === Number(specialID))
-            console.log("DDDDDD", d) // debug log
-            currentPrice += Number(d?.priceAfter)
+            const d = offersData?.find(item =>  Number(item.id) === Number(specialID))
+            console.log("DDDDDD", d ,  Number(d?.priceAfter), typeof  Number(d?.priceAfter) ) // debug log
+            currentPrice += Number(d?.priceAfter) || 0
+            
+            if(Number.isNaN(Number(d?.priceAfter))  )
+                toast.error("somethingWentWrong")
         }
         else {
             currentPrice += Number(mealData?.price)
@@ -241,7 +252,7 @@ const page = ({ params }) => {
 
             }
         }
-        console.log("item add to cart ",currentCart)//debug log
+        console.log("item add to cart ", currentCart)//debug log
         localStorage.setItem("cartItems", JSON.stringify(currentCart))
         setSelectedExtra([])
         setCount(0)

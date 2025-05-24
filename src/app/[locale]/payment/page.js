@@ -86,7 +86,7 @@ const page = () => {
                 }
             }
             
-
+            console.log("add_orders data : ",data)
             console.log("firna", data)
             const response = await axios.post(
                 `${BASE_URL}add_orders`,

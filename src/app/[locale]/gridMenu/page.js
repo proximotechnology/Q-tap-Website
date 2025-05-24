@@ -44,9 +44,12 @@ const page = () => {
     // // useEffect(() => {
     // //     getData('menu_all_restaurants')
     // // }, [])
-    const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
+const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
         queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
-        queryFn: () => getSpecialOffers(branchId)
+        queryFn: () => getSpecialOffers(branchId),
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
     });
     const { data: shops, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['shops'],

@@ -51,7 +51,10 @@ const page = () => {
 
     const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
         queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
-        queryFn: () => getSpecialOffers(branchId)
+        queryFn: () => getSpecialOffers(branchId),
+        staleTime: 1000 * 60 * 15, // 15 minutes
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
     });
     const { data: shops, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['shops'],
@@ -126,8 +129,8 @@ const page = () => {
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
                         }}>{t("specialOffers")}</span>
                     </Typography>
-                  
-                  { offers && offers.length > 0 ? (  <MyOffersSlider items={offers} openOffer={(offer) => {
+
+                    {offers && offers.length > 0 ? (<MyOffersSlider items={offers} openOffer={(offer) => {
                         handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
                     }} />) : (<Box> <Typography variant="body1" sx={{ marginBottom: "10px", }}>
                         <span style={{

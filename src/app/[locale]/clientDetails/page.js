@@ -390,7 +390,7 @@ const page = () => {
                                         <MenuItem value="" disabled sx={{ fontSize: "11px", color: "#797993", }}>
                                             {t("selectCity")}
                                         </MenuItem>
-                                        {egyptCities.map(city => <MenuItem value={1} sx={{ fontSize: "11px", color: "#797993", }}>{city.name}</MenuItem>)}
+                                        {egyptCities.map(city => <MenuItem value={city.name} sx={{ fontSize: "11px", color: "#797993", }}>{city.name}</MenuItem>)}
                                     </Select>
                                 </FormControl>
                                 <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("address")}</Typography>
