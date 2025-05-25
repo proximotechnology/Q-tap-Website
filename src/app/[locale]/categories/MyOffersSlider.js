@@ -65,8 +65,8 @@ const MyOffersSlider = ({ items, openOffer }) => {
 
                                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                     <Box>
-                                        <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.priceAfter}</Typography>
-                                        <Typography sx={{ fontSize: "15px" }}>{offer.priceBefore} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
+                                        <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.priceBefore}</Typography>
+                                        <Typography sx={{ fontSize: "15px" }}>{offer.priceAfter} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
                                     </Box>
                                     <Box
                                         sx={{

@@ -1,5 +1,6 @@
 import axios from "axios"
-
+export const BASE_URL = 'https://api.qutap.co/api/'
+export const BASE_URL_IMAGE = 'https://api.qutap.co/'
 export const formateDate = (date) => {
     const newDate = new Date(date);
 
@@ -13,11 +14,17 @@ export const formateDate = (date) => {
 
     );
 }
-
-
-export const BASE_URL = 'https://api.qutap.co/api/'
-export const BASE_URL_IMAGE = 'https://api.qutap.co/'
-
+export const fetchShopsData = async () => {
+    try {
+        // setIsLoading(true)
+        const response = await axios.get(`${BASE_URL}menu_all_restaurants`)
+        console.log(response.data.data) // array of object [{...} , ... , {...}]
+        return response.data.data
+        // setShops(response.data.data)
+    } catch (error) {
+        console.log(error)
+    }
+}
 export const fetchData = async (endPoint, setIsLoading) => {
     try {
         setIsLoading(true)

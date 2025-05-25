@@ -113,7 +113,7 @@ const page = () => {
             localStorage.setItem('order', JSON.stringify(response.data.order))
             if (payWay === "wallet" && response.data.payment_url)
                 localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
-            router.push("/orderPlaced")
+            if(response) router.push("/orderPlaced")
         } catch (error) {
             console.log('order payment errror', error)
             toast.error(t("somethingWentWrong"))

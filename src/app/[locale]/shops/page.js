@@ -5,19 +5,9 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
-import { BASE_URL } from '@/utils';
+import { BASE_URL_IMAGE, fetchShopsData } from '@/utils';
 
-export const fetchShopsData = async () => {
-    try {
-        // setIsLoading(true)
-        const response = await axios.get(`${BASE_URL}menu_all_restaurants`)
-        console.log(response.data.data) // array of object [{...} , ... , {...}]
-        return response.data.data
-        // setShops(response.data.data)
-    } catch (error) {
-        console.log(error)
-    } 
-}
+
 const ShopSelect = () => {
     // const [shops, setShops] = useState(null)
     const [selectedShop, setSelectedShop] = useState(null)
@@ -44,11 +34,24 @@ const ShopSelect = () => {
         router.push(`/categories?shopId=${selectedShop.id}&branchId=${branchID}`);
 
     };
-    const BASE_URL = 'https://api.qutap.co/api/'
-    const BASE_URL_IMAGE = 'https://api.qutap.co/'
 
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 20;
+    const indexOfLastShop = currentPage * itemsPerPage;
+    const indexOfFirstShop = indexOfLastShop - itemsPerPage;
 
+    const currentShops = shops?.slice(indexOfFirstShop, indexOfLastShop);
+
+    const totalPages = shops ? Math.ceil(shops.length / itemsPerPage) : 1;
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) setCurrentPage(prev => prev - 1);
+    };
 
     // useEffect(() => {
     //     fetchData('menu_all_restaurants')
@@ -105,7 +108,8 @@ const ShopSelect = () => {
                                     loading
                                 </h1>
                                 : (
-                                    shops?.map(shop => (
+                                    <>
+                                     {currentShops?.map(shop => (
                                         <div
                                             key={shop?.id}
                                             className={`card ${colors.card_bg} rounded-lg p-2 flex flex-col justify-between h-[300px]`}
@@ -125,7 +129,25 @@ const ShopSelect = () => {
                                                 </h2>
                                             </div>
                                         </div>
-                                    ))
+                                        ))}
+                                        <div className="flex justify-center items-center mt-6 gap-4 w-[100vw]">
+                                            <button
+                                                onClick={handlePrevPage}
+                                                disabled={currentPage === 1}
+                                                className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
+                                            >
+                                                Previous
+                                            </button>
+                                            <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
+                                            <button
+                                                onClick={handleNextPage}
+                                                disabled={currentPage === totalPages}
+                                                className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    </>
                                 )
                             }
 
@@ -133,7 +155,7 @@ const ShopSelect = () => {
                     )
                 }
 
-            </div>
+            </div >
         </>
     )
 }
