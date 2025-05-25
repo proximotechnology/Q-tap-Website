@@ -73,7 +73,7 @@ const page = () => {
                     variants: (item.selectedOptions ?? []).map(item => item.id),
                     extras: (item.selectedExtras ?? []).map(item => item.id),
                     size: item.selectedSize ? sizeConvert[item.selectedSize] : 's',
-                    discount_code: item.discounts ? item.discounts.code : null,
+                    discount_code: formdata?.code ,
                 }
 
                 data.meals = [...data.meals, itemData]
@@ -99,7 +99,6 @@ const page = () => {
             }
 
             console.log("add_orders data : ", data) // debug log
-            console.log("firna", data) // debug log
             const response = await axios.post(
                 `${BASE_URL}add_orders`,
                 data,

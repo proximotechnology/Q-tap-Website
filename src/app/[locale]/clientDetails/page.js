@@ -6,13 +6,14 @@ import { TextField, MenuItem, InputAdornment, OutlinedInput, Divider, FormContro
 import PhoneInput from 'react-phone-input-2';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import CheckIcon from '@mui/icons-material/Check';
+import SendIcon from "@mui/icons-material/Send";
 import 'react-phone-input-2/lib/style.css';
 import TableBarOutlinedIcon from '@mui/icons-material/TableBarOutlined';
 import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 import { getCartItems } from '../ProductDetails/cartUtils';
 import axios from 'axios';
-import { BASE_URL, calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils';
+import { apiCheckDiscountCode, BASE_URL, calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils';
 import MapView from './map';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -114,11 +115,6 @@ const page = () => {
         setCartItems(storedCartItems);
         getTable()
     }, []);
-    const [validDiscountCode, setValidDiscountCode] = useState(null);
-
-    useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validDiscountCode)
-    }, [cartItems, validDiscountCode]);
 
 
     // =========================================================================
@@ -172,12 +168,38 @@ const page = () => {
     const [selectedName, setSelectedName] = useState("");
     const [comment, setComment] = useState("");
     const [address, setAddress] = useState("");
-    const [code, setCode] = useState("");
-
     const [selectedValue, setSelectedValue] = useState('cash');
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
     };
+    // ===================================== Discount code ====================================
+    const [code, setCode] = useState("");
+    const [validDiscountCode, setValidDiscountCode] = useState(null);
+    const [validated, setValidated] = useState(false);
+
+    useEffect(() => {
+        setValidated(false);
+    }, [code]);
+
+    const handleValidate = async () => {
+        try {
+            setIsLoading(true)
+            const res = await apiCheckDiscountCode(code, branchId)
+            if (res?.data?.discount) {
+                setValidated(true)
+                setValidDiscountCode(code)
+            }
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+    // ===================================== Discount code ====================================
+
+    useEffect(() => {
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validDiscountCode)
+    }, [cartItems, validDiscountCode]);
 
     useEffect(() => {
         const data = {
@@ -190,10 +212,11 @@ const page = () => {
             code,
             paymentWay: selectedValue,
             servingWay: selectedOption,
-            userPosition
+            userPosition,
+            code: validated ? validDiscountCode : ''
         };
         localStorage.setItem('formData', JSON.stringify(data));
-    }, [phone, selectedTable, selectedCity, selectedName, comment, address, code, selectedValue, selectedOption, userPosition]);
+    }, [phone, selectedTable, selectedCity, selectedName, comment, address, validDiscountCode, validated, selectedValue, selectedOption, userPosition]);
 
     const handlePlaceOrderClick = () => {
         setIsLoading(true)
@@ -475,20 +498,27 @@ const page = () => {
                         />
 
                         <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "White" }}>
-                            {t("discountCode")}</Typography>
+                            {t("discountCode")}
+                        </Typography>
+
                         <TextField
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <span style={{ fontSize: "20px", color: "#797993" }} >% </span>
-
+                                        <span style={{ fontSize: "20px", color: "#797993" }}>%</span>
                                     </InputAdornment>
                                 ),
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <CheckIcon sx={{ fontSize: "25px", color: "#009444" }} />
+                                        {validated ? (
+                                            <CheckIcon sx={{ fontSize: "25px", color: "#009444" }} />
+                                        ) : (
+                                            <IconButton onClick={handleValidate} disabled={isLoading}>
+                                                <SendIcon sx={{ fontSize: "20px", color: "#797993" }} />
+                                            </IconButton>
+                                        )}
                                     </InputAdornment>
                                 ),
                                 sx: {

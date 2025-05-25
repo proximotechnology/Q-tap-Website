@@ -43,6 +43,27 @@ export const fetchData = async (endPoint, setIsLoading) => {
     }
 
 }
+export const apiCheckDiscountCode = async (discountCode,branchId) => {
+    /* {
+    "brunch_id":"187",
+    "code":"3"
+} */
+    try {
+        const response = await axios.post(`${BASE_URL}check_discount_code`, {
+            code: discountCode,
+            brunch_id: branchId
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return (response)
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+
+}
 /* 
 @param
 cartItem [ {sizePrice , quantity , tax,discount{discount} , selectedExtra[{price}] ,selectedOptions[{price}] ,}]
@@ -90,7 +111,7 @@ export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setD
 
             if (item.tax) tax += itemSubTotal * Number(item.tax) / 100 * item.quantity
 
-            if(item.discount && discountCode === item.discount.code) {
+            if (item.discount && discountCode === item.discount.code) {
                 if (!item.special) {
                     discount += itemSubTotal * (Number(item.discount.discount) / 100);
                 }
