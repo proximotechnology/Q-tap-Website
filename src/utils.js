@@ -48,12 +48,37 @@ export const fetchData = async (endPoint, setIsLoading) => {
 cartItem [ {sizePrice , quantity , tax,discount{discount} , selectedExtra[{price}] ,selectedOptions[{price}] ,}]
 */
 
-export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setDiscount, setTotalPrice) => {
+export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, discountCode) => {
     let subTotal = 0;
     let tax = 0;
     let discount = 0;
     let totalPrice = 0;
-
+    /* 
+    this item come from local storage not the same as the api 
+     item = {
+      branchId: "187",
+      catId: "16",
+      discount: {
+        id: 31,
+        code: "1",
+        discount: "1", 
+        status: "active",
+        brunch_id: 187,
+      },
+      id: 26,
+      image: "storage/images/MOL78bsFb3vwpDDUN4OqZwcMXGCd1xoUN2bZx39q.jpg",
+      name: "1",
+      price: "2.00",
+      quantity: 1,
+      selectedExtra: [],
+      selectedOptions: [],
+      selectedSize: "L",
+      shopId: "159",
+      sizePrice: "1",
+      special: null,
+      tax: "1",
+    };
+    */
     if (cartItems) {
         cartItems.map(item => {
             let itemSubTotal = 0;
@@ -64,9 +89,15 @@ export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setD
             subTotal += itemSubTotal
 
             if (item.tax) tax += itemSubTotal * Number(item.tax) / 100 * item.quantity
-            if (item.discount) discount += item.special ? 0 : itemSubTotal * Number(item.discount.discount) / 100 * item.quantity
+
+            if(item.discount && discountCode === item.discount.code) {
+                if (!item.special) {
+                    discount += itemSubTotal * (Number(item.discount.discount) / 100);
+                }
+            }
 
         })
+        console.log("discount", discount)
     }
     setSubTotal(subTotal.toFixed(2))
     setTax(tax.toFixed(2))

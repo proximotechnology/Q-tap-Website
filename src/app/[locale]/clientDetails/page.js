@@ -114,10 +114,11 @@ const page = () => {
         setCartItems(storedCartItems);
         getTable()
     }, []);
+    const [validDiscountCode, setValidDiscountCode] = useState(null);
 
     useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
-    }, [cartItems]);
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validDiscountCode)
+    }, [cartItems, validDiscountCode]);
 
 
     // =========================================================================
@@ -206,8 +207,8 @@ const page = () => {
             setIsLoading(false)
             return;
         }
-        
-        router.push('/payment' + (shopId || branchId ? `?shopId=${shopId}&branchId=${branchId}`+ (tableId ? `&tableId=${tableId}` : '') : (tableId ? `?tableId=${tableId}` : '') ))
+
+        router.push('/payment' + (shopId || branchId ? `?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '') : (tableId ? `?tableId=${tableId}` : '')))
 
     }
     // =========================================================================
@@ -255,7 +256,7 @@ const page = () => {
                                 padding: '10px',
                             }}
                         >
-                            <Link href={'cart' + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}`+(tableId?`&tableId=${tableId}`:"") : '')}>
+                            <Link href={'cart' + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : "") : '')}>
                                 <IconButton sx={{ color: "white" }}>
                                     <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
                                 </IconButton>
@@ -269,7 +270,7 @@ const page = () => {
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
                             {renderIcon()}
                         </Box>
-                        
+
                         <Box sx={{ display: "flex", position: 'relative', width: '100%', height: '100%' }}>
                             {options.map((option) => (branchServigWay?.some(item => item.name === option.value) &&
                                 <Box

@@ -124,9 +124,9 @@ const page = ({ params }) => {
         }
         let sub = currentPrice;
         /* add discount and tax */
-        if (mealData?.discounts?.discount && !specialID) {
-            sub -= Number(mealData?.discounts?.discount) * currentPrice / 100
-        }
+        // if (mealData?.discounts?.discount && !specialID) {
+        //     sub -= Number(mealData?.discounts?.discount) * currentPrice / 100
+        // }
 
         if (mealData?.Tax) {
             sub += Number(mealData?.Tax) * currentPrice / 100
@@ -453,7 +453,7 @@ const page = ({ params }) => {
                                 );
                             })}
                         </Box>   {/* size */}
-                        {!specialID && mealData?.discounts?.discount ? <Typography>discount {mealData?.discounts?.discount} %</Typography> : <></>}
+                        {/* {!specialID && mealData?.discounts?.discount ? <Typography>discount {mealData?.discounts?.discount} %</Typography> : <></>} */}
                         <Box sx={{ marginTop: "15px" }}>
                             <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
                                 {t("options")} <span style={{ fontSize: "9px", fontWeight: '300', color: 'white' }}>{t("required)")}</span>
