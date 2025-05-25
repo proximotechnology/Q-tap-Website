@@ -255,7 +255,7 @@ const page = () => {
                                 padding: '10px',
                             }}
                         >
-                            <Link href={'cart' + (shopId || branchId || tableId ? `?shopId=${shopId}& branchId=${branchId}&tableId=${tableId}` : '')}>
+                            <Link href={'cart' + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}`+(tableId?`&tableId=${tableId}`:"") : '')}>
                                 <IconButton sx={{ color: "white" }}>
                                     <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
                                 </IconButton>
