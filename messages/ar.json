@@ -243,5 +243,6 @@
     "branchs": "الفروع",
     "search_placeholder": "عمّ تبحث؟",
     "special_offers": "عروض خاصة",
-    "noSpecialOffers": " لا يوجد عروض خاصة"
+    "noSpecialOffers": " لا يوجد عروض خاصة",
+     "inValidDiscountCode":"كود خصم غير صحيح"
 }

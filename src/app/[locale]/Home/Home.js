@@ -5,13 +5,21 @@ import './Home.css'
 import NavBar from './NavBar';
 // import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 
 
 const Home = () => {
     const t = useTranslations()
     return (
-        <Box className="container">
+        <Box className="container" sx={{
+            width: {
+                xs: '100vw !important',
+                sm: '100vw !important',
+                md: '100vw !important',
+                lg: '100vw !important',
+                xl: '100vw !important',
+            },
+        }}>
             <NavBar />
 
             <Box className="hero">

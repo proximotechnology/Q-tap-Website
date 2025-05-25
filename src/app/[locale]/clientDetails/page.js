@@ -188,9 +188,12 @@ const page = () => {
             if (res?.data?.discount) {
                 setValidated(true)
                 setValidDiscountCode(code)
+            } else {
+                toast.error(t("inValidDiscountCode"))
             }
         } catch (error) {
             console.log(error)
+            toast.error(t("inValidDiscountCode"))
         } finally {
             setIsLoading(false)
         }

@@ -243,5 +243,6 @@
     "branchs":"Branch",
     "search_placeholder": "What are you looking for...",
     "special_offers": "Special Offers",
-    "noSpecialOffers":"No Special Offers"
+    "noSpecialOffers":"No Special Offers",
+    "inValidDiscountCode":"invalid Discount Code"
 }

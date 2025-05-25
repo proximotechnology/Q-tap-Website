@@ -32,7 +32,6 @@ const page = () => {
     let shopId = searchParams.get('shopId')
     let branchId = searchParams.get('branchId')
     let tableId = searchParams.get('tableId')
-    const confirmUrl = `/${locale}/clientDetails` + ( tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : `?shopId=${shopId}&branchId=${branchId}`)
     if (!shopId || !branchId) {
         shopId = localStorage.getItem("selectedShopID")
         branchId = localStorage.getItem("selectedBranchID")
@@ -74,7 +73,7 @@ const page = () => {
         return item ? item.count : 1;
     };
 
-    const handleAddItem = (index) => { 
+    const handleAddItem = (index) => {
         console.log('add item at', index) // debug log
         const newCartItems = cartItems.map((item, i) =>
             i === index ? { ...item, quantity: item.quantity + 1 } : item
@@ -101,6 +100,23 @@ const page = () => {
 
     // ===============================================================================
     const router = useRouter();
+
+    const handleConfirmButtonClick = () => {
+        const isValidCart = isAllItemComeFromSameBranch(cartItems, Number(cartItems?.[0]?.branchId))
+        // console.log("isValid", isValidCart) // debug log
+        if (cartItems.length > 0 && isValidCart) {
+            console.log("cartItems", cartItems)
+            const confirmUrl = `/${locale}/clientDetails` + (tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : `?shopId=${cartItems?.[0]?.shopId}&branchId=${cartItems?.[0]?.branchId}`)
+
+            router.push(confirmUrl);
+        }
+
+        else {
+            toast.error(t("cartNotValid"))
+            // toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
+        }
+
+    }
     return (
         //  <button onClick={() => handleRemove(item.id)}>Remove</button>
         <Box
@@ -254,16 +270,7 @@ const page = () => {
                 <Divider orientation="vertical" flexItem sx={{ backgroundColor: "gray", mx: 1 }} />
                 <Box sx={{ width: "46%" }}>
                     <Button
-                        onClick={() => {
-                            const isValidCart = isAllItemComeFromSameBranch(cartItems, cartItems?.[0]?.branchId)
-                            console.log("isValid", isValidCart) // debug log
-                            if (cartItems.length > 0 && isValidCart)
-                                router.push(confirmUrl);
-                            else {
-                                toast.error(t("cartNotValid"))
-                                toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
-                            }
-                        }}
+                        onClick={handleConfirmButtonClick}
                         sx={{
                             backgroundImage: 'linear-gradient(to right, #302E3B, #797993)',
                             color: "white",

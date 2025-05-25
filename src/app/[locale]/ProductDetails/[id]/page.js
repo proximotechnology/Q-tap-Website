@@ -182,7 +182,10 @@ const page = ({ params }) => {
         } else {
             currentCart = []
         }
-        if (!isAllItemComeFromSameBranch(currentCart, mealData.id)) {
+        console.log("mealData",mealData)
+        const isValidCart = isAllItemComeFromSameBranch(currentCart, mealData.brunch_id);
+        if (!isValidCart) {
+            console.log(">>>>>>>>>inside>>>>>>>>>",isValidCart)
             toast.error(t("cartNotValid"))
             toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
             return;

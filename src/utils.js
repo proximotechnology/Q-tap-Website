@@ -17,7 +17,10 @@ export const formateDate = (date) => {
 // take cart and id to cheek
 export const isAllItemComeFromSameBranch = (cart, branchID) => {
     if (!Array.isArray(cart) || cart.length === 0) return true; // assume valid if empty
-    return cart.every(item => item.branchId === branchID);
+    return cart.every(item => {
+        console.log("item.branchId === branchID",item , "  ", item.brunch_id ,"===", branchID)
+        return Number(item.branchId) === branchID
+    });
 }
 export const fetchShopsData = async () => {
     try {
@@ -43,7 +46,7 @@ export const fetchData = async (endPoint, setIsLoading) => {
     }
 
 }
-export const apiCheckDiscountCode = async (discountCode,branchId) => {
+export const apiCheckDiscountCode = async (discountCode, branchId) => {
     /* {
     "brunch_id":"187",
     "code":"3"

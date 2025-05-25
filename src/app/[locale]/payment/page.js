@@ -130,7 +130,7 @@ const page = () => {
 
     // ============================================================================
     useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice,formData?.code)
     }, [cartItems]);
 
     useEffect(() => {
