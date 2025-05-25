@@ -12,7 +12,6 @@ import { AllChatForm } from '../Chat/AllChatForm.js';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from "react-toastify";
 
-
 export const VerfiyEmail = () => {
 
     const [otp, setOtp] = useState('');
