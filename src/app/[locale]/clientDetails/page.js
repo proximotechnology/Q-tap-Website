@@ -12,12 +12,11 @@ import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 import { getCartItems } from '../ProductDetails/cartUtils';
 import axios from 'axios';
-import { BASE_URL, calculateOrderPriceDetailed, egyptCities } from '@/utils';
+import { BASE_URL, calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils';
 import MapView from './map';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
-import { fetchShopsData } from '../shops/page';
 
 
 const options = [

@@ -9,12 +9,11 @@ import { Footer } from '../categories/Footer';
 import { Categories } from './Categories';
 import { Content } from './Content';
 import { useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE, fetchData } from '@/utils';
+import { BASE_URL_IMAGE, fetchData, fetchShopsData } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSpecialOffers, handleSpecialOfferClick } from '../categories/page';
 import MyOffersSlider from '../categories/MyOffersSlider';
 import { useQuery } from '@tanstack/react-query';
-import { fetchShopsData } from '../shops/page';
 
 const page = () => {
     const t = useTranslations()

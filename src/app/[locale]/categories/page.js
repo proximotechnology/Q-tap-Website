@@ -14,9 +14,8 @@ import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useShop } from './context';
-import { BASE_URL, BASE_URL_IMAGE, fetchData } from '../../../utils'
+import { BASE_URL, BASE_URL_IMAGE, fetchData, fetchShopsData } from '../../../utils'
 import { useQuery } from '@tanstack/react-query';
-import { fetchShopsData } from '../shops/page';
 import MyOffersSlider from './MyOffersSlider';
 
 const page = () => {
