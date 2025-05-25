@@ -14,6 +14,11 @@ export const formateDate = (date) => {
 
     );
 }
+// take cart and id to cheek
+export const isAllItemComeFromSameBranch = (cart, branchID) => {
+    if (!Array.isArray(cart) || cart.length === 0) return true; // assume valid if empty
+    return cart.every(item => item.branchId === branchID);
+}
 export const fetchShopsData = async () => {
     try {
         // setIsLoading(true)

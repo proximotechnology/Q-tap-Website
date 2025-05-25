@@ -6,18 +6,16 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { Link } from "@/i18n/navigation"
-
-const sizes = ["S", "M", "L"];
-
-
 import { addItemToCart } from "../cartUtils";
 import { useLocale, useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE, fetchData } from '@/utils';
+import { BASE_URL_IMAGE, fetchData, fetchShopsData, isAllItemComeFromSameBranch } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchShopsData } from '../../shops/page';
 import { getSpecialOffers } from '../../categories/page';
+
+const sizes = ["S", "M", "L"];
+
 const page = ({ params }) => {
     const locale = useLocale();
     const t = useTranslations()
@@ -114,11 +112,11 @@ const page = ({ params }) => {
             if (selectedSize === "L") currentPrice += Number(mealData?.price_large)
 
         } if (specialID) {
-            const d = offersData?.find(item =>  Number(item.id) === Number(specialID))
-            console.log("DDDDDD", d ,  Number(d?.priceAfter), typeof  Number(d?.priceAfter) ) // debug log
+            const d = offersData?.find(item => Number(item.id) === Number(specialID))
+            console.log("DDDDDD", d, Number(d?.priceAfter), typeof Number(d?.priceAfter)) // debug log
             currentPrice += Number(d?.priceAfter) || 0
-            
-            if(Number.isNaN(Number(d?.priceAfter))  )
+
+            if (Number.isNaN(Number(d?.priceAfter)))
                 toast.error("somethingWentWrong")
         }
         else {
@@ -183,6 +181,11 @@ const page = ({ params }) => {
             currentCart = JSON.parse(currentCart)
         } else {
             currentCart = []
+        }
+        if (!isAllItemComeFromSameBranch(currentCart, mealData.id)) {
+            toast.error(t("cartNotValid"))
+            toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
+            return;
         }
         let sizePrice =
             selectedSize === 'L' ?
@@ -380,21 +383,21 @@ const page = ({ params }) => {
                                 }}>
 
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                                        <span class="icon-star" style={{ color: "#ef7d00", fontSize: "14px" }}></span>
+                                        <span className="icon-star" style={{ color: "#ef7d00", fontSize: "14px" }}></span>
                                         <Typography variant="body2" color="white" sx={{ fontSize: '13px', marginLeft: "3px" }}  >
                                             {/*// TODO: handle rating */}
                                         </Typography>
                                     </Box>
 
                                     <Box display="flex" alignItems="center">
-                                        <span class="icon-calories-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
+                                        <span className="icon-calories-1"><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span></span>
                                         <Typography variant="body2" color="white" sx={{ fontSize: '13px', marginLeft: "3px" }} >
                                             {mealData?.Calories}
                                             <span style={{ fontSize: '12px', marginLeft: "3px", color: "#AAAAAA" }}>{t("kcal")}</span></Typography>
                                     </Box>
 
                                     <Box display="flex" alignItems="center">
-                                        <span class="icon-chronometer" ><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+                                        <span className="icon-chronometer" ><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span><span className="path5"></span><span className="path6"></span><span className="path7"></span><span className="path8"></span><span className="path9"></span><span className="path10"></span><span className="path11"></span><span className="path12"></span></span>
                                         <Typography variant="body2" color="white"
                                             sx={{ fontSize: '13px', marginLeft: "3px" }} >
                                             {/* TODO: prepare time  */}

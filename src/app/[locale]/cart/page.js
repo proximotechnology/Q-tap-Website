@@ -8,7 +8,7 @@ import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { BASE_URL_IMAGE, calculateOrderPriceDetailed } from '@/utils';
+import { BASE_URL_IMAGE, calculateOrderPriceDetailed, isAllItemComeFromSameBranch } from '@/utils';
 import { toast } from 'react-toastify';
 /**
  * 1 - get cart from localStorge
@@ -56,9 +56,7 @@ const page = () => {
     // ===============================================================================
 
     // ===============================================================================
-    const isAllItemComeFromSameBranch = (cart, branchID) => {
-        return cart.every(item => item.branchId === branchID);
-    }
+    
 
     const [itemCount, setItemCount] = useState([]);
     useEffect(() => {
