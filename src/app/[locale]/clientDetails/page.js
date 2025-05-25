@@ -160,20 +160,22 @@ const page = () => {
     };
 
     // =========================================================================
+    const editFormData = sessionStorage.getItem("editFormData");
+    const editData = JSON.parse(editFormData); // إذا كنت قد خزّنت كائن سابقًا
 
-
-    const [phone, setPhone] = useState('');
-    const [selectedTable, setSelectedTable] = useState("");
-    const [selectedCity, setSelectedCity] = useState("");
-    const [selectedName, setSelectedName] = useState("");
-    const [comment, setComment] = useState("");
-    const [address, setAddress] = useState("");
-    const [selectedValue, setSelectedValue] = useState('cash');
+    
+    const [phone, setPhone] = useState(editData?.phone ||'');
+    const [selectedTable, setSelectedTable] = useState(editData?.selectedTable ||'');
+    const [selectedCity, setSelectedCity] = useState(editData?.selectedCity ||'');
+    const [selectedName, setSelectedName] = useState(editData?.selectedName ||'');
+    const [comment, setComment] = useState(editData?.comment ||'');
+    const [address, setAddress] = useState(editData?.address ||'');
+    const [selectedValue, setSelectedValue] = useState('cash' ||'');
     const handleChange = (event) => {
-        setSelectedValue(event.target.value);
+        setSelectedValue(event.target.value ||'');
     };
     // ===================================== Discount code ====================================
-    const [code, setCode] = useState("");
+    const [code, setCode] = useState(editData?.code ||'');
     const [validDiscountCode, setValidDiscountCode] = useState(null);
     const [validated, setValidated] = useState(false);
 

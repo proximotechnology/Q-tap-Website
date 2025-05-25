@@ -73,7 +73,7 @@ const page = () => {
                     variants: (item.selectedOptions ?? []).map(item => item.id),
                     extras: (item.selectedExtras ?? []).map(item => item.id),
                     size: item.selectedSize ? sizeConvert[item.selectedSize] : 's',
-                    discount_code: formdata?.code ,
+                    discount_code: formdata?.code,
                 }
 
                 data.meals = [...data.meals, itemData]
@@ -130,7 +130,7 @@ const page = () => {
 
     // ============================================================================
     useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice,formData?.code)
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, formData?.code)
     }, [cartItems]);
 
     useEffect(() => {
@@ -176,8 +176,24 @@ const page = () => {
     };
     // ===============================================================================
 
+    const handleCancelPay = () => {
+        // Preserve existing URL search params when navigating
+        const params = window.location.search;
+        router.push("/categories" + params);
+        localStorage.removeItem("formData");
+        sessionStorage.removeItem("editFormData");
 
+    }
 
+    const handleEditPay = () => {
+        const params = window.location.search;
+        const formData = localStorage.getItem("formData");
+        // Pass formData via sessionStorage for the next page
+        if (formData) {
+            sessionStorage.setItem("editFormData", formData);
+        }
+        router.push('/clientDetails' + params);
+    }
     // ===============================================================================
 
     return (
@@ -386,15 +402,19 @@ const page = () => {
                 }}>
 
                 <Box sx={{ display: "flex", alignItems: "center", width: "70%" }}>
-                    <Typography variant="body2" sx={{ cursor: "pointer", color: "#AAAAAA", fontSize: "12px", fontWeight: "bold" }}>
+                    <Typography
+                        onClick={handleCancelPay}
+                        variant="body2" sx={{ cursor: "pointer", color: "#AAAAAA", fontSize: "12px", fontWeight: "bold" }}>
                         <span class="icon-close" style={{ fontSize: "12px", marginRight: "5px" }}></span>
                         {t("cancel")}
                     </Typography>
 
-                    <Typography variant="body2" sx={{
-                        cursor: "pointer", marginLeft: "25px",
-                        color: "#AAAAAA", fontSize: "12px", fontWeight: "bold"
-                    }}>
+                    <Typography
+                        onClick={handleEditPay}
+                        variant="body2" sx={{
+                            cursor: "pointer", marginLeft: "25px",
+                            color: "#AAAAAA", fontSize: "12px", fontWeight: "bold"
+                        }}>
                         <span class="icon-edit"
                             style={{ fontSize: "18px", color: "#009444", marginRight: "5px" }}></span>
                         {t("edit")}
