@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from "@/i18n/navigation"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Box, IconButton } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 
 
 export const Header = () => {
@@ -16,16 +17,20 @@ export const Header = () => {
             setFormData(JSON.parse(storedData));
         }
     }, []);
+    const searchParams = useSearchParams();
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
+    const tableId = searchParams.get('tableId')
     // =========================================================================
 
     const renderIcon = () => {
         if (!formData) return null;
 
         switch (formData.servingWay) {
-            case 'dinein':
+            case 'dine_in':
                 return <span className='icon-table' style={{ fontSize: '70px', color: "#aaaaaa2c" }}></span>;
 
-            case 'takeaway':
+            case 'take_away':
                 return <span className='icon-takeaway' style={{ fontSize: '70px', color: "#aaaaaa2c" }}></span>;
 
             case 'delivery':
@@ -79,7 +84,7 @@ export const Header = () => {
                                 padding: '10px',
                             }}>
 
-                            <Link href='/clientDetails'>
+                            <Link href={'/clientDetails' + `?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')}>
                                 <IconButton sx={{ color: "white" }}>
                                     <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
                                 </IconButton>

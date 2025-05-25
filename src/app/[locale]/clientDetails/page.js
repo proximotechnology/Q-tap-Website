@@ -14,7 +14,7 @@ import { getCartItems } from '../ProductDetails/cartUtils';
 import axios from 'axios';
 import { BASE_URL, calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils';
 import MapView from './map';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 
@@ -36,6 +36,7 @@ const page = () => {
     const [showMap, setShowMap] = useState(false);
     const [userPosition, setUserPosition] = useState(null)
     const router = useRouter()
+
     const { data: shops, isError, error, refetch } = useQuery({
         queryKey: ['shops'],
         queryFn: fetchShopsData,
@@ -43,8 +44,15 @@ const page = () => {
         refetchOnMount: true,
         refetchOnWindowFocus: false,
     });
+
     const [selectedOption, setSelectedOption] = useState('dine_in');
-    const [branchServigWay,setBranchServingWary] = useState([])
+    const [branchServigWay, setBranchServingWary] = useState([])
+
+    const searchParams = useSearchParams();
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
+    const tableId = searchParams.get('tableId')
+
     useEffect(() => {
         const storedCartItems = getCartItems();
         console.log("cartItems>>>>>>>>>>>>>>>>>>>>", storedCartItems)// debug log 
@@ -57,8 +65,19 @@ const page = () => {
         console.log("shop>>>>>>>>>>>>>>>>>>>>", shopId, ">>>", shop)// debug log 
         const branch = shop?.brunchs?.find(item => Number(item.id) === Number(branchId))
         console.log("branch>>>>>>>>>>>>>>>>>>>>", branchId, ">>>", branch)// debug log 
-        setBranchServingWary(branch?.serving_ways)
-        setSelectedOption(branch?.serving_ways?.[0]?.name)
+        if (!tableId) {
+
+            setBranchServingWary(branch?.serving_ways)
+            setSelectedOption(branch?.serving_ways?.[0]?.name)
+        } else {
+            const dineIn = branch?.serving_ways?.find(item => item.name === "dine_in")
+            console.log("dinein>>>>>>>>>>>>", dineIn) // debug log 
+            if (dineIn) {
+                setBranchServingWary([dineIn])
+                setSelectedOption(dineIn?.name)
+            }
+
+        }
         // serving_ways
         /* 0
         : 
@@ -80,7 +99,7 @@ const page = () => {
                 }
             })
 
-            console.log("Table data response ", response);
+            console.log("Table data response ", response);// debug log 
             if (response.data) {
                 setTable(response.data.tables);
             }
@@ -187,7 +206,8 @@ const page = () => {
             setIsLoading(false)
             return;
         }
-        router.push('/payment')
+        
+        router.push('/payment' + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : ""))
 
     }
     // =========================================================================
@@ -235,7 +255,7 @@ const page = () => {
                                 padding: '10px',
                             }}
                         >
-                            <Link href='cart'>
+                            <Link href={'cart' + (shopId || branchId || tableId ? `?shopId=${shopId}& branchId=${branchId}&tableId=${tableId}` : '')}>
                                 <IconButton sx={{ color: "white" }}>
                                     <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
                                 </IconButton>
@@ -249,9 +269,9 @@ const page = () => {
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
                             {renderIcon()}
                         </Box>
-{console.log(options)}
+                        
                         <Box sx={{ display: "flex", position: 'relative', width: '100%', height: '100%' }}>
-                            {options.map((option) => ( branchServigWay?.some(item=>item.name === option.value) &&
+                            {options.map((option) => (branchServigWay?.some(item => item.name === option.value) &&
                                 <Box
                                     onClick={() => handleClick(option.value)}
                                     key={option.value}
@@ -337,8 +357,7 @@ const page = () => {
                         />
                         <Divider sx={{ width: "100%", height: "1px", backgroundColor: "#44404D", margin: "15px 0px" }} />
 
-
-                        {selectedOption === 'dinein' && (
+                        {selectedOption === 'dine_in' && (
                             <>
                                 <Box display={"flex"} justifyContent={"space-between"}>
                                     <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("table")}</Typography>

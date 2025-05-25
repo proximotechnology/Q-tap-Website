@@ -31,7 +31,8 @@ const page = () => {
     const searchParams = useSearchParams();
     let shopId = searchParams.get('shopId')
     let branchId = searchParams.get('branchId')
-
+    let tableId = searchParams.get('tableId')
+    const confirmUrl = `/${locale}/clientDetails` + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : '')
     if (!shopId || !branchId) {
         shopId = localStorage.getItem("selectedShopID")
         branchId = localStorage.getItem("selectedBranchID")
@@ -56,7 +57,7 @@ const page = () => {
     // ===============================================================================
 
     // ===============================================================================
-    
+
 
     const [itemCount, setItemCount] = useState([]);
     useEffect(() => {
@@ -73,8 +74,8 @@ const page = () => {
         return item ? item.count : 1;
     };
 
-    const handleAddItem = (index) => {
-        console.log('add item at', index)
+    const handleAddItem = (index) => { 
+        console.log('add item at', index) // debug log
         const newCartItems = cartItems.map((item, i) =>
             i === index ? { ...item, quantity: item.quantity + 1 } : item
         );
@@ -84,7 +85,7 @@ const page = () => {
     };
 
     const handleMinusItem = (index) => {
-        console.log('remove item at', index)
+        console.log('remove item at', index) // debug log
         let updatedCartItems = cartItems.map(item => ({ ...item })); // Deep copy objects
 
         if (updatedCartItems[index].quantity > 1) {
@@ -120,7 +121,9 @@ const page = () => {
                 }}
             >
                 <IconButton
-                    onClick={() => router.push(`/categories?shopId=${shopId}&branchId=${branchId}`)}
+                    onClick={() => router.push(
+                        `/categories?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')
+                    )}
                     sx={{ color: "white" }}>
                     <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
                 </IconButton>
@@ -253,9 +256,9 @@ const page = () => {
                     <Button
                         onClick={() => {
                             const isValidCart = isAllItemComeFromSameBranch(cartItems, cartItems?.[0]?.branchId)
-                            console.log("isValid", isValidCart)
+                            console.log("isValid", isValidCart) // debug log
                             if (cartItems.length > 0 && isValidCart)
-                                window.location.href = `/${locale}/clientDetails`;
+                                router.push(confirmUrl);
                             else {
                                 toast.error(t("cartNotValid"))
                                 toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))

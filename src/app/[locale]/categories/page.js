@@ -28,6 +28,8 @@ const page = () => {
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
+    const tableId = searchParams.get('tableId')
+
     const router = useRouter();
 
     if (!shopId || !branchId) {
@@ -35,15 +37,18 @@ const page = () => {
     }
 
 
+
     const prefetchTarget = (id) => {
-        router.prefetch(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`); // Next.js caches this
+        let catIdUrl = `/categories/${id}?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')
+        router.prefetch(catIdUrl); // Next.js caches this
     };
 
     const handlCatClick = (id) => {
         if (shopId && branchId) {
-            router.push(`/categories/${id}?shopId=${shopId}&branchId=${branchId}`);
+            let catIdUrl = `/categories/${id}?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')
+            router.push(catIdUrl);
         } else {
-            console.log("Shop or Branch not selected yet");
+            console.log("Shop or Branch not selected yet");// debug log
         }
 
     }
@@ -130,7 +135,7 @@ const page = () => {
                     </Typography>
 
                     {offers && offers.length > 0 ? (<MyOffersSlider items={offers} openOffer={(offer) => {
-                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
+                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch,tableId)
                     }} />) : (<Box> <Typography variant="body1" sx={{ marginBottom: "10px", }}>
                         <span style={{
                             fontSize: "11px",
@@ -302,7 +307,7 @@ export const getSpecialOffers = async (branchId) => {
     }
 };
 
-export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specialOfferId, currentBranch) => {
+export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specialOfferId, currentBranch , tableId) => {
     console.log("special offer click", currentBranch) // debug log
     const categoryWithMeal = currentBranch.cat_meal
         .find(category => {
@@ -311,9 +316,10 @@ export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specia
             return category.meals.some(meal => meal.id === Number(mealId))
         }
         );
-    console.log(categoryWithMeal)
+    console.log(categoryWithMeal) // debug log
     if (shopId && branchId && categoryWithMeal) {
-        router.push(`/ProductDetails/${mealId}?shopId=${shopId}&branchId=${branchId}&catId=${categoryWithMeal.id}&special=${specialOfferId}`);
+        router.push(`/ProductDetails/${mealId}?shopId=${shopId}&branchId=${branchId}&catId=${categoryWithMeal.id}&special=${specialOfferId}` + (tableId ? `&tableId=${tableId}` : ''));
+        // router.push(`/ProductDetails/${mealId}?shopId=${shopId}&branchId=${branchId}&catId=${categoryWithMeal.id}&special=${specialOfferId}`);
     } else {
         console.log("Shop or Branch not selected yet");// debug log
     }

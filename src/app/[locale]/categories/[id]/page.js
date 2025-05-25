@@ -24,6 +24,7 @@ const page = ({ params }) => {
   const searchParams = useSearchParams();
   const shopId = searchParams.get('shopId')
   const branchId = searchParams.get('branchId')
+  const tableId = searchParams.get('tableId')
 
   if (!id || !shopId || !branchId) {
     return <p>{t("noProductAvailableForThisCategory")}</p>;
@@ -61,7 +62,7 @@ const page = ({ params }) => {
     const shop = shopData?.find(shop => shop.id === Number(shopId));
     const selectedBranch = shop?.brunchs?.find(branch => branch.id === Number(branchId));
     const selectedCat = selectedBranch?.cat_meal?.find(cat => cat.id === Number(id));
-    console.log("shopData", shopData)
+    console.log("shopData", shopData)// debug log
     setData(selectedCat)
   }, [shopData])
   // console.log(products)
@@ -69,10 +70,12 @@ const page = ({ params }) => {
   const router = useRouter();
 
   const handleGoBack = () => {
-    console.log('bakc')
+    console.log('bakc') // debug log
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
-    router.push(`/categories?shopId=${shopId}&branchId=${branchId}`);
+    const tableId = searchParams.get('tableId')
+    let catUrl = `/categories?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')
+    router.push(catUrl);
 
   }
   return (
@@ -186,7 +189,7 @@ const page = ({ params }) => {
                     </Typography>
                   </Box>
 
-                  <Link key={product?.id} href={`/ProductDetails/${product?.id}?shopId=${shopId}&branchId=${branchId}&catId=${data?.id}`}>
+                  <Link key={product?.id} href={`/ProductDetails/${product?.id}?shopId=${shopId}&branchId=${branchId}&catId=${data?.id}`+(tableId?`&tableId=${tableId}`:'')}>
                     <Box
                       sx={{
                         backgroundImage: 'linear-gradient(to right, #48485B, #797993)',

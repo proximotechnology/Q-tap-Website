@@ -16,6 +16,7 @@ export const Footer = () => {
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
+    const tableId = searchParams.get('tableId')
     return (
         <Box display="flex" justifyContent="space-around" alignItems="center"
             sx={{
@@ -28,7 +29,7 @@ export const Footer = () => {
                 </IconButton>
             </Link>
 
-            <Link href={`/cart?shopId=${shopId}&branchId=${branchId}`}>
+            <Link href={`/cart?shopId=${shopId}&branchId=${branchId}`+(tableId?`&tableId=${tableId}`:'')}>
                 <IconButton color="inherit">
                     <span className='icon-shopping-cart' style={{ color: "gray", fontSize: "22px" }}></span>
                     <Box sx={{ fontSize: "11px", color: "gray", marginTop: "-20px" }}>{count}</Box>

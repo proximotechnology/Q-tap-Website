@@ -8,7 +8,7 @@ import { useTranslations } from 'use-intl';
 import axios from 'axios';
 import { BASE_URL, calculateOrderPriceDetailed } from '@/utils';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import MapView from '../clientDetails/map';
 
 const page = () => {
@@ -32,7 +32,10 @@ const page = () => {
     }
     // ============================================================================
     const [selectedMethod, setSelectedMethod] = useState("cash");
-
+    const searchParams = useSearchParams();
+    // const shopId = searchParams.get('shopId')
+    // const branchId = searchParams.get('branchId')
+    const tableId = searchParams.get('tableId')
     // ============================================================================
     const makeOrder = async () => {
         try {
@@ -47,7 +50,7 @@ const page = () => {
                 return;
             }
             formdata = JSON.parse(formdata)
-            console.log("formdata", formdata)
+            console.log("formdata", formdata) // debug log
             let payWay = selectedMethod === 'cash' ? 'cash' : "wallet";
             let data = {
                 name: formdata.selectedName,
@@ -60,7 +63,7 @@ const page = () => {
                 "total_price": totalPrice,
                 meals: []
             }
-            console.log(data)
+            console.log(data) // debug log
             //// add meals data to the request 
             const sizeConvert = { 'L': 'l', 'M': 'm', 'S': 's' }
             cartItems.map((item) => {
@@ -87,16 +90,16 @@ const page = () => {
 
                 }
             }
-            if (formdata.servingWay === 'dinein') {
+            if (formdata.servingWay === 'dine_in') {
                 data = {
                     ...data,
-                    table_id: 1,
+                    table_id: tableId,
                     type: 'dinein',
                 }
             }
 
-            console.log("add_orders data : ", data)
-            console.log("firna", data)
+            console.log("add_orders data : ", data) // debug log
+            console.log("firna", data) // debug log
             const response = await axios.post(
                 `${BASE_URL}add_orders`,
                 data,
@@ -109,13 +112,15 @@ const page = () => {
             );
             localStorage.setItem('cartItems', '')
             setCartItems([])
-            console.log(response)
+            console.log(response) // debug log
             localStorage.setItem('order', JSON.stringify(response.data.order))
             if (payWay === "wallet" && response.data.payment_url)
                 localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
-            if(response) router.push("/orderPlaced")
+            if (response) router.push("/orderPlaced")
         } catch (error) {
-            console.log('order payment errror', error)
+            console.log('order payment errror', error) // debug log
+            if (error?.response?.data?.errors?.table_id)
+                toast.error("error table")
             toast.error(t("somethingWentWrong"))
         }
         finally {
@@ -143,8 +148,8 @@ const page = () => {
     useEffect(() => {
         if (formData && formData.servingWay === 'delivery') {
             let pos = [
-                formData.userPosition[0],
-                formData.userPosition[1]
+                formData?.userPosition?.[0],
+                formData?.userPosition?.[1]
             ]
             console.log("selected Pos", pos) // debug log 
             setPosition(pos)
@@ -155,12 +160,12 @@ const page = () => {
     // ============================================================================
     const renderIcon = () => {
         if (!formData) return null;
-        console.log("renderIcon", formData.servingWay)
-        switch ("takeaway") {
-            case 'dinein':
+        console.log("renderIcon", formData.servingWay) // debug log
+        switch (formData.servingWay) {
+            case 'dine_in':
                 return <span className='icon-table' style={{ fontSize: '20px', color: "#F78822" }}></span>;
 
-            case "takeaway":
+            case "take_away":
                 return <span className='icon-takeaway' style={{ fontSize: '20px', color: "#F78822" }}></span>;
 
             case 'delivery':
@@ -267,9 +272,12 @@ const page = () => {
                                         {renderIcon()}
                                     </Typography>
                                 </Box>
-                                <Typography color="#AAAAAA" fontSize="12px" >
-                                    <span style={{ color: "#797993", marginLeft: "10px" }}>{t("address")} : </span>
-                                    {formData.address}</Typography>
+                                {
+                                    formData?.servingWay !== "dine_in" && <Typography color="#AAAAAA" fontSize="12px" >
+                                        <span style={{ color: "#797993", marginLeft: "10px" }}>{t("address")} : </span>
+                                        {formData.address}
+                                    </Typography>
+                                }
 
                                 <Typography color="#AAAAAA" fontSize="12px" >
                                     <span style={{ color: "#797993", marginLeft: "10px" }}>{t("name")} : </span>
