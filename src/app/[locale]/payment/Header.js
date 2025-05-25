@@ -6,7 +6,7 @@ import { Box, IconButton } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 
 
-export const Header = () => {
+export const Header = ({ showBackButton = true, backUrl }) => {
 
     // =========================================================================
     const [formData, setFormData] = useState(null);
@@ -80,15 +80,15 @@ export const Header = () => {
                         <Box
                             sx={{
                                 display: 'flex',
-                                justifyContent: 'space-between',
+                                justifyContent: showBackButton ? 'space-between' : "end",
                                 padding: '10px',
                             }}>
 
-                            <Link href={'/clientDetails' + `?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')}>
+                            {showBackButton && <Link href={backUrl ? backUrl : '/clientDetails' + `?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')}>
                                 <IconButton sx={{ color: "white" }}>
                                     <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
                                 </IconButton>
-                            </Link>
+                            </Link>}
 
                             <IconButton color="inherit">
                                 <span className='icon-menu' style={{ fontSize: "22px" }}></span>

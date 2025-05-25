@@ -207,7 +207,7 @@ const page = () => {
             return;
         }
         
-        router.push('/payment' + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : ""))
+        router.push('/payment' + (shopId || branchId ? `?shopId=${shopId}&branchId=${branchId}`+ (tableId ? `&tableId=${tableId}` : '') : (tableId ? `?tableId=${tableId}` : '') ))
 
     }
     // =========================================================================

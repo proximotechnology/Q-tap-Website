@@ -54,7 +54,7 @@ const page = () => {
                 }}>
 
 
-                <Header />
+                <Header showBackButton={false}  />
                 <OrderDetails />
             </Box>
             <Box sx={{ height: `${headerHeight}px` }} />

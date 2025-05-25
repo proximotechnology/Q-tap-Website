@@ -210,7 +210,7 @@ PHASE_TEMP represents the different stages an order goes through.
         }}>
 
 
-        <Header />
+        <Header backUrl={"/"}/>
         <OrderDetails />
       </Box>
       <Box sx={{ height: `${headerHeight}px` }} />

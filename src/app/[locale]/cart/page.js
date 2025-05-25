@@ -32,7 +32,7 @@ const page = () => {
     let shopId = searchParams.get('shopId')
     let branchId = searchParams.get('branchId')
     let tableId = searchParams.get('tableId')
-    const confirmUrl = `/${locale}/clientDetails` + (shopId || branchId || tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : '')
+    const confirmUrl = `/${locale}/clientDetails` + ( tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : `?shopId=${shopId}&branchId=${branchId}`)
     if (!shopId || !branchId) {
         shopId = localStorage.getItem("selectedShopID")
         branchId = localStorage.getItem("selectedBranchID")
