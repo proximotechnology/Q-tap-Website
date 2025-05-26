@@ -86,7 +86,6 @@ const page = () => {
 
     if (isLoading) return <div>Loading ...</div>;
     if (isError) return <div>Error: {error.message}</div>;
-    console.log("shops", shops, "offers", offers)//debug log
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
 
@@ -265,7 +264,6 @@ export default page;
 export const getSpecialOffers = async (branchId) => {
     try {
 
-        console.log(">>>>>>>>>>>> getOffers") // debug log
         const response = await axios.get(`${BASE_URL}meals_special_offers`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -286,7 +284,6 @@ export const getSpecialOffers = async (branchId) => {
         //     },
         // });
 
-        console.log(">>>>>>>>>>>> response", response) // debug log
         if (response.data) {
             const formattedOffers = response.data.map(offer => ({
                 id: offer.id,
@@ -308,11 +305,8 @@ export const getSpecialOffers = async (branchId) => {
 };
 
 export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specialOfferId, currentBranch , tableId) => {
-    console.log("special offer click", currentBranch) // debug log
     const categoryWithMeal = currentBranch.cat_meal
         .find(category => {
-            console.log(">>>> category", category)// debug log
-            console.log(">>>> mealId", mealId)// debug log
             return category.meals.some(meal => meal.id === Number(mealId))
         }
         );

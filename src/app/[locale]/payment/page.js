@@ -60,7 +60,7 @@ const page = () => {
                 payment_way: payWay,
                 brunch_id: cartItems?.[0].branchId,// TODO:  order payment errror TypeError: Cannot read properties of undefined (reading 'branchId')
                 "tax": tax, //may be nullable
-                "total_price": totalPrice,
+                "total_price": totalPrice - discount,
                 meals: []
             }
             console.log(data) // debug log
@@ -69,11 +69,11 @@ const page = () => {
             cartItems.map((item) => {
                 const itemData = {
                     meal_id: item.id,
-                    quantity: item.quantity,
+                    quantity: item.SelectedQuantity,
                     variants: (item.selectedOptions ?? []).map(item => item.id),
                     extras: (item.selectedExtras ?? []).map(item => item.id),
                     size: item.selectedSize ? sizeConvert[item.selectedSize] : 's',
-                    discount_code: formdata?.code,
+                    discount_code: formdata?.code?.code,
                 }
 
                 data.meals = [...data.meals, itemData]
@@ -111,7 +111,7 @@ const page = () => {
             );
             localStorage.setItem('cartItems', '')
             setCartItems([])
-            console.log(response) // debug log
+            console.log(" order set to localStorage ", response) // debug log
             localStorage.setItem('order', JSON.stringify(response.data.order))
             if (payWay === "wallet" && response.data.payment_url)
                 localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
@@ -131,6 +131,8 @@ const page = () => {
     // ============================================================================
     useEffect(() => {
         calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, formData?.code)
+
+        
     }, [cartItems]);
 
     useEffect(() => {
@@ -261,7 +263,7 @@ const page = () => {
                                         </Button>
                                         <Typography style={{ fontSize: "12px", color: "#575756", marginLeft: "10px" }}>
                                             <span style={{ color: "#AAAAAA" }}>x</span>
-                                            {item.quantity || 0}
+                                            {item.SelectedQuantity || 0}
                                         </Typography>
                                     </Box>
                                     <Typography variant="h6" sx={{
@@ -372,7 +374,7 @@ const page = () => {
 
                                     <Typography variant="h6" sx={{ fontSize: '19px', fontWeight: "bold", color: 'white' }}>
 
-                                        {totalPrice} <span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                        {totalPrice - discount} <span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                     </Typography>
                                 </Box>
 

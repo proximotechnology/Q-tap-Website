@@ -132,7 +132,6 @@ const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
                         }}>{t("noSpecialOffers")}</span>
                     </Typography></Box>)}
                     {/* <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                        {console.log("offers>>>>>>>>>>>>>", offers)}
                         {offers.map((offer) => (
                             <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
                                 <Box sx={{

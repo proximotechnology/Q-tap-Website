@@ -24,13 +24,12 @@ const page = ({ params }) => {
     // const [shopData, setShopData] = useState(null)
     const [mealData, setMealData] = useState(null)
     // const [isLoading, setIsLoading] = useState(true)
-
+    /*  */
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
     const catId = searchParams.get('catId')
     const specialID = searchParams.get('special') || null
-    console.log("specialID", specialID)// debug log
     const router = useRouter()
 
 
@@ -41,16 +40,7 @@ const page = ({ params }) => {
         refetchOnMount: true,
         refetchOnWindowFocus: false,
     });
-    // const offersData  = []
-    // const queryClient = useQueryClient();
-    // Get cached data without refetching
-    // const offersData = queryClient.getQueryData(['restaurant-offers-data', branchId]);
-    // const queryState = queryClient.getQueryState(['restaurant-offers-data', branchId]);
-    // console.log('Query state:', queryState);
-    // const allCachedQueries = queryClient.getQueryCache().findAll();
-    // console.log('All cached queries:', allCachedQueries.map(q => q.queryKey));
-    // Verify your ['restaurant-offers-data', branchId] exists in this list
-    console.log("data", offersData) // debug log
+
 
     if (!id) {
         return <p>{t("noProductSelected")}</p>;
@@ -83,16 +73,18 @@ const page = ({ params }) => {
     const [selectedExtra, setSelectedExtra] = useState([])
     const [selectedOptions, setSelectedOptions] = useState([])
     const [count, setCount] = useState(0)
-    const [price, setPrice] = useState(0) // to send for calculation
+    const [price, setPrice] = useState(0) // to send for calculation sub total without discount and tax
+    const [priceBeforeDiscount, setPriceBeforeDiscount] = useState(0)
     const [totalprice, setTotalPrice] = useState(0)// to show 
 
     useEffect(() => {
-        handlePrice()
+        
+            handlePrice()
     }, [count, mealData, selectedSize, selectedExtra, selectedOptions])
 
     const handlePrice = () => {
         /* calculate meal price  */
-        let currentPrice = 0;
+        let currentPrice = 0; // 
 
         if (selectedExtra) {
             selectedExtra?.map(item => {
@@ -111,9 +103,8 @@ const page = ({ params }) => {
             if (selectedSize === "M") currentPrice += Number(mealData?.price_medium)
             if (selectedSize === "L") currentPrice += Number(mealData?.price_large)
 
-        } if (specialID) {
+        } else if (specialID) {
             const d = offersData?.find(item => Number(item.id) === Number(specialID))
-            console.log("DDDDDD", d, Number(d?.priceAfter), typeof Number(d?.priceAfter)) // debug log
             currentPrice += Number(d?.priceAfter) || 0
 
             if (Number.isNaN(Number(d?.priceAfter)))
@@ -124,14 +115,14 @@ const page = ({ params }) => {
         }
         let sub = currentPrice;
         /* add discount and tax */
-        // if (mealData?.discounts?.discount && !specialID) {
-        //     sub -= Number(mealData?.discounts?.discount) * currentPrice / 100
-        // }
+        if (mealData?.discount && !specialID) {
+            sub -= Number(mealData?.discount) * currentPrice / 100
+        }
 
         if (mealData?.Tax) {
             sub += Number(mealData?.Tax) * currentPrice / 100
         }
-
+        setPriceBeforeDiscount(((currentPrice + Number(mealData?.Tax) * currentPrice / 100) * count).toFixed(2))
         setPrice((sub).toFixed(2))
         /* one piece price * quantity */
         setTotalPrice((sub * count).toFixed(2))
@@ -182,10 +173,8 @@ const page = ({ params }) => {
         } else {
             currentCart = []
         }
-        console.log("mealData",mealData)
         const isValidCart = isAllItemComeFromSameBranch(currentCart, mealData.brunch_id);
         if (!isValidCart) {
-            console.log(">>>>>>>>>inside>>>>>>>>>",isValidCart)
             toast.error(t("cartNotValid"))
             toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
             return;
@@ -206,21 +195,18 @@ const page = ({ params }) => {
                         mealData.price_medium :
                         mealData.price_small;
             currentCart.push({
-                id: mealData.id,
-                image: mealData.img,
-                name: mealData.name,
+                ...mealData,
                 selectedSize,
-                quantity: count,
-                price,
+                SelectedQuantity: count,
                 selectedExtra,
                 selectedOptions,
+                special: specialID ? offersData.find(item => item.id === Number(specialID)) : null,
+
+                price,
                 shopId,
                 branchId,
                 catId,
-                tax: mealData.Tax,
-                discount: mealData.discounts,
                 sizePrice,
-                special: specialID ? offersData.find(item => item.id === Number(specialID)) : null
             })
 
 
@@ -233,32 +219,28 @@ const page = ({ params }) => {
                     if (item.selectedSize === selectedSize
                         && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
                         && Number(specialID) === item?.special?.id) {
-                        item.quantity += count;
+                        item.SelectedQuantity += count;
                     }
                 })
 
             } else {
                 currentCart.push({
-                    id: mealData.id,
-                    image: mealData.img,
-                    name: mealData.name,
+                    ...mealData,
                     selectedSize,
-                    quantity: count,
-                    price,
+                    SelectedQuantity: count,
                     selectedExtra,
                     selectedOptions,
+                    special: specialID ? offersData.find(item => item.id === Number(specialID)) : null,
+
+                    price,
                     shopId,
                     branchId,
                     catId,
-                    tax: mealData.Tax,
-                    discount: mealData.discounts,
                     sizePrice,
-                    special: specialID ? offersData.find(item => item.id === Number(specialID)) : null
                 })
 
             }
         }
-        console.log("item add to cart ", currentCart)//debug log
         localStorage.setItem("cartItems", JSON.stringify(currentCart))
         setSelectedExtra([])
         setCount(0)
@@ -456,7 +438,8 @@ const page = ({ params }) => {
                                 );
                             })}
                         </Box>   {/* size */}
-                        {/* {!specialID && mealData?.discounts?.discount ? <Typography>discount {mealData?.discounts?.discount} %</Typography> : <></>} */}
+                        {!specialID && mealData?.discount ? <Typography>discount {mealData?.discount} %</Typography> : <></>}
+                        {!specialID && mealData?.Tax ? <Typography>Tax {mealData?.Tax} %</Typography> : <></>}
                         <Box sx={{ marginTop: "15px" }}>
                             <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
                                 {t("options")} <span style={{ fontSize: "9px", fontWeight: '300', color: 'white' }}>{t("required)")}</span>
@@ -591,7 +574,8 @@ const page = ({ params }) => {
                                 {t("price")}
                             </Typography>
                             <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                                {totalprice}
+                                {selectedSize && count !==0 && !specialID && <span style={{ textDecoration: 'line-through' }}>{priceBeforeDiscount}</span>}{" "}
+                                {selectedSize && count ? totalprice : 0}
                                 <span style={{ fontSize: "10px", color: '#575756' }}> EGP</span>
                             </Typography>
                         </Box>

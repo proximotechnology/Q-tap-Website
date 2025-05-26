@@ -18,7 +18,6 @@ export const formateDate = (date) => {
 export const isAllItemComeFromSameBranch = (cart, branchID) => {
     if (!Array.isArray(cart) || cart.length === 0) return true; // assume valid if empty
     return cart.every(item => {
-        console.log("item.branchId === branchID",item , "  ", item.brunch_id ,"===", branchID)
         return Number(item.branchId) === branchID
     });
 }
@@ -26,7 +25,6 @@ export const fetchShopsData = async () => {
     try {
         // setIsLoading(true)
         const response = await axios.get(`${BASE_URL}menu_all_restaurants`)
-        console.log(response.data.data) // array of object [{...} , ... , {...}]
         return response.data.data
         // setShops(response.data.data)
     } catch (error) {
@@ -73,62 +71,83 @@ cartItem [ {sizePrice , quantity , tax,discount{discount} , selectedExtra[{price
 */
 
 export const calculateOrderPriceDetailed = (cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, discountCode) => {
+    /* this item come from local storage not the same as the api 
+    item = {
+     branchId: "187",
+     catId: "16",
+     discount: {
+       id: 31,
+       code: "1",
+       discount: "1", 
+       status: "active",
+       brunch_id: 187,
+     },
+     id: 26,
+     image: "storage/images/MOL78bsFb3vwpDDUN4OqZwcMXGCd1xoUN2bZx39q.jpg",
+     name: "1",
+     price: "2.00",
+     quantity: 1,
+     selectedExtra: [],
+     selectedOptions: [],
+     selectedSize: "L",
+     shopId: "159",
+     sizePrice: "1",
+     special: null,
+     tax: "1",
+   };
+   */
     let subTotal = 0;
     let tax = 0;
     let discount = 0;
-    let totalPrice = 0;
-    /* 
-    this item come from local storage not the same as the api 
-     item = {
-      branchId: "187",
-      catId: "16",
-      discount: {
-        id: 31,
-        code: "1",
-        discount: "1", 
-        status: "active",
-        brunch_id: 187,
-      },
-      id: 26,
-      image: "storage/images/MOL78bsFb3vwpDDUN4OqZwcMXGCd1xoUN2bZx39q.jpg",
-      name: "1",
-      price: "2.00",
-      quantity: 1,
-      selectedExtra: [],
-      selectedOptions: [],
-      selectedSize: "L",
-      shopId: "159",
-      sizePrice: "1",
-      special: null,
-      tax: "1",
-    };
-    */
+
     if (cartItems) {
         cartItems.map(item => {
-            let itemSubTotal = 0;
-            itemSubTotal += item.special ? Number(item.special.priceAfter) * item.quantity : Number(item.sizePrice) * item.quantity
-            if (item.selectedExtra) item.selectedExtra.map(extra => itemSubTotal += Number(extra.price) * item.quantity)
-            if (item.selectedOptions) item.selectedOptions.map(options => itemSubTotal += Number(options.price) * item.quantity)
-
-            subTotal += itemSubTotal
-
-            if (item.tax) tax += itemSubTotal * Number(item.tax) / 100 * item.quantity
-
-            if (item.discount && discountCode === item.discount.code) {
-                if (!item.special) {
-                    discount += itemSubTotal * (Number(item.discount.discount) / 100);
-                }
-            }
-
+            let { itemSubTotal, itemDiscount, itemTax } = itemCalculation(item)
+            subTotal += itemSubTotal * Number(item.SelectedQuantity)
+            discount += itemDiscount * Number(item.SelectedQuantity)
+            tax += itemTax * Number(item.SelectedQuantity)
         })
-        console.log("discount", discount)
     }
-    setSubTotal(subTotal.toFixed(2))
+    setSubTotal((subTotal - discount).toFixed(2)) // sub here is new price of items 
     setTax(tax.toFixed(2))
-    setDiscount(discount.toFixed(2))
+    // setDiscount(discount.toFixed(2))
+
+    if (discountCode) {
+        setDiscount((subTotal - discount + tax) * (Number(discountCode?.discount ?? 0) / 100))
+    }
     setTotalPrice((subTotal + tax - discount).toFixed(2))
 }
+const itemCalculation = (item) => {
+    /* item : { special , selectedSize , Tax, discount,selectedExtra,selectedOptions, 
+    price_small,price_medium ,price_large}  */
+    let subTotal = 0 // based on  spicial or normal => size / extra / option
+    let discount = 0
+    let tax = 0
+    if (item.special) {
+        subTotal = Number(item.special.priceAfter)
+    } else {
+        if (item.selectedSize === 'L')
+            subTotal = item.price_large
+        if (item.selectedSize === 'M')
+            subTotal = item.price_medium
+        if (item.selectedSize === 'S')
+            subTotal = item.price_small
+    }
+    if (item.selectedExtra) item.selectedExtra.map(extra => subTotal += Number(extra.price))
+    if (item.selectedOptions) item.selectedOptions.map(options => subTotal += Number(options.price))
 
+
+    if (item.Tax) tax += subTotal * Number(item.Tax) / 100
+
+    if (item.discount) {
+        if (!item.special) {
+            discount += subTotal * (Number(item.discount) / 100);
+        }
+    }
+
+    return { itemSubTotal: subTotal, itemDiscount: discount, itemTax: tax }
+
+}
 export const egyptCities = [
     { name: "Cairo", region: "Nile Valley & Delta" },
     { name: "Giza", region: "Nile Valley & Delta" },

@@ -56,23 +56,18 @@ const page = () => {
 
     useEffect(() => {
         const storedCartItems = getCartItems();
-        console.log("cartItems>>>>>>>>>>>>>>>>>>>>", storedCartItems)// debug log 
 
         const branchId = storedCartItems?.[0]?.branchId
         const shopId = storedCartItems?.[0]?.shopId
-        console.log("cartItems>>>>>>>>>>>>>>>>>>>>", branchId, ">>>", shopId)// debug log 
 
         const shop = shops?.find(item => Number(item.id) === Number(shopId))
-        console.log("shop>>>>>>>>>>>>>>>>>>>>", shopId, ">>>", shop)// debug log 
         const branch = shop?.brunchs?.find(item => Number(item.id) === Number(branchId))
-        console.log("branch>>>>>>>>>>>>>>>>>>>>", branchId, ">>>", branch)// debug log 
         if (!tableId) {
 
             setBranchServingWary(branch?.serving_ways)
             setSelectedOption(branch?.serving_ways?.[0]?.name)
         } else {
             const dineIn = branch?.serving_ways?.find(item => item.name === "dine_in")
-            console.log("dinein>>>>>>>>>>>>", dineIn) // debug log 
             if (dineIn) {
                 setBranchServingWary([dineIn])
                 setSelectedOption(dineIn?.name)
@@ -100,7 +95,6 @@ const page = () => {
                 }
             })
 
-            console.log("Table data response ", response);// debug log 
             if (response.data) {
                 setTable(response.data.tables);
             }
@@ -113,7 +107,7 @@ const page = () => {
     useEffect(() => {
         const storedCartItems = getCartItems();
         setCartItems(storedCartItems);
-        getTable()
+        // getTable()
     }, []);
 
 
@@ -163,24 +157,25 @@ const page = () => {
     const editFormData = sessionStorage.getItem("editFormData");
     const editData = JSON.parse(editFormData); // إذا كنت قد خزّنت كائن سابقًا
 
-    
-    const [phone, setPhone] = useState(editData?.phone ||'');
-    const [selectedTable, setSelectedTable] = useState(editData?.selectedTable ||'');
-    const [selectedCity, setSelectedCity] = useState(editData?.selectedCity ||'');
-    const [selectedName, setSelectedName] = useState(editData?.selectedName ||'');
-    const [comment, setComment] = useState(editData?.comment ||'');
-    const [address, setAddress] = useState(editData?.address ||'');
-    const [selectedValue, setSelectedValue] = useState('cash' ||'');
+
+    const [phone, setPhone] = useState(editData?.phone || '');
+    const [selectedTable, setSelectedTable] = useState(editData?.selectedTable || '');
+    const [selectedCity, setSelectedCity] = useState(editData?.selectedCity || '');
+    const [selectedName, setSelectedName] = useState(editData?.selectedName || '');
+    const [comment, setComment] = useState(editData?.comment || '');
+    const [address, setAddress] = useState(editData?.address || '');
+    const [selectedValue, setSelectedValue] = useState('cash' || '');
     const handleChange = (event) => {
-        setSelectedValue(event.target.value ||'');
+        setSelectedValue(event.target.value || '');
     };
     // ===================================== Discount code ====================================
-    const [code, setCode] = useState(editData?.code ||'');
+    const [code, setCode] = useState(editData?.code || '');
     const [validDiscountCode, setValidDiscountCode] = useState(null);
     const [validated, setValidated] = useState(false);
 
     useEffect(() => {
         setValidated(false);
+        setDiscount(0)
     }, [code]);
 
     const handleValidate = async () => {
@@ -189,7 +184,7 @@ const page = () => {
             const res = await apiCheckDiscountCode(code, branchId)
             if (res?.data?.discount) {
                 setValidated(true)
-                setValidDiscountCode(code)
+                setValidDiscountCode(res?.data?.discount)
             } else {
                 toast.error(t("inValidDiscountCode"))
             }
@@ -203,8 +198,8 @@ const page = () => {
     // ===================================== Discount code ====================================
 
     useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validDiscountCode)
-    }, [cartItems, validDiscountCode]);
+        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validated ? validDiscountCode : null)
+    }, [cartItems, validDiscountCode, validated]);
 
     useEffect(() => {
         const data = {
@@ -220,6 +215,7 @@ const page = () => {
             userPosition,
             code: validated ? validDiscountCode : ''
         };
+        console.log("formData data :", data)// debug log
         localStorage.setItem('formData', JSON.stringify(data));
     }, [phone, selectedTable, selectedCity, selectedName, comment, address, validDiscountCode, validated, selectedValue, selectedOption, userPosition]);
 
@@ -570,7 +566,7 @@ const page = () => {
                         {t("totalPrice")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                        {totalPrice}<span style={{ fontSize: "10px", fontWeight: "400", color: '#AAAAAA' }}>EGP</span>
+                        {totalPrice - discount}<span style={{ fontSize: "10px", fontWeight: "400", color: '#AAAAAA' }}>EGP</span>
                     </Typography>
                 </Box>
 

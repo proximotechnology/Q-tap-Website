@@ -74,9 +74,8 @@ const page = () => {
     };
 
     const handleAddItem = (index) => {
-        console.log('add item at', index) // debug log
         const newCartItems = cartItems.map((item, i) =>
-            i === index ? { ...item, quantity: item.quantity + 1 } : item
+            i === index ? { ...item, SelectedQuantity: item.SelectedQuantity + 1 } : item
         );
         setCartItems(newCartItems)
         localStorage.setItem('cartItems', JSON.stringify(newCartItems))
@@ -84,11 +83,10 @@ const page = () => {
     };
 
     const handleMinusItem = (index) => {
-        console.log('remove item at', index) // debug log
         let updatedCartItems = cartItems.map(item => ({ ...item })); // Deep copy objects
 
-        if (updatedCartItems[index].quantity > 1) {
-            updatedCartItems[index].quantity -= 1;
+        if (updatedCartItems[index].SelectedQuantity > 1) {
+            updatedCartItems[index].SelectedQuantity -= 1;
         } else {
             updatedCartItems.splice(index, 1);
         }
@@ -103,7 +101,6 @@ const page = () => {
 
     const handleConfirmButtonClick = () => {
         const isValidCart = isAllItemComeFromSameBranch(cartItems, Number(cartItems?.[0]?.branchId))
-        // console.log("isValid", isValidCart) // debug log
         if (cartItems.length > 0 && isValidCart) {
             console.log("cartItems", cartItems)
             const confirmUrl = `/${locale}/clientDetails` + (tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : `?shopId=${cartItems?.[0]?.shopId}&branchId=${cartItems?.[0]?.branchId}`)
@@ -227,7 +224,7 @@ const page = () => {
                                             fontSize: "12px", fontWeight: 900,
                                             padding: "0px 12px", color: "#44404D"
                                         }}>
-                                            {item.quantity} </Typography>
+                                            {item.SelectedQuantity} </Typography>
 
                                         <RemoveCircleOutlinedIcon
                                             onClick={() => handleMinusItem(index)}
@@ -239,7 +236,7 @@ const page = () => {
                                             marginTop: "5px",
                                             fontSize: '15px', fontWeight: "bold", color: 'white'
                                         }}>
-                                            {item.price}x{item.quantity} : {(item.price * item.quantity).toFixed(2)} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                            {item.price}x{item.SelectedQuantity} : {(item.price * item.SelectedQuantity).toFixed(2)} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                         </Typography>
                                     </Box>
                                 </Box>
