@@ -8,7 +8,7 @@ import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { Link } from "@/i18n/navigation"
 import { addItemToCart } from "../cartUtils";
 import { useLocale, useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE, fetchData, fetchShopsData, isAllItemComeFromSameBranch } from '@/utils';
+import { BASE_URL_IMAGE, fetchData, fetchShopsData, isAllItemComeFromSameBranch, itemPriceDetailsCalculation } from '@/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -78,54 +78,31 @@ const page = ({ params }) => {
     const [totalprice, setTotalPrice] = useState(0)// to show 
 
     useEffect(() => {
-        
-            handlePrice()
+
+        handlePrice()
     }, [count, mealData, selectedSize, selectedExtra, selectedOptions])
 
     const handlePrice = () => {
         /* calculate meal price  */
-        let currentPrice = 0; // 
 
-        if (selectedExtra) {
-            selectedExtra?.map(item => {
-                currentPrice += Number(item?.price)
-            })
+        let special = null
+        if (specialID) {
+            special = offersData?.find(item => Number(item.id) === Number(specialID))
         }
+        let { itemSubTotal, itemDiscount, itemTax } = itemPriceDetailsCalculation({
+            special, selectedSize,
+            selectedExtra, selectedOptions,
 
-        if (selectedOptions) {
-            selectedOptions?.map(item => {
-                currentPrice += Number(item?.price)
-            })
-        }
-
-        if (selectedSize) {
-            if (selectedSize === "S") currentPrice += Number(mealData?.price_small)
-            if (selectedSize === "M") currentPrice += Number(mealData?.price_medium)
-            if (selectedSize === "L") currentPrice += Number(mealData?.price_large)
-
-        } else if (specialID) {
-            const d = offersData?.find(item => Number(item.id) === Number(specialID))
-            currentPrice += Number(d?.priceAfter) || 0
-
-            if (Number.isNaN(Number(d?.priceAfter)))
-                toast.error("somethingWentWrong")
-        }
-        else {
-            currentPrice += Number(mealData?.price)
-        }
-        let sub = currentPrice;
-        /* add discount and tax */
-        if (mealData?.discount && !specialID) {
-            sub -= Number(mealData?.discount) * currentPrice / 100
-        }
-
-        if (mealData?.Tax) {
-            sub += Number(mealData?.Tax) * currentPrice / 100
-        }
-        setPriceBeforeDiscount(((currentPrice + Number(mealData?.Tax) * currentPrice / 100) * count).toFixed(2))
-        setPrice((sub).toFixed(2))
+            Tax: mealData?.Tax,
+            discount: mealData?.discount,
+            price_small: mealData?.price_small,
+            price_medium: mealData?.price_medium,
+            price_large: mealData?.price_large
+        })
+        setPriceBeforeDiscount(((itemSubTotal + itemTax) * count).toFixed(2))
+        setPrice((itemSubTotal - itemDiscount).toFixed(2))
         /* one piece price * quantity */
-        setTotalPrice((sub * count).toFixed(2))
+        setTotalPrice(((itemSubTotal + itemTax - itemDiscount) * count).toFixed(2))
     }
     // ========================================================================
     const increaseCount = () => {
@@ -574,7 +551,7 @@ const page = ({ params }) => {
                                 {t("price")}
                             </Typography>
                             <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                                {selectedSize && count !==0 && !specialID && <span style={{ textDecoration: 'line-through' }}>{priceBeforeDiscount}</span>}{" "}
+                                {selectedSize && count !== 0 && !specialID && <span style={{ textDecoration: 'line-through' }}>{priceBeforeDiscount}</span>}{" "}
                                 {selectedSize && count ? totalprice : 0}
                                 <span style={{ fontSize: "10px", color: '#575756' }}> EGP</span>
                             </Typography>

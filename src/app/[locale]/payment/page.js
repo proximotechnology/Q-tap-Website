@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Button, Divider, Menu, MenuItem } from '@mui/material';
 import { Header } from './Header';
 import { Link } from "@/i18n/navigation"
@@ -10,11 +10,33 @@ import { BASE_URL, calculateOrderPriceDetailed } from '@/utils';
 import { toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MapView from '../clientDetails/map';
+import { useReactToPrint } from 'react-to-print';
+import html2pdf from 'html2pdf.js';
 
 const page = () => {
     const t = useTranslations()
     const router = useRouter();
+    const pageRef = useRef();
 
+    const handlePrint = useReactToPrint({
+        content: () => pageRef.current,
+        contentRef: pageRef,
+        documentTitle: 'MyPage',
+        removeAfterPrint: true,
+    });
+
+    const handleDownloadPDF = (fileName) => {
+    const element = pageRef.current;
+    const opt = {
+      margin:       0.5,
+      filename:     `${fileName}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
     const [isLoading, setIsLoading] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState(null);
@@ -115,7 +137,10 @@ const page = () => {
             localStorage.setItem('order', JSON.stringify(response.data.order))
             if (payWay === "wallet" && response.data.payment_url)
                 localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
-            if (response) router.push("/orderPlaced")
+            if (response) {
+                handleDownloadPDF("order-summary"+response.data?.order?.id)
+                router.push("/orderPlaced")
+            }
         } catch (error) {
             console.log('order payment errror', error) // debug log
             if (error?.response?.data?.errors?.table_id)
@@ -132,7 +157,7 @@ const page = () => {
     useEffect(() => {
         calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, formData?.code)
 
-        
+
     }, [cartItems]);
 
     useEffect(() => {
@@ -206,8 +231,9 @@ const page = () => {
                 height: "auto",
                 minHeight: '100vh',
                 width: '100%',
-            }}>
-
+            }}
+            ref={pageRef}
+        >
             <Header />
 
             <Box
@@ -442,7 +468,15 @@ const page = () => {
                         {t("confirm")} <img src="/assets/hands.svg" style={{ marginLeft: "5px" }} />
                     </Button>
                     {/* </Link> */}
-                    <span className="icon-printer1" style={{ fontSize: "22px", marginLeft: "10px", color: "#AAAAAA" }}></span>
+                    <Button onClick={() => {
+                        if (pageRef.current) {
+                            handlePrint();
+                            // handleDownloadPDF()
+                            console.log("on print click",pageRef.current)
+                        } else {
+                            console.warn("Printable content not mounted");
+                        }
+                    }} ><span className="icon-printer1" style={{ fontSize: "22px", marginLeft: "10px", color: "#AAAAAA" }}></span></Button>
                 </Box>
             </Box>
         </Box>
