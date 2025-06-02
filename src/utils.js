@@ -1,6 +1,10 @@
 import axios from "axios"
-export const BASE_URL = 'https://api.qutap.co/api/'
-export const BASE_URL_IMAGE = 'https://api.qutap.co/'
+// export const BASE_URL = 'https://api.qutap.co/api/'
+// export const BASE_URL_IMAGE = 'https://api.qutap.co/'
+export const BASE_URL = 'https://highleveltecknology.com/Qtap/api/'
+export const BASE_URL_IMAGE = 'https://highleveltecknology.com/Qtap/'
+export const DASHBOARD_URL = ""
+
 export const formateDate = (date) => {
     const newDate = new Date(date);
 

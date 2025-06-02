@@ -5,28 +5,37 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { HomeContext } from "../context/homeContext";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import { DASHBOARD_URL } from "@/utils";
 
 const PricingCard = ({ title, priceMonthly, priceYearly, description, features }) => {
   const t = useTranslations();
+
+  const handleNavigateToDashboard = () => {
+    window.location.href = DASHBOARD_URL;
+  }
+
   return (
     <Box
       sx={{
         borderRadius: "50px 50px 50px 0px",
-        padding: "30px",
         backgroundColor: "white",
         margin: "20px",
         height: "90%",
-        position: "relative",
         "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.3s" },
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "center", position: "relative", top: "-40px" }}>
+      <Box sx={{
+        display: "flex", justifyContent: "center",
+        margin: "0 auto",
+        width: "70%",
+        transform: "translateY(-50%)",
+      }}>
         <Box
           sx={{
             backgroundColor: "#ef7d00",
             textAlign: "center",
             padding: "5px 20px",
-            width: "70%",
+            width: "100%",
             borderRadius: "40px",
             color: "#fff",
           }}
@@ -34,70 +43,176 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
           <Typography variant="h6">{title}</Typography>
         </Box>
       </Box>
-
-      <Box sx={{ textAlign: "center", marginTop: "-20px" }}>
-        <Typography variant="h4" color="textPrimary">
-          <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px" }}>EGP</sup>
-          {priceMonthly}
-          <Typography component="span" variant="body2" color="textSecondary">
-            /{t("month")}
+      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Box sx={{ textAlign: "center", marginTop: "-20px" }}>
+          <Typography variant="h4" color="textPrimary" fontWeight="900" >
+            <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
+            {priceMonthly}
+            <Typography component="span" variant="body2" color="textSecondary">
+              /{t("month")}
+            </Typography>
           </Typography>
+
+          <Typography variant="h6" color="textPrimary" sx={{ marginTop: "10px" }} fontWeight={900}>
+            <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
+            {priceYearly}
+            <Typography component="span" variant="body2" color="textSecondary">
+              /{t("year")}
+            </Typography>
+          </Typography>
+          <Divider sx={{ my: 2, backgroundColor: "#ef7d00", width: "100%" }} />
+        </Box>
+
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "40px", fontSize: "11px" }}>
+          {description}
         </Typography>
 
-        <Typography variant="h6" color="textPrimary" sx={{ marginTop: "10px" }}>
-          <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px" }}>EGP</sup>
-          {priceYearly}
-          <Typography component="span" variant="body2" color="textSecondary">
-            /{t("year")}
-          </Typography>
-        </Typography>
-        <Divider sx={{ my: 2, backgroundColor: "#ef7d00", width: "100%" }} />
-      </Box>
+        <Box>
+          {features.map((feature, index) => (
+            <Typography
+              key={index}
+              variant="body2"
+              color="textSecondary"
+              display="flex"
+              sx={{ fontSize: "10px", paddingTop: "8px", wordSpacing: "2px" }}
+            >
+              <img
+                src="/assets/check.svg"
+                alt="check"
+                style={{ fontSize: "13px", height: "13px", marginRight: "10px" }}
+              />
+              {feature}
+            </Typography>
+          ))}
+        </Box>
 
-      <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "40px", fontSize: "11px" }}>
-        {description}
-      </Typography>
-
-      <Box>
-        {features.map((feature, index) => (
-          <Typography
-            key={index}
-            variant="body2"
-            color="textSecondary"
-            display="flex"
-            sx={{ fontSize: "10px", paddingTop: "8px", wordSpacing: "2px" }}
+        <Box display="flex" justifyContent="center" mt={6}>
+          <Button
+            sx={{
+              backgroundColor: "#222240",
+              fontSize: "15px",
+              padding: "6px 40px",
+              borderRadius: "20px",
+              color: "white",
+              "&:hover": { backgroundColor: "#222240e5" },
+              textTransform: "capitalize",
+              // position: "absolute",
+              bottom: "15px",
+              fontWeight: "600"
+            }}
+            onClick={() => { handleNavigateToDashboard() }}
           >
-            <img
-              src="/assets/check.svg"
-              alt="check"
-              style={{ fontSize: "13px", height: "13px", marginRight: "10px" }}
-            />
-            {feature}
-          </Typography>
-        ))}
-      </Box>
+            {t("subscribe")} <ArrowForwardIcon sx={{ fontSize: "16px", marginLeft: "6px", strokeWidth: 2 }} />
+          </Button>
+        </Box>
+      </div>
 
-      <Box display="flex" justifyContent="center" mt={6}>
-        <Button
-          sx={{
-            backgroundColor: "#222240",
-            fontSize: "15px",
-            padding: "6px 40px",
-            borderRadius: "20px",
-            color: "white",
-            "&:hover": { backgroundColor: "#222240e5" },
-            textTransform: "capitalize",
-            position: "absolute",
-            bottom: "15px",
-          }}
-        >
-          {t("subscribe")} <ArrowForwardIcon sx={{ fontSize: "16px", marginLeft: "6px" }} />
-        </Button>
-      </Box>
     </Box>
   );
 };
+const PricingCardCustom = () => {
+  const t = useTranslations();
 
+
+
+  return (
+    <Box
+      sx={{
+        borderRadius: "50px 50px 50px 0px",
+        backgroundColor: "white",
+        margin: "20px",
+        height: "90%",
+        "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.3s" },
+      }}
+    >
+      <Box sx={{
+        display: "flex", justifyContent: "center",
+        margin: "0 auto",
+        width: "70%",
+        transform: "translateY(-50%)",
+      }}>
+        <Box
+          sx={{
+            backgroundColor: "#ef7d00",
+            textAlign: "center",
+            padding: "5px 20px",
+            width: "100%",
+            borderRadius: "40px",
+            color: "#fff",
+          }}
+        >
+          <Typography variant="h6">
+            custom plan
+          </Typography>
+        </Box>
+      </Box>
+      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Box sx={{ textAlign: "center", marginTop: "-20px" }}>
+          <Typography variant="h4" color="textPrimary" fontWeight="900" >
+            <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
+            {/* {priceMonthly} */}
+            <Typography component="span" variant="body2" color="textSecondary">
+              /{t("month")}
+            </Typography>
+          </Typography>
+
+          <Typography variant="h6" color="textPrimary" sx={{ marginTop: "10px" }} fontWeight={900}>
+            <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
+            {/* {priceYearly} */}
+            <Typography component="span" variant="body2" color="textSecondary">
+              /{t("year")}
+            </Typography>
+          </Typography>
+          <Divider sx={{ my: 2, backgroundColor: "#ef7d00", width: "100%" }} />
+        </Box>
+
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "40px", fontSize: "11px" }}>
+          {/* {description} */}
+        </Typography>
+
+        <Box>
+          {/* {features.map((feature, index) => (
+            <Typography
+              key={index}
+              variant="body2"
+              color="textSecondary"
+              display="flex"
+              sx={{ fontSize: "10px", paddingTop: "8px", wordSpacing: "2px" }}
+            >
+              <img
+                src="/assets/check.svg"
+                alt="check"
+                style={{ fontSize: "13px", height: "13px", marginRight: "10px" }}
+              />
+              {feature}
+            </Typography>
+          ))} */}
+        </Box>
+
+        <Box display="flex" justifyContent="center" mt={6}>
+          <Button
+            sx={{
+              backgroundColor: "#222240",
+              fontSize: "15px",
+              padding: "6px 40px",
+              borderRadius: "20px",
+              color: "white",
+              "&:hover": { backgroundColor: "#222240e5" },
+              textTransform: "capitalize",
+              // position: "absolute",
+              bottom: "15px",
+              fontWeight: "600"
+            }}
+            onClick={() => { handleNavigateToDashboard() }}
+          >
+            {t("subscribe")} <ArrowForwardIcon sx={{ fontSize: "16px", marginLeft: "6px", strokeWidth: 2 }} />
+          </Button>
+        </Box>
+      </div>
+
+    </Box>
+  );
+};
 export const Pricing = () => {
   const { getHomeData } = useContext(HomeContext);
   const t = useTranslations();
@@ -117,7 +232,7 @@ export const Pricing = () => {
       );
     },
   });
-
+  console.log("error pricing", error)
   // التعامل مع حالات التحميل
   if (isLoading) {
     return (
@@ -297,7 +412,10 @@ export const Pricing = () => {
         </Box>
 
         <Grid container justifyContent="center" spacing={2}>
-          {pricingData.map((plan) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} >
+            <PricingCardCustom />
+          </Grid>
+          {pricingData?.map((plan) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={plan.id}>
               <PricingCard
                 title={plan.name}

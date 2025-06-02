@@ -72,24 +72,25 @@ function DrawerAppBar(props) {
                         style={{ textDecoration: 'none' }}
                     >
                         <ListItemButton
-                            sx={{ textAlign: 'center', padding: "13px",
-                                    '&::after': {
+                            sx={{
+                                textAlign: 'center', padding: "13px",
+                                '&::after': {
                                     content: '""',
                                     position: 'absolute',
                                     bottom: 0,
-                                    left: locale == "en" ?0:"82%",
+                                    left: locale == "en" ? 0 : "82%",
                                     height: '2px',
                                     width: '0%',
                                     backgroundColor: '#E57C00',
                                     transition: 'width 0.3s ease-in-out',
                                 },
                                 '&:hover::after': {
-                                    width: locale == "en" ?'110px':'90px',
+                                    width: locale == "en" ? '110px' : '90px',
                                 },
-                             }}
+                            }}
                             onClick={() => handleNavigation(item.path)}
                         >
-                            <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" , marginLeft:"10px"}}></span>
+                            <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px", marginLeft: "10px" }}></span>
                             <span style={{ marginLeft: '12px', color: "white" }}>
                                 <Typography sx={{ fontSize: "13px", cursor: "pointer" }}>
                                     {t("nav." + item.name)}
@@ -109,10 +110,10 @@ function DrawerAppBar(props) {
             {/* Header (menu icon + settings) for screens < 950px */}
             <Box
                 sx={{
-                    
+
                     display: { xs: 'block', sm: 'block', md: 'none' },
                     width: "100% !important",
-                    marginLeft:"20px",
+                    marginLeft: "20px",
                     padding: "12px 10px",
                     '@media (min-width: 950px)': {
                         display: "none",
@@ -121,7 +122,7 @@ function DrawerAppBar(props) {
             >
                 <Box
                     sx={{
-                        zIndex:20,
+                        zIndex: 20,
                         display: "flex",
                         width: "100%",
                         justifyContent: "space-between",
@@ -173,7 +174,7 @@ function DrawerAppBar(props) {
                                 >
                                     <img
                                         src='/assets/pricing.svg'
-                                        style={{ width: "18px", marginLeft: locale == "ar" ? "6px":"0px", marginRight: locale == "en" ? "5px":"0px", height: "18px" }}
+                                        style={{ width: "18px", marginLeft: locale == "ar" ? "6px" : "0px", marginRight: locale == "en" ? "5px" : "0px", height: "18px" }}
                                     />
                                     {t("nav.pricing")}
                                 </Typography>
@@ -256,7 +257,7 @@ function DrawerAppBar(props) {
                                                     }}
                                                 >
                                                     <span className={item.icon} style={{ color: "#E57C00", fontSize: "16px" }}></span>
-                                                    <span style={{ marginLeft: '5px', fontSize: "11px", marginRight: locale == "ar" ? "8px":"0px" }}>
+                                                    <span style={{ marginLeft: '5px', fontSize: "11px", marginRight: locale == "ar" ? "8px" : "0px" }}>
                                                         {t("nav." + item.name)}
                                                     </span>
                                                 </Button>
@@ -268,50 +269,50 @@ function DrawerAppBar(props) {
 
                             <Box>
                                 <Tooltip>
-                                    <Box  sx={{
+                                    <Box sx={{
                                         display: "flex",
                                         gap: "20px",
-                                          '@media (min-width: 900px) and (max-width: 949px)': {
+                                        '@media (min-width: 900px) and (max-width: 949px)': {
                                             gap: "10px", // Reduce spacing
                                             marginLeft: "-25px !important", // Ensure margin is applied
                                         },
-                                     }}>
+                                    }}>
                                         <Language />
                                         <Typography
-                                    onClick={() => {
-                                        const section = document.getElementById("pricing");
-                                        if (section) {
-                                            section.scrollIntoView({ behavior: "smooth" });
-                                        }
-                                    }}
-                                    sx={{
-                                        cursor: "pointer",
-                                        fontSize: "12px",
-                                        color: "white",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        position: 'relative',
-                                        '&::after': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            bottom: 0,
-                                            left: 0,
-                                            height: '2px',
-                                            width: '0%',
-                                            backgroundColor: '#E57C00',
-                                            transition: 'width 0.3s ease-in-out',
-                                        },
-                                        '&:hover::after': {
-                                            width: '100%',
-                                        },
-                                    }}
-                                >
-                                    <img
-                                        src='/assets/pricing.svg'
-                                        style={{ width: "18px", marginLeft: locale == "ar" ? "6px":"0px", marginRight: locale == "en" ? "5px":"0px", height: "18px" }}
-                                    />
-                                    {t("nav.pricing")}
-                                </Typography>
+                                            onClick={() => {
+                                                const section = document.getElementById("pricing");
+                                                if (section) {
+                                                    section.scrollIntoView({ behavior: "smooth" });
+                                                }
+                                            }}
+                                            sx={{
+                                                cursor: "pointer",
+                                                fontSize: "12px",
+                                                color: "white",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                position: 'relative',
+                                                '&::after': {
+                                                    content: '""',
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: 0,
+                                                    height: '2px',
+                                                    width: '0%',
+                                                    backgroundColor: '#E57C00',
+                                                    transition: 'width 0.3s ease-in-out',
+                                                },
+                                                '&:hover::after': {
+                                                    width: '100%',
+                                                },
+                                            }}
+                                        >
+                                            <img
+                                                src='/assets/pricing.svg'
+                                                style={{ width: "18px", marginLeft: locale == "ar" ? "6px" : "0px", marginRight: locale == "en" ? "5px" : "0px", height: "18px" }}
+                                            />
+                                            {t("nav.pricing")}
+                                        </Typography>
                                         <Admin />
                                     </Box>
                                 </Tooltip>

@@ -11,6 +11,8 @@ import { Test } from '../Test/Test';
 import Footer from '../Footer/Footer';
 import Home from '../Home/Home';
 import { AllChatForm } from '../Chat/AllChatForm.js';
+import FeaturesNew from '../Features/FeaturesNew';
+import { ClientNew } from '../Client/ClientNew';
 
 
 export const HomePage = () => {
@@ -18,9 +20,11 @@ export const HomePage = () => {
     return (
         <div style={{ overflowX:"hidden !important"}}>
             <Home />
-            <Features />
+            {/* <Features /> */}
+            <FeaturesNew />
             <Serves />
-            <Client />
+            {/* <Client /> */}
+            <ClientNew />
             <VideoSlider />
             <QRCodeComponent />
             <Pricing />

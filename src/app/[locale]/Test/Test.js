@@ -8,6 +8,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { HomeContext } from "../context/homeContext";
+import { BASE_URL } from "@/utils";
 
 export const Test = () => {
   const [expanded, setExpanded] = useState(null);
@@ -303,7 +304,7 @@ export const Test = () => {
                 <img
                   src={
                     item.client.img && item.client.img.trim() !== ""
-                      ? `https://api.qutap.co/${item.client.img}`
+                      ? `${BASE_URL}${item.client.img}`
                       : "/assets/chef.svg"
                   }
                   alt="Chef"

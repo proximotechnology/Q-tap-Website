@@ -12,13 +12,17 @@ import { useLocale } from 'next-intl';
 export const Admin = () => {
     const router = useRouter();
     const locale = useLocale()
+
     const [anchorElUser, setAnchorElUser] = useState(null);
     const openUserPopover = Boolean(anchorElUser);
+
     const [isLoggedIn, setIsLoggedIn] = useState(null);
+
     const [userData, setUserData] = useState({
         name: '',
         email: ''
     });
+
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         const storedName = localStorage.getItem('userName');
@@ -82,15 +86,16 @@ export const Admin = () => {
     };
 
     return (
-        <>
-            <Box
+        <div>
+            <Box className='hereProblem noRightPadding'
                 aria-describedby={openUserPopover ? 'simple-popover' : undefined}
                 onClick={handleUserClick}
                 sx={{
                     cursor: "pointer", display: "flex", alignItems: "center", gap: "3px",
-                    marginRight: { xs: "20px", md: "0px" } // Apply marginRight for smaller screens
+                    marginRight: { xs: "20px", md: "0px" }, // Apply marginRight for smaller screens
+                    paddingRight: '0px !important'
 
-                }}>
+                }} >
                 <IconButton color="inherit" sx={{
                     backgroundColor: '#ef7d00', borderRadius: '30%', padding: '8px',
                     '&:hover': {
@@ -99,17 +104,33 @@ export const Admin = () => {
                 }}>
                     <PersonOutlineOutlinedIcon sx={{ fontSize: "20px", color: "white" }} />
                 </IconButton>
-                <KeyboardArrowDownIcon sx={{ fontSize: "15px", color: "white" }} />
+                <KeyboardArrowDownIcon sx={{ fontSize: "15px", color: "white", paddingRight: '0px !important' }} />
             </Box>
+            {/* جزء ال drop menu */}
+            {/* TODO: padding-right : 15px when selected come form no where fix this */}
             <Popover
                 id={openUserPopover ? 'simple-popover' : undefined}
                 open={openUserPopover}
                 anchorEl={anchorElUser}
                 onClose={handleUserClose}
+                disablePortal={false}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'left',
+                    horizontal: 'right', // Aligns to the right of the anchor element
                 }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right', // Makes the popover open from its right side
+                }}
+                slotProps={{
+                    paper: {
+                        style: {
+                            paddingRight: 0, // override inline
+                            padding: 0,
+                        },
+                    },
+                }}
+
             >
                 <Box sx={{ width: 200, padding: '10px' }}>
                     {isLoggedIn && isLoggedIn !== "null" ? <>
@@ -129,34 +150,35 @@ export const Admin = () => {
 
 
                     <List>
-                        <Box
-                            onClick={() => router.push(`/${locale}`)}
-                            sx={{
-                                cursor: "pointer",
-                                backgroundColor: "#222240",
-                                color: "white",
-                                marginBottom: "10px",
-                                borderRadius: "30px",
-                                display: "flex",
-                                alignItems: "center",
-                                textAlign: "center",
-                                justifyContent: "center",
-                                width: "80%",
-                                padding: "5px 0px",
-                                margin: "0 auto",
-                            }}>
-
-                            <span class="icon-home-icon-silhouette" style={{ color: "#ef7d00", marginRight: "5px", fontSize: "15px" }} ></span>
-                            <Typography
-                                sx={{ color: "white", fontSize: "10px", textTransform: "capitalize", cursor: "pointer" }}
-                                onClick={() => {
-                                    window.location.href = "https://dashboard.qutap.co"
-                                }}
-                            >
-                                Dashboard
-                            </Typography>
-                        </Box>
+                        {/* login/signin and logout section  */}
                         {isLoggedIn && isLoggedIn !== "null" ? <>
+                            <Box
+                                onClick={() => router.push(`/${locale}`)}
+                                sx={{
+                                    cursor: "pointer",
+                                    backgroundColor: "#222240",
+                                    color: "white",
+                                    marginBottom: "10px",
+                                    borderRadius: "30px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    textAlign: "center",
+                                    justifyContent: "center",
+                                    width: "80%",
+                                    padding: "5px 0px",
+                                    margin: "0 auto",
+                                }}>
+
+                                <span class="icon-home-icon-silhouette" style={{ color: "#ef7d00", marginRight: "5px", fontSize: "15px" }} ></span>
+                                <Typography
+                                    sx={{ color: "white", fontSize: "10px", textTransform: "capitalize", cursor: "pointer" }}
+                                    onClick={() => {
+                                        window.location.href = "https://dashboard.qutap.co"
+                                    }}
+                                >
+                                    Dashboard
+                                </Typography>
+                            </Box>
                             <Typography
                                 onClick={() => {
                                     window.location.href = `https://dashboard.qutap.co/test-web-login?token=${localStorage.getItem("token")}`;
@@ -223,36 +245,64 @@ export const Admin = () => {
                                 />
                             </ListItem>
                         ) : (
-                            <Typography
-                                onClick={() => {
-                                    window.location.href = "https://dashboard.qutap.co?redirectBack=https://qutap.co/en"
-                                }}
-                                style={{ textDecoration: "none" }}>
-                                <ListItem sx={{ cursor: "pointer" }} >
-                                    <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
-                                        <img
-                                            src="/assets/logout.svg"
-                                            alt="icon"
-                                            style={{ width: "16px", height: "16px" }}
+                            <div>
+                                <Typography
+                                    onClick={() => {
+                                        window.location.href = "https://dashboard.qutap.co?redirectBack=https://qutap.co/en"
+                                    }}
+                                    style={{ textDecoration: "none" }}>
+                                    <ListItem sx={{ cursor: "pointer" }} >
+                                        <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
+                                            <img
+                                                src="/assets/logout.svg"
+                                                alt="icon"
+                                                style={{ width: "16px", height: "16px" }}
+                                            />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary="Log In"
+                                            primaryTypographyProps={{
+                                                sx: {
+                                                    color: "#5D5D5C",
+                                                    fontSize: "12px",
+                                                    marginLeft: locale === "en" ? "-30px" : "",
+                                                    textAlign: locale === "ar" ? "start" : "",
+                                                },
+                                            }}
                                         />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary="Log In"
-                                        primaryTypographyProps={{
-                                            sx: {
-                                                color: "#5D5D5C",
-                                                fontSize: "12px",
-                                                marginLeft: locale === "en" ? "-30px" : "",
-                                                textAlign: locale === "ar" ? "start" : "",
-                                            },
-                                        }}
-                                    />
-                                </ListItem>
-                            </Typography>
+                                    </ListItem>
+                                </Typography>
+                                <Typography
+                                    onClick={() => {
+                                        window.location.href = "https://dashboard.qutap.co?redirectBack=https://qutap.co/en"
+                                    }}
+                                    style={{ textDecoration: "none" }}>
+                                    <ListItem sx={{ cursor: "pointer" }} >
+                                        <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
+                                            <img
+                                                src="/assets/logout.svg"
+                                                alt="icon"
+                                                style={{ width: "16px", height: "16px" }}
+                                            />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary="Sign In"
+                                            primaryTypographyProps={{
+                                                sx: {
+                                                    color: "#5D5D5C",
+                                                    fontSize: "12px",
+                                                    marginLeft: locale === "en" ? "-30px" : "",
+                                                    textAlign: locale === "ar" ? "start" : "",
+                                                },
+                                            }}
+                                        />
+                                    </ListItem>
+                                </Typography>
+                            </div>
                         )}
                     </List>
                 </Box>
             </Popover >
-        </>
+        </div>
     )
 }

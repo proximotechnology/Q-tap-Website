@@ -102,60 +102,62 @@ const ShopSelect = () => {
                     )
                     :
                     (
-                        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-[100px]'>
-                            {isLoading ?
-                                <h1 className={`text-center text-white h-[100px]  m-0 w-full ${colors.bg_main} z-50 flex items-center justify-center`}>
-                                    loading
-                                </h1>
-                                : (
-                                    <>
-                                     {currentShops?.map(shop => (
-                                        <div
-                                            key={shop?.id}
-                                            className={`card ${colors.card_bg} rounded-lg p-2 flex flex-col justify-between h-[300px]`}
-                                            onClick={() => handleSelectShop(shop)}
-                                        >
-                                            <div className="relative w-full aspect-[1/2] overflow-hidden rounded-md">
-                                                <img
-                                                    src={`${BASE_URL_IMAGE}${shop?.img}`}
-                                                    alt={shop?.name}
-                                                    className="absolute top-0 left-0 w-full h-full object-cover"
-                                                />
-                                            </div>
 
-                                            <div className="mt-2">
-                                                <h2 className={`font-bold text-lg ${colors.card_title} line-clamp-1`}>
-                                                    {shop?.name}
-                                                </h2>
+                        isLoading ?
+                            <h1 className={`text-center text-white h-[100px]  m-0 w-full ${colors.bg_main} z-50 flex items-center justify-center`}>
+                                loading
+                            </h1>
+                            : (
+                                <div>
+                                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-[100px]'>
+                                        {currentShops?.map(shop => (
+                                            <div
+                                                key={shop?.id}
+                                                className={`card ${colors.card_bg} rounded-lg p-2 flex flex-col justify-between h-[300px]`}
+                                                onClick={() => handleSelectShop(shop)}
+                                            >
+                                                <div className="relative w-full aspect-[1/2] overflow-hidden rounded-md">
+                                                    <img
+                                                        src={`${BASE_URL_IMAGE}${shop?.img}`}
+                                                        alt={shop?.name}
+                                                        className="absolute top-0 left-0 w-full h-full object-cover"
+                                                    />
+                                                </div>
+
+                                                <div className="mt-2">
+                                                    <h2 className={`font-bold text-lg ${colors.card_title} line-clamp-1`}>
+                                                        {shop?.name}
+                                                    </h2>
+                                                </div>
                                             </div>
-                                        </div>
                                         ))}
-                                        <div className="flex justify-center items-center mt-6 gap-4 w-[100vw]">
-                                            <button
-                                                onClick={handlePrevPage}
-                                                disabled={currentPage === 1}
-                                                className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
-                                            >
-                                                Previous
-                                            </button>
-                                            <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
-                                            <button
-                                                onClick={handleNextPage}
-                                                disabled={currentPage === totalPages}
-                                                className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </>
-                                )
-                            }
 
-                        </div>
+                                    </div>
+                                    <div className="flex justify-center items-center mt-6 gap-4 w-[100vw]">
+                                        <button
+                                            onClick={handlePrevPage}
+                                            disabled={currentPage === 1}
+                                            className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
+                                        >
+                                            Previous
+                                        </button>
+                                        <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
+                                        <button
+                                            onClick={handleNextPage}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+
+
                     )
                 }
 
-            </div >
+            </div>
         </>
     )
 }

@@ -6,6 +6,7 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { useTranslations } from 'next-intl';
+import { BASE_URL } from '@/utils';
 
 const FormFields = ({ onStartChat }) => {
     const [name, setName] = useState('');
@@ -35,7 +36,7 @@ const FormFields = ({ onStartChat }) => {
 
         try {
             // send data to backend
-            const response = await fetch("https://api.qutap.co/api/customer_info", {
+            const response = await fetch(`${BASE_URL}customer_info`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -72,7 +73,8 @@ const FormFields = ({ onStartChat }) => {
                 bottom: 80,
                 right: 20,
                 borderRadius: 2,
-                boxShadow: '10px 10px 10px rgba(0,0,0,0.5)',
+                // boxShadow: '10px 10px 10px rgba(0,0,0,0.5)',
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)',
                 backgroundColor: 'white',
                 zIndex: 1000,
                 textAlign: "center", justifyContent: "center"

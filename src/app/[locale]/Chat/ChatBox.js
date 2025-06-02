@@ -6,6 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PhotoIcon from '@mui/icons-material/Photo';
+import { BASE_URL } from '@/utils';
 
 const ChatBox = ({ onCloseChat }) => {
     const [messages, setMessages] = useState([]); // store all messages
@@ -24,7 +25,7 @@ const ChatBox = ({ onCloseChat }) => {
                 };
 
                 // send message to server
-                const response = await fetch("https://api.qutap.co/api/chat", {
+                const response = await fetch(`${BASE_URL}chat`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -60,7 +61,7 @@ const ChatBox = ({ onCloseChat }) => {
         }
 
         try {
-            const url = `https://api.qutap.co/api/chat?customer_id=${customerId}`;
+            const url = `${BASE_URL}chat?customer_id=${customerId}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
@@ -109,8 +110,9 @@ const ChatBox = ({ onCloseChat }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 zIndex: 1000,
-                boxShadow: '10px 10px 10px rgba(0,0,0,0.5)',
-            
+                // boxShadow: '10px 10px 10px rgba(0,0,0,0.5)',
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+
             }}
         >
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

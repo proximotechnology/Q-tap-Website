@@ -90,24 +90,30 @@ export const VideoSlider = () => {
         height: "100vh",
       }}
     >
-      {videos.map((vid, index) => (
-        <SwiperSlide key={index}>
-          <iframe
-            width="100%"
-            height="100%"
-            src={vid.video}
-            title={`Video ${index + 1}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          ></iframe>
-        </SwiperSlide>
-      ))}
+      {videos?.map((vid, index) => {
+        const srcUrl = vid.video.includes('?')
+          ? `${vid.video}&autoplay=1&mute=1&enablejsapi=1&controls=0&rel=0`
+          : `${vid.video}?autoplay=1&mute=1&enablejsapi=1&controls=0&rel=0`;
+        return (
+          <SwiperSlide key={index}>
+            <iframe
+              width="100%"
+              height="100%"
+              src={srcUrl}
+              title={`Video ${index + 1}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            ></iframe>
+          </SwiperSlide>
+        )
+      }
+      )}
       <div className="swiper-button-prev" />
       <div className="swiper-button-next" />
     </Swiper>

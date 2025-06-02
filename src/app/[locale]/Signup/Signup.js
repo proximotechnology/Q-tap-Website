@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
 import { useLocale, useTranslations } from 'next-intl';
+import { BASE_URL } from "@/utils.js";
 
 
 export const Signup = () => {
@@ -82,7 +83,7 @@ export const Signup = () => {
           setIsLoading(true);
           const options = {
             method: 'POST',
-            url:"https://api.qutap.co/api/register",
+            url:`${BASE_URL}register`,
             headers: { 'Content-Type': 'application/json' },
             data
 

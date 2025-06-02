@@ -1,4 +1,5 @@
 "use client";
+import { BASE_URL } from "@/utils";
 import axios from "axios";
 import { createContext } from "react";
 
@@ -6,10 +7,14 @@ export let HomeContext = createContext();
 const HomeContextProvider = (props) => {
 
   const getHomeData = async () => {
-    const response = await axios.get("https://api.qutap.co/api/home");
-    console.log("all response" , response);
-    
-    return response;
+    try {
+      const response = await axios.get(`${BASE_URL}home`);
+      console.log("all response", response);
+      return response;
+    } catch (err) {
+       console.log("all response", err);
+      throw err
+    }
   };
 
   return (

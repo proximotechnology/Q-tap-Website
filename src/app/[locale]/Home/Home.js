@@ -20,10 +20,34 @@ const Home = () => {
                 xl: '100vw !important',
             },
         }}>
+            <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    zIndex: 0,
+                }}
+            >
+                <source src="/heroVideo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
             <NavBar />
 
             <Box className="hero">
-                <Box className="heroContent">
+
+                <Box className="heroContent" style={{ position: "absolute" }}>
+                    {/* <video autoplay muted loop playsinline class="background-video">
+                        <source src="https://www.youtube.com/watch?v=RGaW82k4dK4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video> */}
+
                     <Typography variant='h1'
                         sx={{ fontSize: "50px", color: "#E57C00", marginBottom: "30px" }}>{t("homePage.title")}</Typography>
                     <Typography variant='body1' sx={{ fontSize: "15px", marginBottom: "40px" }}>

@@ -56,3 +56,48 @@ html {
   position: absolute;
   width: 100%;
 }
+
+.noRightPadding {
+  padding-right: 0px !important;
+}
+
+.swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background-color: #ccc !important;
+  opacity: 1 !important;
+  margin: 0 6px;
+  transition: transform 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #e57c00 !important;
+  transform: scale(1.8);
+  margin-top: 10px;
+}
+
+.swiper .swiper-pagination {
+  margin-top: 50px !important;
+}
+/*  .swiper-pagination {
+  margin-top: 30px !important; /* adjust as needed * /}  */
+
+.swiper-pagination {
+  bottom: -10px !important; /* or any value you need */
+  position: relative; /* or override absolute if needed */
+}
+/* 
+That light blue background you see on autocomplete suggestions 
+(especially on Chrome) is the browser’s default styling for autofill 
+or autocomplete.
+
+To prevent or style it differently,
+you can override the browser's autofill styles using CSS.  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important; /* Change 'white' to your input background */
+  -webkit-text-fill-color: #000 !important; /* text color */
+  transition: background-color 5000s ease-in-out 0s;
+}

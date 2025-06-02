@@ -5,15 +5,15 @@ import React, { useContext, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
+import { Pagination, Autoplay, FreeMode } from "swiper/modules";
 import "./Client.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "@/utils";
 
-export const Client = () => {
-const { getHomeData } = useContext(HomeContext);
+export const ClientNew = () => {
+  const { getHomeData } = useContext(HomeContext);
   const t = useTranslations();
 
   // جلب البيانات باستخدام useQuery مع معالجة البيانات
@@ -64,20 +64,22 @@ const { getHomeData } = useContext(HomeContext);
             }}
           >
             <Swiper
-              slidesPerView={5}
-              spaceBetween={1}
-              pagination={{ clickable: true }}
-              modules={[Pagination]}
+              slidesPerView={3}
+              spaceBetween={20}
+              loop={true}
+              freeMode={true}
+              autoplay={{
+                delay: 0,
+                disableOnInteraction: false,
+              }}
+              speed={8000} // transition speed (not a delay, but how fast it moves)
+              modules={[Autoplay, FreeMode]}
+              // pagination={{ clickable: true }}
+              allowTouchMove={false} // optional: disable manual dragging to avoid jumpy behavior
               breakpoints={{
-                0: {
-                  slidesPerView: 1,
-                },
-                600: {
-                  slidesPerView: 3,
-                },
-                900: {
-                  slidesPerView: 5,
-                },
+                0: { slidesPerView: 1, },
+                600: { slidesPerView: 3, },
+                900: { slidesPerView: 3, },
               }}
               style={{
                 display: "flex",
@@ -94,6 +96,7 @@ const { getHomeData } = useContext(HomeContext);
                     display: "flex", justifyContent: "center",
                     width: "90px", height: "90px", alignItems: "center", margin: "0 auto",
                     borderRadius: "50%",
+                    // border: 'solid 1px black',
                     padding: "5px",
                     "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.3s" }
                   }}>

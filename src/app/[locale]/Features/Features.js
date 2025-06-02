@@ -12,6 +12,7 @@ import "./Features.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import { BASE_URL_IMAGE } from "@/utils";
 
 const Features = () => {
   const [activeIndex, setActiveIndex] = useState(1);
@@ -200,7 +201,7 @@ const Features = () => {
                 <CardMedia
                   component="img"
                   height="50%"
-                  image={`https://api.qutap.co/${feature?.img}`}
+                  image={`${BASE_URL_IMAGE}${feature?.img}`}
                   alt={feature?.titles}
                 />
                 <CardContent>

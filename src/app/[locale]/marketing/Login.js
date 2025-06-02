@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
 import axios from 'axios';
 import { useLocale, useTranslations } from 'next-intl';
+import { BASE_URL } from '@/utils.js';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -52,7 +53,7 @@ export const Login = () => {
             setIsLoading(true);
             const options = {
                 method: 'POST',
-                url: "https://api.qutap.co/api/login",
+                url: `${BASE_URL}login`,
                 headers: { 'Content-Type': 'application/json' },
                 data
 

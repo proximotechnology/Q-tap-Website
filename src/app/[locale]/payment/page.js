@@ -26,17 +26,17 @@ const page = () => {
     });
 
     const handleDownloadPDF = (fileName) => {
-    const element = pageRef.current;
-    const opt = {
-      margin:       0.5,
-      filename:     `${fileName}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2 },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
+        const element = pageRef.current;
+        const opt = {
+            margin: 0.5,
+            filename: `${fileName}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
 
-    html2pdf().set(opt).from(element).save();
-  };
+        html2pdf().set(opt).from(element).save();
+    };
     const [isLoading, setIsLoading] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState(null);
@@ -138,7 +138,7 @@ const page = () => {
             if (payWay === "wallet" && response.data.payment_url)
                 localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
             if (response) {
-                handleDownloadPDF("order-summary"+response.data?.order?.id)
+                handleDownloadPDF("order-summary" + response.data?.order?.id)
                 router.push("/orderPlaced")
             }
         } catch (error) {
@@ -160,12 +160,11 @@ const page = () => {
 
     }, [cartItems]);
 
+
+
     useEffect(() => {
         const storedCartItems = getCartItems();
         setCartItems(storedCartItems);
-    }, []);
-
-    useEffect(() => {
         const storedData = localStorage.getItem('formData');
         if (storedData) {
             setFormData(JSON.parse(storedData));
@@ -472,7 +471,7 @@ const page = () => {
                         if (pageRef.current) {
                             handlePrint();
                             // handleDownloadPDF()
-                            console.log("on print click",pageRef.current)
+                            console.log("on print click", pageRef.current)
                         } else {
                             console.warn("Printable content not mounted");
                         }

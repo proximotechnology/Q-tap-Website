@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from "react-toastify";
+import { BASE_URL } from "@/utils.js";
 
 export const VerfiyEmail = () => {
 
@@ -38,7 +39,7 @@ export const VerfiyEmail = () => {
         try {
             const options = {
                 method: 'POST',
-                url: "https://api.qutap.co/api/verfiy_email",
+                url: `${BASE_URL}verfiy_email`,
                 headers: { 'Content-Type': 'application/json' },
                 data
 
