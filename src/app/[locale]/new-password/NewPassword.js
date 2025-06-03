@@ -12,7 +12,7 @@ import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Mail } from '@mui/icons-material';
-import { BASE_URL } from '@/utils';
+import { BASE_URL } from '@/utils/constants';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 

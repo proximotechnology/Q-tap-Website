@@ -7,7 +7,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentModal from './PaymentModal';
 import { useTranslations } from 'next-intl';
 import Pusher from 'pusher-js';
-import { formateDate } from '@/utils';
+import { formateDate } from '@/utils/utils';
 
 
 const page = () => {

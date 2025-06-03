@@ -1,11 +1,11 @@
 "use client";
-import { Box, Typography, Divider, Button, Grid, Skeleton } from "@mui/material";
-import React, { useContext } from "react";
+import { Box, Typography, Divider, Button, Grid, Skeleton, TextField } from "@mui/material";
+import React, { useContext, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { HomeContext } from "../context/homeContext";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { DASHBOARD_URL } from "@/utils";
+import { DASHBOARD_URL } from "@/utils/constants";
 
 const PricingCard = ({ title, priceMonthly, priceYearly, description, features }) => {
   const t = useTranslations();
@@ -43,7 +43,7 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
           <Typography variant="h6">{title}</Typography>
         </Box>
       </Box>
-      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: '90%' }}>
         <Box sx={{ textAlign: "center", marginTop: "-20px" }}>
           <Typography variant="h4" color="textPrimary" fontWeight="900" >
             <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
@@ -112,8 +112,14 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
 };
 const PricingCardCustom = () => {
   const t = useTranslations();
+  const [selectedOrderNumber, setSelectedOrderNumber] = useState(0.00)
+  const [pricing, setPricing] = useState({
+    month: "0.00",
+    year: "0.00"
+  })
+  const handleSelectOrderNumber = () => {
 
-
+  }
 
   return (
     <Box
@@ -142,15 +148,15 @@ const PricingCardCustom = () => {
           }}
         >
           <Typography variant="h6">
-            custom plan
+            {t("customPlan")}
           </Typography>
         </Box>
       </Box>
-      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: '90%' }}>
         <Box sx={{ textAlign: "center", marginTop: "-20px" }}>
           <Typography variant="h4" color="textPrimary" fontWeight="900" >
             <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
-            {/* {priceMonthly} */}
+            {pricing.month}
             <Typography component="span" variant="body2" color="textSecondary">
               /{t("month")}
             </Typography>
@@ -158,7 +164,7 @@ const PricingCardCustom = () => {
 
           <Typography variant="h6" color="textPrimary" sx={{ marginTop: "10px" }} fontWeight={900}>
             <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
-            {/* {priceYearly} */}
+            {pricing.year}
             <Typography component="span" variant="body2" color="textSecondary">
               /{t("year")}
             </Typography>
@@ -171,6 +177,19 @@ const PricingCardCustom = () => {
         </Typography>
 
         <Box>
+          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "40px", fontSize: "11px" }}>
+            Number Of Orders :
+          </Typography>
+          <TextField
+            id="outlined-number"
+            label="Number"
+            type="number"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
           {/* {features.map((feature, index) => (
             <Typography
               key={index}

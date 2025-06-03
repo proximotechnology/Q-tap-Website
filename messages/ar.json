@@ -244,5 +244,6 @@
     "search_placeholder": "عمّ تبحث؟",
     "special_offers": "عروض خاصة",
     "noSpecialOffers": " لا يوجد عروض خاصة",
-     "inValidDiscountCode":"كود خصم غير صحيح"
+     "inValidDiscountCode":"كود خصم غير صحيح",
+     "customPlan":"خطه خاصه"
 }

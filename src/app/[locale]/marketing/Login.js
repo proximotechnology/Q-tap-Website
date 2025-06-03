@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import { AllChatForm } from '../Chat/AllChatForm.js';
 import axios from 'axios';
 import { useLocale, useTranslations } from 'next-intl';
-import { BASE_URL } from '@/utils.js';
+import { BASE_URL } from '@/utils/constants.js';
 
 export const Login = () => {
     const [email, setEmail] = useState('');

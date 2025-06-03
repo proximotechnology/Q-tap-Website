@@ -11,7 +11,7 @@ import "./Features.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "@/utils";
+import { BASE_URL } from "@/utils/constants";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 
@@ -70,11 +70,11 @@ const FeaturesNew = () => {
         <Box
             sx={{
                 backgroundImage: "url('/images/Rectangle.png')",
-                height: "92vh",
+                height: "85vh",
                 width: "100%",
                 position: "relative",
                 backgroundSize: "cover",
-                padding: "50px 0px 100px 0px",
+                // padding: "50px 0px 100px 0px",
                 backgroundPosition: "center",
                 minHeight: '650px'
             }}
@@ -86,6 +86,7 @@ const FeaturesNew = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     marginBottom: "50px",
+                    height:'full'
                 }}
             >
                 <Typography
@@ -129,7 +130,7 @@ const FeaturesNew = () => {
                     </SwiperSlide>
                 ))}
             </Swiper> */}
-            <Box sx={{ overflow: '' }}>
+            <Box sx={{ overflow: '',margin:"1rem"}}>
                 <Swiper
                     modules={[Pagination, Navigation, Autoplay]} // include Navigation
                     pagination={{ clickable: true }}

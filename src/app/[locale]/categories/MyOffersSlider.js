@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Box, Button, Card, CardMedia, Typography } from '@mui/material';
-import { BASE_URL_IMAGE } from '@/utils';
+import { BASE_URL_IMAGE } from '@/utils/constants';
 import { useTranslations } from 'use-intl';
 import AddIcon from '@mui/icons-material/Add';
 

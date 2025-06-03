@@ -8,10 +8,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import axios from 'axios';
-import { useShop } from '../context';
-import { BASE_URL_IMAGE, fetchData, fetchShopsData } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { BASE_URL_IMAGE } from '@/utils/constants';
+import { useShops } from '@/hooks/useShops';
 
 
 const page = ({ params }) => {
@@ -29,29 +27,9 @@ const page = ({ params }) => {
   if (!id || !shopId || !branchId) {
     return <p>{t("noProductAvailableForThisCategory")}</p>;
   }
-  const { data: shopData, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['shops'],
-    queryFn: fetchShopsData,
-    staleTime: 1000 * 60 * 15, // 15 minutes
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
 
-  // const getData = async () => {
-  //   try {
-  //     const responseData = await fetchData("menu_all_restaurants", setIsLoading)
-  //     console.log("responseData product details", responseData)
-  //     setShopData(responseData.data.data)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
+  const { data: shopData, } = useShops()
 
-  // }
-
-  // useEffect(() => {
-  //   console.log("get shop data")
-  //   getData()
-  // }, [])
 
 
 
@@ -189,7 +167,7 @@ const page = ({ params }) => {
                     </Typography>
                   </Box>
 
-                  <Link key={product?.id} href={`/ProductDetails/${product?.id}?shopId=${shopId}&branchId=${branchId}&catId=${data?.id}`+(tableId?`&tableId=${tableId}`:'')}>
+                  <Link key={product?.id} href={`/ProductDetails/${product?.id}?shopId=${shopId}&branchId=${branchId}&catId=${data?.id}` + (tableId ? `&tableId=${tableId}` : '')}>
                     <Box
                       sx={{
                         backgroundImage: 'linear-gradient(to right, #48485B, #797993)',

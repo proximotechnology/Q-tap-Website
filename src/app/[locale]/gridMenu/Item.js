@@ -4,9 +4,9 @@ import { Box, Typography, } from '@mui/material';
 import { Link } from "@/i18n/navigation"
 import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
-import { BASE_URL_IMAGE } from '@/utils';
+import { BASE_URL_IMAGE } from '@/utils/constants';
 import { useSearchParams } from 'next/navigation';
-export const Item = ({ item ,selectedCategory}) => {
+export const Item = ({ item }) => {
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
@@ -72,7 +72,7 @@ export const Item = ({ item ,selectedCategory}) => {
                             </Typography>
                         </Box>
 
-                        <Link key={item?.id} href={`/ProductDetails/${item?.id}?shopId=${shopId}&branchId=${branchId}&catId=${selectedCategory?.id}`}>
+                        <Link key={item?.id} href={`/ProductDetails/${item?.id}?shopId=${shopId}&branchId=${branchId}&catId=${item?.categories_id}`}>
                             <Box
                                 sx={{
                                     backgroundImage: 'linear-gradient(to right, #48485B, #797993)',

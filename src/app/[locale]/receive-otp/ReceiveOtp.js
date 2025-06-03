@@ -12,7 +12,7 @@ import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { BASE_URL } from '@/utils';
+import { BASE_URL } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 
 export const ReceiveOtp = () => {

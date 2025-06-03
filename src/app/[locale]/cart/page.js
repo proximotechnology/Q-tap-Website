@@ -8,8 +8,9 @@ import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { BASE_URL_IMAGE, calculateOrderPriceDetailed, isAllItemComeFromSameBranch } from '@/utils';
+import { calculateOrderPriceDetailed, isAllItemComeFromSameBranch } from '@/utils/utils';
 import { toast } from 'react-toastify';
+import { BASE_URL_IMAGE } from '@/utils/constants';
 /**
  * 1 - get cart from localStorge
  * 2 - calc subtotal , tax , discount ,and total price

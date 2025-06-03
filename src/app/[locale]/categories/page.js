@@ -14,9 +14,10 @@ import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { useShop } from './context';
-import { BASE_URL, BASE_URL_IMAGE, fetchData, fetchShopsData } from '../../../utils'
-import { useQuery } from '@tanstack/react-query';
+import { BASE_URL, BASE_URL_IMAGE,} from '../../../utils/constants'
 import MyOffersSlider from './MyOffersSlider';
+import { useSpecialOffers } from '@/hooks/useSpecialOffers';
+import { useShops } from '@/hooks/useShops';
 
 const page = () => {
     const t = useTranslations();
@@ -53,21 +54,8 @@ const page = () => {
 
     }
 
-    const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
-        queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
-        queryFn: () => getSpecialOffers(branchId),
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
-    const { data: shops, isLoading, isError, error, refetch } = useQuery({
-        queryKey: ['shops'],
-        queryFn: fetchShopsData,
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
-
+    const { data: offers, isLoading: isLoadingOffers } = useSpecialOffers(branchId);
+    const { data: shops, isLoading, isError,error, refetch } = useShops();
 
 
     useEffect(() => {
@@ -134,7 +122,7 @@ const page = () => {
                     </Typography>
 
                     {offers && offers.length > 0 ? (<MyOffersSlider items={offers} openOffer={(offer) => {
-                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch,tableId)
+                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch, tableId)
                     }} />) : (<Box> <Typography variant="body1" sx={{ marginBottom: "10px", }}>
                         <span style={{
                             fontSize: "11px",
@@ -261,50 +249,9 @@ const page = () => {
 
 export default page;
 
-export const getSpecialOffers = async (branchId) => {
-    try {
 
-        const response = await axios.get(`${BASE_URL}meals_special_offers`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            params: {
-                brunch_id: branchId
-            }
-        });
 
-        // const response = await axios({
-        //     method: 'get',
-        //     url: `${BASE_URL}${endPoint}`,
-        //     data: {
-        //         brunch_id: branchId,
-        //     },
-        //     headers: {
-
-        //     },
-        // });
-
-        if (response.data) {
-            const formattedOffers = response.data.map(offer => ({
-                id: offer.id,
-                item: offer.meals_id,
-                discount: offer.discount,
-                priceBefore: offer.before_discount,
-                priceAfter: offer.after_discount,
-                name: offer.name || '', // Ensure name is included
-                description: offer.description || '', // Ensure description is included
-                isEditing: false,
-                img: offer.img
-            }));
-            return (formattedOffers);
-        }
-    } catch (error) {
-        console.error('Error fetching discounts:', error);
-        return null
-    }
-};
-
-export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specialOfferId, currentBranch , tableId) => {
+export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specialOfferId, currentBranch, tableId) => {
     const categoryWithMeal = currentBranch.cat_meal
         .find(category => {
             return category.meals.some(meal => meal.id === Number(mealId))

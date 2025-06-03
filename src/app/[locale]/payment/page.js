@@ -6,12 +6,13 @@ import { Link } from "@/i18n/navigation"
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useTranslations } from 'use-intl';
 import axios from 'axios';
-import { BASE_URL, calculateOrderPriceDetailed } from '@/utils';
+import {  calculateOrderPriceDetailed } from '@/utils/utils';
 import { toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MapView from '../clientDetails/map';
 import { useReactToPrint } from 'react-to-print';
 import html2pdf from 'html2pdf.js';
+import { BASE_URL } from '@/utils/constants';
 
 const page = () => {
     const t = useTranslations()

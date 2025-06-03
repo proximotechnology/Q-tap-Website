@@ -13,11 +13,13 @@ import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 import { getCartItems } from '../ProductDetails/cartUtils';
 import axios from 'axios';
-import { apiCheckDiscountCode, BASE_URL, calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils';
+import {   calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils/utils';
 import MapView from './map';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { useQuery } from '@tanstack/react-query';
+import { useShops } from '@/hooks/useShops';
+import { apiCheckDiscountCode } from '@/api/checkDiscountCode';
+import { BASE_URL } from '@/utils/constants';
 
 
 const options = [
@@ -38,14 +40,8 @@ const page = () => {
     const [userPosition, setUserPosition] = useState(null)
     const router = useRouter()
 
-    const { data: shops, isError, error, refetch } = useQuery({
-        queryKey: ['shops'],
-        queryFn: fetchShopsData,
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
 
+    const { data: shops, } = useShops()
     const [selectedOption, setSelectedOption] = useState('dine_in');
     const [branchServigWay, setBranchServingWary] = useState([])
 

@@ -1,5 +1,5 @@
 "use client";
-import { BASE_URL } from "@/utils";
+import { BASE_URL } from "@/utils/constants";
 import axios from "axios";
 import { createContext } from "react";
 

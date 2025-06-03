@@ -4,8 +4,9 @@ import './custom-css.css'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
-import { BASE_URL_IMAGE, fetchShopsData } from '@/utils';
+import { BASE_URL_IMAGE } from '@/utils/constants';
+import { useShops } from '@/hooks/useShops';
+
 
 
 const ShopSelect = () => {
@@ -13,13 +14,8 @@ const ShopSelect = () => {
     const [selectedShop, setSelectedShop] = useState(null)
     // const [isLoading, setIsLoading] = useState(false)
     const t = useTranslations()
-    const { data: shops, isLoading, isError, error, refetch } = useQuery({
-        queryKey: ['shops'],
-        queryFn: fetchShopsData,
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
+
+    const { data: shops,isError,isLoading } = useShops()
     const router = useRouter();
 
     const handleSelectShop = (shop) => {
@@ -53,9 +49,7 @@ const ShopSelect = () => {
         if (currentPage > 1) setCurrentPage(prev => prev - 1);
     };
 
-    // useEffect(() => {
-    //     fetchData('menu_all_restaurants')
-    // }, [])
+  
 
     const products = [{ name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" }, { name: "1", description: "1" },]
     const colors = { bg_main: "bg-[#1E1E2A]", card_bg: 'bg-[#302E3B]', card_title: 'text-[#797993]' }
@@ -133,13 +127,13 @@ const ShopSelect = () => {
                                         ))}
 
                                     </div>
-                                    <div className="flex justify-center items-center mt-6 gap-4 w-[100vw]">
+                                    <div className="flex justify-center items-center mt-6 gap-4 w-full">
                                         <button
                                             onClick={handlePrevPage}
                                             disabled={currentPage === 1}
                                             className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
                                         >
-                                            Previous
+                                            {"<"}
                                         </button>
                                         <span className="text-white">{`Page ${currentPage} of ${totalPages}`}</span>
                                         <button
@@ -147,7 +141,7 @@ const ShopSelect = () => {
                                             disabled={currentPage === totalPages}
                                             className={`px-4 py-2 ${colors.card_bg} text-white border rounded disabled:opacity-50`}
                                         >
-                                            Next
+                                            {">"}
                                         </button>
                                     </div>
                                 </div>

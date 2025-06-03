@@ -6,7 +6,7 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { useTranslations } from 'next-intl';
-import { BASE_URL } from '@/utils';
+import { BASE_URL } from '@/utils/constants';
 
 const FormFields = ({ onStartChat }) => {
     const [name, setName] = useState('');

@@ -12,7 +12,7 @@ import "./Features.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL_IMAGE } from "@/utils";
+import { BASE_URL_IMAGE } from "@/utils/constants";
 
 const Features = () => {
   const [activeIndex, setActiveIndex] = useState(1);

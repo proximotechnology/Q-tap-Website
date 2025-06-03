@@ -8,11 +8,12 @@ import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { Link } from "@/i18n/navigation"
 import { addItemToCart } from "../cartUtils";
 import { useLocale, useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE, fetchData, fetchShopsData, isAllItemComeFromSameBranch, itemPriceDetailsCalculation } from '@/utils';
+import { isAllItemComeFromSameBranch, itemPriceDetailsCalculation } from '@/utils/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getSpecialOffers } from '../../categories/page';
+import { useSpecialOffers } from '@/hooks/useSpecialOffers';
+import { useShops } from '@/hooks/useShops';
+import { BASE_URL_IMAGE } from '@/utils/constants';
 
 const sizes = ["S", "M", "L"];
 
@@ -33,27 +34,15 @@ const page = ({ params }) => {
     const router = useRouter()
 
 
-    const { data: offersData, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
-        queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
-        queryFn: () => getSpecialOffers(branchId),
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
-
+    const { data: offersData, isLoading: isLoadingOffers } = useSpecialOffers(branchId);
 
     if (!id) {
         return <p>{t("noProductSelected")}</p>;
     }
     if (!shopId || !branchId || !catId) return <p>{t("noProductSelected")}</p>
 
-    const { data: shopData, isLoading, isError, error, refetch } = useQuery({
-        queryKey: ['shops'],
-        queryFn: fetchShopsData,
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
+
+    const { data: shopData, isLoading } = useShops()
 
     useEffect(() => {
         if (!shopData) return;
@@ -61,6 +50,7 @@ const page = ({ params }) => {
         const selectedBranch = shop?.brunchs?.find(branch => branch.id === Number(branchId));
         const selectedCat = selectedBranch?.cat_meal?.find(cat => cat.id === Number(catId));
         const selectedMeal = selectedCat?.meals?.find(meal => meal.id === Number(id));
+        console.log("selected shop",selectedCat)
         setMealData(selectedMeal)
     }, [shopData])
 
@@ -72,7 +62,7 @@ const page = ({ params }) => {
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedExtra, setSelectedExtra] = useState([])
     const [selectedOptions, setSelectedOptions] = useState([])
-    const [count, setCount] = useState(0)
+    const [count, setCount] = useState(1)
     const [price, setPrice] = useState(0) // to send for calculation sub total without discount and tax
     const [priceBeforeDiscount, setPriceBeforeDiscount] = useState(0)
     const [totalprice, setTotalPrice] = useState(0)// to show 
@@ -84,22 +74,16 @@ const page = ({ params }) => {
 
     const handlePrice = () => {
         /* calculate meal price  */
-
-        let special = null
-        if (specialID) {
-            special = offersData?.find(item => Number(item.id) === Number(specialID))
+        const meal = {
+            ...mealData,
+            selectedSize,
+            selectedExtra,
+            selectedOptions,
         }
-        let { itemSubTotal, itemDiscount, itemTax } = itemPriceDetailsCalculation({
-            special, selectedSize,
-            selectedExtra, selectedOptions,
+        const { itemDiscount, itemSubTotal, itemTax } = itemPriceDetailsCalculation(meal)
 
-            Tax: mealData?.Tax,
-            discount: mealData?.discount,
-            price_small: mealData?.price_small,
-            price_medium: mealData?.price_medium,
-            price_large: mealData?.price_large
-        })
         setPriceBeforeDiscount(((itemSubTotal + itemTax) * count).toFixed(2))
+        console.log("value",itemDiscount,"value", itemSubTotal,"value", itemTax )
         setPrice((itemSubTotal - itemDiscount).toFixed(2))
         /* one piece price * quantity */
         setTotalPrice(((itemSubTotal + itemTax - itemDiscount) * count).toFixed(2))
@@ -551,7 +535,8 @@ const page = ({ params }) => {
                                 {t("price")}
                             </Typography>
                             <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                                {selectedSize && count !== 0 && !specialID && <span style={{ textDecoration: 'line-through' }}>{priceBeforeDiscount}</span>}{" "}
+                                {selectedSize && count !== 0 && !specialID && <span style={{ textDecoration: 'line-through' }}>
+                                {priceBeforeDiscount}</span>}{" "}
                                 {selectedSize && count ? totalprice : 0}
                                 <span style={{ fontSize: "10px", color: '#575756' }}> EGP</span>
                             </Typography>

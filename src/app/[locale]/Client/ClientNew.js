@@ -10,7 +10,7 @@ import "./Client.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "@/utils";
+import { BASE_URL } from "@/utils/constants";
 
 export const ClientNew = () => {
   const { getHomeData } = useContext(HomeContext);

@@ -6,7 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SendIcon from '@mui/icons-material/Send';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PhotoIcon from '@mui/icons-material/Photo';
-import { BASE_URL } from '@/utils';
+import { BASE_URL } from '@/utils/constants';
 
 const ChatBox = ({ onCloseChat }) => {
     const [messages, setMessages] = useState([]); // store all messages

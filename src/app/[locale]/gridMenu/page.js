@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, TextField, Card, CardMedia, Grid, Button } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react'
+import { Box, Typography, IconButton, TextField, ListItem, ListItemIcon, ListItemText, Button } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 import '../categories/categories.css';
@@ -9,65 +9,69 @@ import { Footer } from '../categories/Footer';
 import { Categories } from './Categories';
 import { Content } from './Content';
 import { useTranslations } from 'next-intl';
-import { BASE_URL_IMAGE, fetchData, fetchShopsData } from '@/utils';
+import { BASE_URL_IMAGE } from '@/utils/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getSpecialOffers, handleSpecialOfferClick } from '../categories/page';
+import { handleSpecialOfferClick } from '../categories/page';
 import MyOffersSlider from '../categories/MyOffersSlider';
-import { useQuery } from '@tanstack/react-query';
+import { Item } from './Item';
+import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+import { useSpecialOffers } from '@/hooks/useSpecialOffers';
+import { useShops } from '@/hooks/useShops';
+import { searchMeals } from '@/utils/utils';
 
 const page = () => {
     const t = useTranslations()
 
     const [currentBranch, setCurrentBranch] = useState(null)
     const [selectedCategory, setSelectedCategory] = useState(null)
-
+    const categoryRefs = useRef({});
 
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
     const router = useRouter();
 
+    const { data: offers, isLoading: isLoadingOffers } = useSpecialOffers(branchId);
+    const { data: shops, isLoading, refetch } = useShops();
 
-    if (!shopId || !branchId) {
-        setSelectedShop(shops)
-        router.push(`/shops/`);
-    }
+    useEffect(() => {
+        if (!shopId || !branchId) {
+            setSelectedShop(shops)
+            router.push(`/shops/`);
+        }
+    }, [])
 
-    // const getData = async (endPoint) => {
+    const scrollToCategory = (category) => {
+        // const ref = categoryRefs.current[category];
+        // if (ref) {
+        //     ref.scrollIntoView({ behavior: 'smooth' });
+        // }
+        const ref = categoryRefs.current[category];
+        const offset = 160; // change to your header height
 
-    //     const data = await fetchData(endPoint, setIsLoading);
+        if (ref) {
+            const top = ref.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+        }
+    };
+    const [userQuery, setUserQuery] = useState("")
+    const [queryResult, setQueryResult] = useState([])
 
-    //     setShops(data.data.data)
-    // }
-
-    // // useEffect(() => {
-    // //     getData('menu_all_restaurants')
-    // // }, [])
-const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
-        queryKey: ['restaurant-offers-data', branchId], // Include branchId in query key
-        queryFn: () => getSpecialOffers(branchId),
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
-    const { data: shops, isLoading, isError, error, refetch } = useQuery({
-        queryKey: ['shops'],
-        queryFn: fetchShopsData,
-        staleTime: 1000 * 60 * 15, // 15 minutes
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-    });
-
+    
+    useEffect(() => {
+        const result = searchMeals(currentBranch, userQuery)
+        console.log("qu res",result)
+        setQueryResult(result)
+    }, [userQuery])
+    
     useEffect(() => {
 
         const selectedShop = shops?.find(shop => shop.id === Number(shopId));
+        console.log("selectedShop", selectedShop)
         const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
-        console.log("selectedBranch", selectedBranch)
 
-        console.log('check setSelectedCategory', Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal?.length > 0)
         if (Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal.length > 0) {
             setSelectedCategory(selectedBranch?.cat_meal[0])
-            console.log('setSelectedCategory')
         }
 
         setCurrentBranch(selectedBranch)
@@ -106,6 +110,7 @@ const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
                             style: { color: 'white', width: '100%', fontSize: "11px" }
                         }}
                         sx={{ color: 'white', flexGrow: 1 }}
+                        onChange={(e) => { setUserQuery(e.currentTarget.value) }}
                     />
                     <span className='icon-settings-sliders' style={{ fontSize: "20px", color: "#797993" }}></span>
                 </Box>
@@ -123,82 +128,43 @@ const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
                         }}>{t("specialOffers")}</span>
                     </Typography>
-                    {offers && offers.length > 0 ? (<MyOffersSlider items={offers} openOffer={(offer) => {
-                        handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
-                    }} />) : (<Box> <Typography variant="body1" sx={{ marginBottom: "10px", }}>
-                        <span style={{
-                            fontSize: "11px",
-                            padding: "5px 16px"
-                        }}>{t("noSpecialOffers")}</span>
-                    </Typography></Box>)}
-                    {/* <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "-50px" }}>
-                        {offers.map((offer) => (
-                            <Grid item key={offer.id} xs={6} sm={6} md={4} lg={3} >
-                                <Box sx={{
-                                    backgroundColor: "#48485B", color: "white", width: "40px", height: "40px",
-                                    borderRadius: "50%", display: "flex", flexDirection: "row", justifyContent: "center",
-                                    textAlign: "center", alignItems: "center", position: "relative", top: "30px", left: "80%",
-                                }}>
-                                    <Typography sx={{ fontSize: "12px" }}>{offer.discount}</Typography>
-                                    <span style={{ fontSize: "12px", color: "#AAAAAA", marginLeft: "1px", fontWeight: "bold" }}>%</span>
-                                </Box>
-                                <Card
-                                    sx={{
-                                        backgroundColor: '#302E3B',
-                                        color: 'white',
-                                        borderRadius: '20px',
-                                        height: 'auto',
-                                    }} >
-                                    {console.log(`${BASE_URL_IMAGE}${offer.img}`) /*debug log* /}
-                                    <CardMedia
-                                        component="img"
-                                        height="90"
-                                        image={offer.img ? `${BASE_URL_IMAGE}${offer.img}` : ""}
-                                        alt={offer.name}
-                                        sx={{
-                                            borderRadius: '0px 0px 20px 20px',
-                                            backgroundSize: "contain",
-                                            backgroundPosition: "center",
-                                        }} />
-
-                                    <Box sx={{ padding: "5px 12px" }}>
-                                        <Typography sx={{ color: "#797993", fontWeight: "900", fontSize: "14px" }}>{offer.name}</Typography>
-                                        <Typography sx={{ fontSize: "8px", color: "#AAAAAA" }}>{t("brief")}</Typography>
-
-                                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Box>
-                                                <Typography sx={{ textDecoration: 'line-through', fontSize: "12px" }}>{offer.priceAfter}</Typography>
-                                                <Typography sx={{ fontSize: "15px" }}>{offer.priceBefore} <span style={{ color: "#575756", fontSize: "9px" }}>EGP</span></Typography>
-                                            </Box>
-                                            <Box
-                                                sx={{
-                                                    width: "27px", height: "27px", backgroundColor: "#797993", color: "white",
-                                                    borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", cursor: 'pointer',
-                                                }}>
-                                                <Button onClick={() => handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)}>
-                                                    <AddIcon sx={{ fontSize: "17px" }} />
-                                                </Button>
-                                            </Box>
-                                        </Box>
-                                    </Box>
-
-                                </Card>
-
-                            </Grid>
-                        ))}
-                    </Grid> */}
+                    {offers && offers.length > 0 ? (
+                        <MyOffersSlider items={offers} openOffer={(offer) => {
+                            handleSpecialOfferClick(router, branchId, shopId, offer.item, offer.id, currentBranch)
+                        }} />
+                    ) : (
+                        <Box>
+                            <Typography variant="body1" sx={{ marginBottom: "10px", }}>
+                                <span style={{ fontSize: "11px", padding: "5px 16px" }}>{t("noSpecialOffers")}</span>
+                            </Typography>
+                        </Box>)}
 
                 </Box>
 
                 {/* Categories */}
-                <Box mt={3}>
+                <Box mt={3} mb={"70px"}>
                     <Box >
                         <Box sx={{ display: 'flex', flexDirection: "column" }}>
-                            <Categories currentBranch={currentBranch} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
+                            <Box sx={{ width: "100%" }}>
 
-                            <Box sx={{ flex: 1 }}>
-                                <Content selectedCategory={selectedCategory} />
+                                <CatList currentBranch={currentBranch} scrollToCategory={scrollToCategory}
+                                    selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                             </Box>
+
+                            <Box sx={{ overflow: "auto" }}>
+                                {queryResult.length === 0 ?
+                                    (<MealsList currentBranch={currentBranch} selectedCategory={selectedCategory} categoryRefs={categoryRefs} />
+                                    ) : (
+                                        <div>
+                                            {
+                                                queryResult?.map(item => (
+                                                    <div key={item?.meal?.id}>
+                                                        <Item item={item?.meal}  />
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    )}</Box>
                         </Box>
                     </Box>
 
@@ -210,4 +176,98 @@ const { data: offers, isLoadingOffers, isErrorOffers, errorOffers } = useQuery({
     );
 };
 
+const CatList = ({ currentBranch, selectedCategory, setSelectedCategory, scrollToCategory }) => {
+    return (
+        <Box sx={{
+            padding: "10px 0px",
+            display: "flex",
+            flexDirection: 'row',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': {
+                display: 'none',
+            }
+        }} gap={1}>
+            {currentBranch?.cat_meal?.map((item, index) => {
+
+                const isActive = selectedCategory?.id === item.id;
+                const backgroundColor = isActive
+                    ? 'linear-gradient(to Bottom, #797993, #48485B)'
+                    : item?.bgcolor;
+                const backgroundIcon = isActive ? "white" : "";
+                const textColor = isActive && item.name !== "Popular" ? "white" : "#797993";
+                const textColor2 = isActive && item.name !== "Popular" ? "white" : item?.color;
+
+                return (
+                    <Button key={index}
+                        onClick={() => {
+                            console.log('clikc')
+                            setSelectedCategory(item)
+                            scrollToCategory(item.id)
+                        }}>
+                        <ListItem
+
+                            sx={{
+                                flexDirection: 'column',
+                                background: backgroundColor,
+                                mb: 2, padding: "5px 13px ",
+                                width: "100%",
+                                borderRadius: "20px", cursor: "pointer",
+                                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                            }}
+                        >
+
+                            <ListItemIcon sx={{
+                                minWidth: 0,
+                                display: 'flex',
+                                backgroundColor: backgroundIcon,
+                                padding: "5px",
+                                borderRadius: "50%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}>
+                                <img src={`${BASE_URL_IMAGE}${item.image}`} style={{ maxWidth: '50px', aspectRatio: '1/1' }} />
+                            </ListItemIcon>
+
+                            <ListItemText
+                                primary={item?.name}
+                                primaryTypographyProps={{
+                                    sx: {
+                                        fontSize: '10px',
+                                        textAlign: 'center',
+                                        color: textColor2,
+                                    }
+                                }} />
+
+                            <KeyboardArrowRightOutlinedIcon sx={{
+                                color: textColor, fontSize: "11px",
+                                borderRadius: "50%", border: `1px solid ${textColor}`
+                            }} />
+
+                        </ListItem>
+                    </Button>
+                );
+            })}
+        </Box>
+    )
+}
+const MealsList = ({ currentBranch, selectedCategory, categoryRefs }) => {
+    return (<div>
+        {currentBranch?.cat_meal.map(cat => {
+            return (
+                <div key={cat.id} ref={(el) => (categoryRefs.current[cat.id] = el)}>
+                    <p> {cat?.name}</p>
+                    {cat?.meals?.map(meal => {
+                        return (
+                            <div key={meal.id}>
+                                <Item item={meal}/>
+                            </div>
+                        )
+                    })}
+                </div>)
+        })}
+
+    </div>)
+}
 export default page; 
