@@ -6,6 +6,8 @@ import {
     CardContent,
     CardMedia,
     Divider,
+    useTheme,
+    useMediaQuery,
 } from "@mui/material";
 import "./Features.css";
 import { HomeContext } from "../context/homeContext.js";
@@ -14,7 +16,6 @@ import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "@/utils/constants";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-
 
 const FeaturesNew = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -63,20 +64,30 @@ const FeaturesNew = () => {
         }
         return false
     }
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
 
 
     return (
-        <Box
+        <Box className="lookhere"
             sx={{
                 backgroundImage: "url('/images/Rectangle.png')",
-                height: "85vh",
+                height: {
+                    xs: '100vh',     // Mobile
+                    sm: '85vh',      // Small tablets
+                    md: '80vh',      // Tablets / medium screens
+                    lg: '75vh',      // Large desktops
+                    xl: '70vh'       // Very large screens
+                },
                 width: "100%",
                 position: "relative",
                 backgroundSize: "cover",
                 // padding: "50px 0px 100px 0px",
                 backgroundPosition: "center",
-                minHeight: '650px'
+                // minHeight: '650px'
+                display: "flex",
+                flexDirection: 'column'
             }}
         >
             <Box
@@ -86,7 +97,7 @@ const FeaturesNew = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     marginBottom: "50px",
-                    height:'full'
+                    height: 'full'
                 }}
             >
                 <Typography
@@ -130,7 +141,8 @@ const FeaturesNew = () => {
                     </SwiperSlide>
                 ))}
             </Swiper> */}
-            <Box sx={{ overflow: '',margin:"1rem"}}>
+
+            <div style={{ flexGrow: 1, marginBottom: '1rem' }} className="iamherePro">
                 <Swiper
                     modules={[Pagination, Navigation, Autoplay]} // include Navigation
                     pagination={{ clickable: true }}
@@ -139,7 +151,7 @@ const FeaturesNew = () => {
                         prevEl: '.swiper-button-prev-custom',
                     }}
                     autoplay={{
-                        delay: 1500,
+                        delay: 5000,
                         disableOnInteraction: false, // Keep autoplay even after user interaction
                     }}
                     breakpoints={{
@@ -149,41 +161,70 @@ const FeaturesNew = () => {
                         1024: { slidesPerView: 3.5, spaceBetween: 20, },
                         1280: { slidesPerView: 4, spaceBetween: 20, },
                     }}
-                    loop={true}
+                    loop={featData?.length > 4}
                     slidesPerView={4}
                     spaceBetween={20}
                     centeredSlides={true}
                     initialSlide={0}
-                    style={{ overflow: 'visible' }}
                     onSlideChange={(swiper) => {
                         setActiveIndex(swiper.realIndex);
                     }}
                     onSwiper={(swiper) => {
-                        setActiveIndex(swiper.realIndex);
+                        setTimeout(() => {
+                            setActiveIndex(swiper.realIndex);
+                            console.log("Active Index on Load:", swiper.realIndex);
+                        }, 0);
+                    }}
+                    style={{
+                        overflow: 'visible',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        height: '100%',
+                        maxHeight: '100%',
                     }}
                 >
                     {featData?.map((feature, index) => {
                         const isActive = index === activeIndex;
                         const isSibling = handleCardSiblingSizeSwipper(index, featData?.length)
                         return (
+
                             <SwiperSlide
                                 key={index}
                                 style={{
-                                    height: isActive ? "450px" : isSibling ? "425px" : "400px",
                                     transition: "all 0.5s ease",
                                     // transform: isActive ? "scale(1.1)" : isSibling ? "scale(1.05)" : "scale(1)",
-                                    display: 'flex',
-                                    justifyContent: 'center',
                                 }}
                             >
-                                <CardComponent feature={feature} index={index} />
+                                <div
+                                    style={{
+                                        height: "50vh",
+                                        width: "100%",
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: "center",
+                                    }} >
+                                    <div style={{
+                                        height: isActive
+                                            ? (isMobile ? "40vh" : "50vh")
+                                            : isSibling
+                                                ? (isMobile ? "35vh" : "45vh")
+                                                : (isMobile ? "30vh" : "40vh"),
+                                        width: "100%",
+                                        margin: "auto 1rem auto 0px"
+                                    }}>
+
+                                        <CardComponent feature={feature} index={index} />
+                                    </div>
+                                </div>
+
                             </SwiperSlide>
                         )
                     })}
                 </Swiper>
-            </Box>
-
+            </div>
         </Box>
+
     );
 };
 
@@ -192,7 +233,7 @@ const CardComponent = ({ feature, index }) => {
         <Box key={index} sx={{ overflow: "visible", width: '100%', height: "100%", }}>
             <Card
                 sx={{
-                    height: "95%",
+                    height: "100%",
                     width: '100%',
                     // width,
                     // height,

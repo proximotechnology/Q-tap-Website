@@ -48,15 +48,18 @@ const Home = () => {
                         Your browser does not support the video tag.
                     </video> */}
 
-                    <Typography variant='h1'
-                        sx={{ fontSize: "50px", color: "#E57C00", marginBottom: "30px" }}>{t("homePage.title")}</Typography>
+                    <Typography variant='h1' className='fw-800'
+                        sx={{ fontSize: "50px", color: "#E57C00", marginBottom: "30px" }}>
+                        {t("homePage.title")}
+                    </Typography>
                     <Typography variant='body1' sx={{ fontSize: "15px", marginBottom: "40px" }}>
                         {t("homePage.about")}</Typography>
                     <Link href="/mobileList">
                         <Button className="joinButton" sx={{ marginTop: "60px", alignItems: "center" }}>
                             <img src="/assets/plus.svg" alt='plus'
-                                style={{ width: "18px", height: "18px", marginRight: "5px" }} />
-                            {t("homePage.joinNow")}</Button>
+                                style={{ width: "18px", height: "18px", marginRight: "5px", }} />
+                            <span className='fw-600'> {t("homePage.joinNow")} </span>
+                        </Button>
                     </Link>
                 </Box>
             </Box>

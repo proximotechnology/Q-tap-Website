@@ -115,7 +115,7 @@ export const Serves = () => {
                                     }}
                                 >
                                     <Typography variant="body1" sx={{ fontSize: "25px" }}>{category.icon}</Typography>
-                                    <Typography variant="body1" sx={{ fontSize: "14px" }}>{t(category.title)} </Typography>
+                                    <Typography className='fw-600' variant="body1" sx={{ fontSize: "14px",width:'85%' }}>{t(category.title)} </Typography>
 
                                     {/* {category.title !== "Cloud Kitchen"||"Pastry Shop"||"Pastry Shop"?<Typography variant="body1" sx={{ fontSize: "14px" }}>{category.title} </Typography>
                                     :  <Typography variant="body1" sx={{ fontSize: "14px" }}>{category.title.split(" ")[0]} <br/> {category.title.split(" ")[1]} </Typography>}
