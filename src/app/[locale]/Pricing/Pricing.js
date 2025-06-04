@@ -185,27 +185,14 @@ const PricingCardCustom = () => {
             label="Number"
             type="number"
             slotProps={{
+              htmlInput: {
+                min: 0,
+              },
               inputLabel: {
                 shrink: true,
               },
             }}
           />
-          {/* {features.map((feature, index) => (
-            <Typography
-              key={index}
-              variant="body2"
-              color="textSecondary"
-              display="flex"
-              sx={{ fontSize: "10px", paddingTop: "8px", wordSpacing: "2px" }}
-            >
-              <img
-                src="/assets/check.svg"
-                alt="check"
-                style={{ fontSize: "13px", height: "13px", marginRight: "10px" }}
-              />
-              {feature}
-            </Typography>
-          ))} */}
         </Box>
 
         <Box display="flex" justifyContent="center" mt={6}>

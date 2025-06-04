@@ -2,24 +2,33 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Header } from '@/app/[locale]/payment/Header'
 import { OrderDetails } from '@/app/[locale]/orderPlaced/OrderDetails';
-import { Box, Typography, Divider, Avatar, Button, } from '@mui/material';
+import {
+  Box, Typography, Divider, Avatar, Button, Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentModal from './PaymentModal';
 import { useTranslations } from 'next-intl';
 import Pusher from 'pusher-js';
 import { formateDate } from '@/utils/utils';
+import { useRouter } from 'next/navigation';
 
 
 const page = () => {
   const t = useTranslations()
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // feedback dialog
+  const [open, setOpen] = useState(true); // You can change when it opens
+
   const [order, setOrder] = useState(null);
   const [pusherOrder, setPusherOrder] = useState(null);
   const [pusherPhase, setPusherPhase] = useState(null)
   // ui dynamic header
   const headerRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
-    useEffect(() => {
+  useEffect(() => {
     if (!headerRef.current) return;
 
     const resizeObserver = new ResizeObserver((entries) => {
@@ -86,6 +95,7 @@ PHASE_TEMP represents the different stages an order goes through.
         if (pusherPhase === "Closed") {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "done");
           console.log('pusher updata data AcceptProccess', AcceptProccess)
+          setOpen(true)
         }
         phase[pusherPhase].status = true;
         phase[pusherPhase].time = AcceptProccess?.created_at
@@ -206,11 +216,11 @@ PHASE_TEMP represents the different stages an order goes through.
           left: 0,
           width: '100%',
           zIndex: 1000,
-          overflowY:'hidden'
+          overflowY: 'hidden'
         }}>
 
 
-        <Header backUrl={"/"}/>
+        <Header backUrl={"/"} />
         <OrderDetails />
       </Box>
       <Box sx={{ height: `${headerHeight}px` }} />
@@ -350,7 +360,7 @@ PHASE_TEMP represents the different stages an order goes through.
                   )}
                 </Box>
               </Box>
-
+                  <FeedbackDialog open={open} setOpen={setOpen} />
               {/* Vertical Line */}
               {index < steps.length - 1 && (
                 <Box
@@ -373,3 +383,34 @@ PHASE_TEMP represents the different stages an order goes through.
 export default page;
 
 
+const FeedbackDialog = ({open,setOpen}) => {
+  const router = useRouter()
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleGiveFeedback = () => {
+    setOpen(false);
+    router.push('/Feedback')
+  };
+
+  return (
+    <Dialog open={open} onClose={handleClose} className='my-base-bg-color-Class'>
+      <DialogTitle className='my-base-bg-color-Class'>We value your feedback!</DialogTitle>
+      <DialogContent className='my-base-bg-color-Class'>
+        <Typography>
+          Would you like to give us feedback to help improve your experience?
+        </Typography>
+      </DialogContent>
+      <DialogActions className='my-base-bg-color-Class'>
+        <Button onClick={handleClose} color="inherit">
+          No, thanks
+        </Button>
+        <Button onClick={handleGiveFeedback}  variant="contained"   className="my-base-button-style">
+          Yes, give feedback
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};

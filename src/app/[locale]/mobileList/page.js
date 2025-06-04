@@ -3,7 +3,7 @@
 import { IconButton, Button, Box, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBack from '@mui/icons-material/ArrowBack';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 
@@ -38,6 +38,7 @@ export default function page() {
           left: 2,
           color: 'white',
         }}
+        onClick={() => { router.push("/Supporting") }}
       >
         <img src="/assets/helplogoWhite.svg" />
       </IconButton>
@@ -70,7 +71,7 @@ export default function page() {
             fontWeight: 'bold',
             transition: 'background-image 0.3s ease-in-out, color 0.3s ease-in-out',
             '&:hover': {
-              backgroundImage: `linear-gradient(to ${locale === "en"?"left":"right"}, #E57C00, #E57C00)`,
+              backgroundImage: `linear-gradient(to ${locale === "en" ? "left" : "right"}, #E57C00, #E57C00)`,
               '& .icon-box': {
                 position: 'relative',
                 [locale === "en" ? 'left' : 'right']: '90%',
@@ -91,11 +92,11 @@ export default function page() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: `${locale === "en"?"left":"right"} 0.5s ease-in-out`,
-              [locale === "en"?"left":"right"]: `0`,
+              transition: `${locale === "en" ? "left" : "right"} 0.5s ease-in-out`,
+              [locale === "en" ? "left" : "right"]: `0`,
             }}
           >
-          {locale === "en" ? <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />:  <ArrowBack className="icon" sx={{ color: 'white', fontSize: '15px' }} />}
+            {locale === "en" ? <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} /> : <ArrowBack className="icon" sx={{ color: 'white', fontSize: '15px' }} />}
           </Box>
 
           <Link href="/shops" passHref style={{ textDecoration: 'none', textAlign: 'center', width: "100%", }}> {/* إزالة الخط تحت النص */}

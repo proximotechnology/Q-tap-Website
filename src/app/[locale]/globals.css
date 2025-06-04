@@ -1,5 +1,9 @@
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
+:root {
+  --base-bg-color: #1d2029;
+  --base-text-color: #ffffff;
+}
 
 body {
   padding: 0;
@@ -101,18 +105,27 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: #000 !important; /* text color */
   transition: background-color 5000s ease-in-out 0s;
 }
-.fw-500{
+.fw-500 {
   font-weight: 500 !important;
 }
-.fw-600{
+.fw-600 {
   font-weight: 600 !important;
 }
-.fw-700{
+.fw-700 {
   font-weight: 700 !important;
 }
-.fw-800{
+.fw-800 {
   font-weight: 800 !important;
 }
-.fw-900{
+.fw-900 {
   font-weight: 900 !important;
+}
+.my-base-button-style {
+  background-color: var(--base-text-color) !important;
+  color: var(--base-bg-color) !important;
+}
+
+.my-base-bg-color-Class {
+  background-color: var(--base-bg-color) !important;
+  color: var(--base-text-color) !important;
 }

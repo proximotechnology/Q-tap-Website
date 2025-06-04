@@ -1,11 +1,13 @@
 import React from 'react'
 import { Box, IconButton, Typography } from '@mui/material';
-import {Link} from "@/i18n/navigation"
+import { Link } from "@/i18n/navigation"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 export const Header = () => {
     const t = useTranslations()
+    const router = useRouter();
     return (
         <Box
             sx={{
@@ -48,11 +50,9 @@ export const Header = () => {
                             padding: '10px',
                         }}>
 
-                        <Link href={'/Feedback'}>
-                            <IconButton sx={{ color: "white" }}>
-                                <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
-                            </IconButton>
-                        </Link>
+                        <IconButton sx={{ color: "white" }} onClick={() => router.back()}>
+                            <ArrowBackIosIcon sx={{ fontSize: "22px" }} />
+                        </IconButton>
 
                         <IconButton color="inherit">
                             <span className='icon-menu' style={{ fontSize: "22px" }}></span>
