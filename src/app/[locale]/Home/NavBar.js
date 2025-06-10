@@ -196,7 +196,7 @@ function DrawerAppBar(props) {
                 }}
             >
                 <CssBaseline />
-                <AppBar
+                <AppBar className="herehere"
                     component="nav"
                     sx={{
                         position: "relative !important",
@@ -205,10 +205,11 @@ function DrawerAppBar(props) {
                         right: 0,
                         backgroundColor: 'transparent',
                         boxShadow: 'none',
+                        padding:'0px !important'
                     }}
                 >
                     <Toolbar>
-                        <Box
+                        <Box 
                             sx={{
                                 flexGrow: 1,
                                 display: { xs: 'none', sm: 'none', md: 'flex' },
@@ -269,7 +270,7 @@ function DrawerAppBar(props) {
 
                             <Box>
                                 <Tooltip>
-                                    <Box sx={{
+                                    <Box  sx={{
                                         display: "flex",
                                         gap: "20px",
                                         '@media (min-width: 900px) and (max-width: 949px)': {

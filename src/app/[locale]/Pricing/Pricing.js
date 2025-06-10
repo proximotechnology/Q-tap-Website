@@ -110,115 +110,7 @@ const PricingCard = ({ title, priceMonthly, priceYearly, description, features }
     </Box>
   );
 };
-const PricingCardCustom = () => {
-  const t = useTranslations();
-  const [selectedOrderNumber, setSelectedOrderNumber] = useState(0.00)
-  const [pricing, setPricing] = useState({
-    month: "0.00",
-    year: "0.00"
-  })
-  const handleSelectOrderNumber = () => {
 
-  }
-
-  return (
-    <Box
-      sx={{
-        borderRadius: "50px 50px 50px 0px",
-        backgroundColor: "white",
-        margin: "20px",
-        height: "90%",
-        "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.3s" },
-      }}
-    >
-      <Box sx={{
-        display: "flex", justifyContent: "center",
-        margin: "0 auto",
-        width: "70%",
-        transform: "translateY(-50%)",
-      }}>
-        <Box
-          sx={{
-            backgroundColor: "#ef7d00",
-            textAlign: "center",
-            padding: "5px 20px",
-            width: "100%",
-            borderRadius: "40px",
-            color: "#fff",
-          }}
-        >
-          <Typography variant="h6">
-            {t("customPlan")}
-          </Typography>
-        </Box>
-      </Box>
-      <div style={{ padding: "30px", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: '90%' }}>
-        <Box sx={{ textAlign: "center", marginTop: "-20px" }}>
-          <Typography variant="h4" color="textPrimary" fontWeight="900" >
-            <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
-            {pricing.month}
-            <Typography component="span" variant="body2" color="textSecondary">
-              /{t("month")}
-            </Typography>
-          </Typography>
-
-          <Typography variant="h6" color="textPrimary" sx={{ marginTop: "10px" }} fontWeight={900}>
-            <sup style={{ color: "#ef7d00", fontSize: "12px", marginRight: "10px", fontWeight: "bold" }}>EGP</sup>
-            {pricing.year}
-            <Typography component="span" variant="body2" color="textSecondary">
-              /{t("year")}
-            </Typography>
-          </Typography>
-          <Divider sx={{ my: 2, backgroundColor: "#ef7d00", width: "100%" }} />
-        </Box>
-
-        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "40px", fontSize: "11px" }}>
-          {/* {description} */}
-        </Typography>
-
-        <Box>
-          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: "40px", fontSize: "11px" }}>
-            Number Of Orders :
-          </Typography>
-          <TextField
-            id="outlined-number"
-            label="Number"
-            type="number"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-              },
-              inputLabel: {
-                shrink: true,
-              },
-            }}
-          />
-        </Box>
-
-        <Box display="flex" justifyContent="center" mt={6}>
-          <Button
-            sx={{
-              backgroundColor: "#222240",
-              fontSize: "15px",
-              padding: "6px 40px",
-              borderRadius: "20px",
-              color: "white",
-              "&:hover": { backgroundColor: "#222240e5" },
-              textTransform: "capitalize",
-              // position: "absolute",
-              bottom: "15px",
-              fontWeight: "600"
-            }}
-            onClick={() => { handleNavigateToDashboard() }}
-          >
-            {t("subscribe")} <ArrowForwardIcon sx={{ fontSize: "16px", marginLeft: "6px", strokeWidth: 2 }} />
-          </Button>
-        </Box>
-      </div>
-
-    </Box>
-  );
-};
 export const Pricing = () => {
   const { getHomeData } = useContext(HomeContext);
   const t = useTranslations();
@@ -418,9 +310,6 @@ export const Pricing = () => {
         </Box>
 
         <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={12} sm={6} md={4} lg={3} >
-            <PricingCardCustom />
-          </Grid>
           {pricingData?.map((plan) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={plan.id}>
               <PricingCard

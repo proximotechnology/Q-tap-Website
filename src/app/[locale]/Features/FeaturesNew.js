@@ -70,7 +70,7 @@ const FeaturesNew = () => {
 
 
     return (
-        <Box className="lookhere"
+        <Box 
             sx={{
                 backgroundImage: "url('/images/Rectangle.png')",
                 height: {
@@ -142,7 +142,7 @@ const FeaturesNew = () => {
                 ))}
             </Swiper> */}
 
-            <div style={{ flexGrow: 1, marginBottom: '1rem' }} className="iamherePro">
+            <div style={{ flexGrow: 1, marginBottom: '1rem' }} >
                 <Swiper
                     modules={[Pagination, Navigation, Autoplay]} // include Navigation
                     pagination={{ clickable: true }}
