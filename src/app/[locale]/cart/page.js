@@ -252,7 +252,7 @@ const page = () => {
             <Box
                 sx={{
                     position: "fixed", bottom: 0, backgroundColor: "#302E3B", height: "60px",
-                    width: "90%", padding: "20px", alignItems: "center",
+                    width: "calc(100vw - 40px)", padding: "20px", alignItems: "center",
                     boxShadow: 3, borderRadius: "30px 30px 0px 0px", display: "flex", justifyContent: "space-between",
                 }}>
                 <Box>

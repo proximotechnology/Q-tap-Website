@@ -196,7 +196,7 @@ function DrawerAppBar(props) {
                 }}
             >
                 <CssBaseline />
-                <AppBar className="herehere"
+                <AppBar 
                     component="nav"
                     sx={{
                         position: "relative !important",

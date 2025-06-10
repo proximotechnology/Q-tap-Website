@@ -31,7 +31,69 @@
     color: white;
     border-radius: 20px 20px 40px 20px;
 
-}            
+}
+
 .menu-title {
     font-size: 16px;
+}
+
+
+
+.my-flex {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+}
+
+.my-flex-col {
+    flex-direction: column;
+}
+
+.my-relative {
+    position: relative;
+}
+
+.my-swiper-pagination {
+    position: static;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    height: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /* Adjust as needed */
+    flex: 1 1 auto;
+}
+
+.my-swiper-button-next,
+.my-swiper-button-prev {
+    position: static;
+    /* transform: translateY(-50%); */
+    z-index: 10;
+    cursor: pointer;
+    width: 40px;
+    height: 40px !important;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    flex: 0 0 40px;
+    font-size: 20px;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  position: static !important; /* Override Swiper's absolute positioning */
+  width: 100%;
+  height: 100%;
+  margin:0px !important;
+  transform: translate(0);
+}
+
+/* If you want to customize the icon color */
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  color: #fff; /* Your custom color */
+  font-size: 16px !important; /* Adjust icon size */
 }

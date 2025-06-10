@@ -14,13 +14,14 @@ import { useTranslations } from 'next-intl';
 import Pusher from 'pusher-js';
 import { formateDate } from '@/utils/utils';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 
 const page = () => {
   const t = useTranslations()
   const [isModalOpen, setIsModalOpen] = useState(false);
   // feedback dialog
-  const [open, setOpen] = useState(true); // You can change when it opens
+  const [open, setOpen] = useState(false); // You can change when it opens
 
   const [order, setOrder] = useState(null);
   const [pusherOrder, setPusherOrder] = useState(null);
@@ -113,11 +114,17 @@ PHASE_TEMP represents the different stages an order goes through.
   useEffect(() => {
     let myOrder = localStorage.getItem('order')
     if (myOrder) {
-      myOrder = JSON.parse(myOrder)
-      if (!myOrder.phase)
-        myOrder.phase = { ...PHASE_TEMP }
-      setOrder(myOrder)
-      console.log('track my order', myOrder)
+      try {
+        myOrder = JSON.parse(myOrder)
+        if (!myOrder.phase)
+          myOrder.phase = { ...PHASE_TEMP }
+        setOrder(myOrder)
+        console.log('track my order', myOrder)
+        
+      } catch (error) {
+        // console.log(error)
+        toast.error("cannot read order")
+      }
     }
 
     const pusher = new Pusher('63b495891d2c3cff9d36', {
@@ -207,7 +214,7 @@ PHASE_TEMP represents the different stages an order goes through.
         flexDirection: 'column',
         position: "relative",
       }}>
-      <Box className="iam here" ref={headerRef}
+      <Box  ref={headerRef}
         sx={{
           position: "fixed",
           overflow: 'hidden',

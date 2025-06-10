@@ -41,7 +41,7 @@ const page = () => {
                 width: '100%',
             }}>
 
-            <Box className="iam here" ref={headerRef}
+            <Box  ref={headerRef}
                 sx={{
                     position: "fixed",
                     overflow: 'hidden',

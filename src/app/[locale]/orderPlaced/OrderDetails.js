@@ -35,9 +35,14 @@ export const OrderDetails = () => {
     useEffect(() => {
         let myOrder = localStorage.getItem('order')
         if (myOrder) {
-            myOrder = JSON.parse(myOrder)
-            setOrder(myOrder)
-            console.log('myOrder', myOrder)
+            try{
+
+                myOrder = JSON.parse(myOrder)
+                setOrder(myOrder)
+                console.log('myOrder', myOrder)
+            } catch(err){
+                console.log(err)
+            }
         }
 
     }, []);

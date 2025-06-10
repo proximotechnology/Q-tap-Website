@@ -87,7 +87,7 @@ export const Admin = () => {
 
     return (
         <div>
-            <Box className='hereProblem noRightPadding'
+            <Box className='noRightPadding'
                 aria-describedby={openUserPopover ? 'simple-popover' : undefined}
                 onClick={handleUserClick}
                 sx={{

@@ -13,7 +13,7 @@ import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
 import { getCartItems } from '../ProductDetails/cartUtils';
 import axios from 'axios';
-import {   calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils/utils';
+import { calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils/utils';
 import MapView from './map';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -337,7 +337,7 @@ const page = () => {
                 </Box>
             </Box>
 
-            <Box
+            <Box className="here"
                 sx={{
                     overflowY: 'auto',
                     height: 'calc(100vh - 43vh)',
@@ -345,7 +345,7 @@ const page = () => {
             >
                 {/* الحقول*/}
                 {selectedOption && (
-                    <Box width="90%" sx={{ padding: "0px 20px" }} >
+                    <Box  sx={{ padding: "0px 20px" }} >
 
                         <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("name")}</Typography>
                         <TextField
@@ -537,10 +537,10 @@ const page = () => {
                     </Box>
                 )}
             </Box>
-
+            {/* footer */}
             <Box
                 sx={{
-                    position: "fixed", bottom: 0, backgroundColor: "#302E3B", width: "90%", padding: "20px",
+                    position: "fixed", bottom: 0, backgroundColor: "#302E3B", width: "calc(100vw - 40px)", padding: "20px",
                     borderRadius: "30px 30px 0px 0px", display: "flex", justifyContent: "space-between", zIndex: '30'
                 }}>
                 <Box sx={{ width: "90%" }}>
@@ -648,7 +648,7 @@ const page = () => {
                     {/* </Link> */}
 
                 </Box>
-            </Box> {/* footer */}
+            </Box>
 
         </Box >
     )
