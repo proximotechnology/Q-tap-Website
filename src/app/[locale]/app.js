@@ -15,7 +15,7 @@ const theme = createTheme({
         },
     },
 });
-
+console.log("auth version 2")
 export default function MyApp({ Component, pageProps }) {
     usePusher(); // تفعيل Pusher
     return (
