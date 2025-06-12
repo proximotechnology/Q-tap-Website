@@ -5,25 +5,24 @@ import React, { useEffect, useState } from 'react'
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useSearchParams } from 'next/navigation';
 import { divIcon } from 'leaflet';
+import { useCartStore } from '@/store/cartStore';
 
 export const Footer = ({ handleChangeView }) => {
-    const [cartItems, setCartItems] = useState([]);
-    useEffect(() => {
-        const storedCartItems = getCartItems();
-        setCartItems(storedCartItems);
-    }, []);
 
-    const count = cartItems.length;
+    const count = useCartStore(state => state.meals).length
+
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
     const tableId = searchParams.get('tableId')
     return (
-        <div style={{ position: 'fixed', bottom: 20, left:0,right:0, width:"100vw"}}>
+        <div style={{ position: 'fixed', bottom: 20, left: 0, right: 0, width: "100vw" }}>
             <Box display="flex" justifyContent="space-around" alignItems="center" className="problemhere my-margin-center-x "
                 sx={{
                     width: '85%', backgroundColor: '#302e3bd0', padding: '4px',
                     borderRadius: '30px', color: "#575756",
+                    backdropFilter: 'blur(8px)',         // actual blur effect
+                    WebkitBackdropFilter: 'blur(8px)',   // for Safari support
                 }}>
                 <Link href='/mobileList'>
                     <IconButton color="inherit">
@@ -38,8 +37,8 @@ export const Footer = ({ handleChangeView }) => {
                     </IconButton>
                 </Link>
                 <Box sx={{}}>
-                    <span className='icon-desk-bell' style={{ color: "white", fontSize: "30px" }}></span>
-                    <Typography style={{ color: "white", fontSize: "7px" }}>Waiter call</Typography>
+                    <span className='icon-desk-bell gradient-icon-waiterCall' style={{ fontSize: "30px" }}></span>
+                    <Typography style={{ color: "grey", fontSize: "7px" }}>Waiter call</Typography>
                 </Box>
 
                 <IconButton color="inherit" onClick={handleChangeView}>

@@ -1,8 +1,8 @@
-// export const BASE_URL = 'https://api.qutap.co/api/'
-// export const BASE_URL_IMAGE = 'https://api.qutap.co/'
-export const BASE_URL = 'https://highleveltecknology.com/Qtap/api/'
-export const BASE_URL_IMAGE = 'https://highleveltecknology.com/Qtap/public/'
-export const DASHBOARD_URL = ""
+export const BASE_URL = 'https://api.qutap.co/api/'
+export const BASE_URL_IMAGE = 'https://api.qutap.co/'
+// export const BASE_URL = 'https://highleveltecknology.com/Qtap/api/'
+// export const BASE_URL_IMAGE = 'https://highleveltecknology.com/Qtap/public/'
+export const DASHBOARD_URL = "https://dashboard.qutap.co/"
 
 export const egyptCities = [
     { name: "Cairo", region: "Nile Valley & Delta" },

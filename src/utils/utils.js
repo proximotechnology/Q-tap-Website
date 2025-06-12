@@ -93,6 +93,7 @@ export const searchMeals = (branch, query) => {
     if (query === "") return [];
     branch?.cat_meal?.forEach((category) => {
         category.meals.forEach((meal) => {
+            console.log("searchMeals meals",meal)
             if (meal.name.toLowerCase().includes(query.toLowerCase())) {
                 results.push({
                     meal,

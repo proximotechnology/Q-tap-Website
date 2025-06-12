@@ -5,116 +5,59 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-import { getCartItems } from "../ProductDetails/cartUtils";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { calculateOrderPriceDetailed, isAllItemComeFromSameBranch } from '@/utils/utils';
 import { toast } from 'react-toastify';
 import { BASE_URL_IMAGE } from '@/utils/constants';
-/**
- * 1 - get cart from localStorge
- * 2 - calc subtotal , tax , discount ,and total price
- * 3 - special order have its own calculation 
- * calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
- * 1 - check if all item come from the same branch 
- * isAllItemComeFromSameBranch(cartItems, cartItems?.[0]?.branchId)
- * @returns 
- */
+import { useCartStore } from '@/store/cartStore';
+
 const page = () => {
     const t = useTranslations();
     const locale = useLocale()
-    const [cartItems, setCartItems] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [tax, setTax] = useState(0);
-    const [discount, setDiscount] = useState(0);
-    const [subTotal, setSubTotal] = useState(0);
+    const router = useRouter();
+    const [hasMounted, setHasMounted] = useState(false);
+
+
+    const meals = useCartStore((state) => state.meals);
+
+    const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
+    const increaseQuantity = useCartStore((state) => state.increaseQuantity);
+
+    const subTotal = () => useCartStore.getState().cartItemsSubTotal();
+    const isCartEmpty = () => useCartStore.getState().isCartEmpty()
 
     const searchParams = useSearchParams();
     let shopId = searchParams.get('shopId')
     let branchId = searchParams.get('branchId')
     let tableId = searchParams.get('tableId')
+
     if (!shopId || !branchId) {
         shopId = localStorage.getItem("selectedShopID")
         branchId = localStorage.getItem("selectedBranchID")
     }
 
-    useEffect(() => {
-        const storedCartItems = getCartItems();
-        setCartItems(storedCartItems);
-    }, []);
 
-    useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice)
-    }, [cartItems]);
-    // const handleRemove = (itemId) => {
-    //     const updatedCartItems = removeItemFromCart(itemId);
-    //     setCartItems(updatedCartItems);
-    // };
-
-    // console.log(cartItems);
-    // console.log(cartItems.map(item => item.image));
-
-    // ===============================================================================
-
-    // ===============================================================================
+    const handleAddItem = (item) => { increaseQuantity(item) }
+    const handleMinusItem = (item) => { decreaseQuantity(item) }
 
 
-    const [itemCount, setItemCount] = useState([]);
-    useEffect(() => {
-        try {
-            const storedItemCount = JSON.parse(localStorage.getItem('itemCount')) || [];
-            setItemCount(storedItemCount);
-        } catch {
-            setItemCount([]);
-        }
-    }, []);
-
-    const getItemCount = (itemId) => {
-        const item = itemCount.find(item => item.id === itemId);
-        return item ? item.count : 1;
-    };
-
-    const handleAddItem = (index) => {
-        const newCartItems = cartItems.map((item, i) =>
-            i === index ? { ...item, SelectedQuantity: item.SelectedQuantity + 1 } : item
-        );
-        setCartItems(newCartItems)
-        localStorage.setItem('cartItems', JSON.stringify(newCartItems))
-
-    };
-
-    const handleMinusItem = (index) => {
-        let updatedCartItems = cartItems.map(item => ({ ...item })); // Deep copy objects
-
-        if (updatedCartItems[index].SelectedQuantity > 1) {
-            updatedCartItems[index].SelectedQuantity -= 1;
-        } else {
-            updatedCartItems.splice(index, 1);
-        }
-
-        setCartItems(updatedCartItems);
-        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems))
-    };
-    // ===============================================================================
-
-    // ===============================================================================
-    const router = useRouter();
 
     const handleConfirmButtonClick = () => {
-        const isValidCart = isAllItemComeFromSameBranch(cartItems, Number(cartItems?.[0]?.branchId))
-        if (cartItems.length > 0 && isValidCart) {
-            console.log("cartItems", cartItems)
-            const confirmUrl = `/${locale}/clientDetails` + (tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : `?shopId=${cartItems?.[0]?.shopId}&branchId=${cartItems?.[0]?.branchId}`)
-
-            router.push(confirmUrl);
+        if (isCartEmpty()) {
+            toast.error("your card is empyt")
+            return;
         }
 
-        else {
-            toast.error(t("cartNotValid"))
-            // toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
-        }
+        const confirmUrl = `/${locale}/clientDetails` + (tableId ? `?shopId=${shopId}&branchId=${branchId}&tableId=${tableId}` : `?shopId=${shopId}&branchId=${branchId}`)
 
+        router.push(confirmUrl);
     }
+
+
+    useEffect(() => setHasMounted(true), []);
+
+    if (!hasMounted) return null;
+
     return (
         //  <button onClick={() => handleRemove(item.id)}>Remove</button>
         <Box
@@ -160,18 +103,18 @@ const page = () => {
 
                     <Typography variant="body2"
                         sx={{ fontSize: "14px", color: "gray", letterSpacing: 1 }}>
-                        {cartItems.length} {t("items")}
+                        {meals.length} {t("items")}
                     </Typography>
 
                 </Box>
 
-                {cartItems.length === 0 ? (
+                {!isCartEmpty ? (
                     <Typography>{t("yourCartIsEmpty")}</Typography>
                 ) : (
-                    cartItems.map((item, index) => (
+                    meals?.map((item, index) => (
                         <>
                             <Box
-                                key={item.id}
+                                key={index}
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
@@ -182,6 +125,7 @@ const page = () => {
                                 }}
                             >
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    {console.log("",item)}
                                     <img
                                         src={BASE_URL_IMAGE + item.image}
                                         alt={item.name}
@@ -218,28 +162,28 @@ const page = () => {
                                 <Box sx={{ display: 'flex', flexDirection: "column", alignItems: 'center' }}>
                                     <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
                                         <AddCircleOutlinedIcon
-                                            onClick={() => handleAddItem(index)}
+                                            onClick={() => handleAddItem(item)}
                                             sx={{ fontSize: "30px", color: "#44404D", cursor: "pointer" }} />
 
                                         <Typography sx={{
                                             fontSize: "12px", fontWeight: 900,
                                             padding: "0px 12px", color: "#44404D"
                                         }}>
-                                            {item.SelectedQuantity} </Typography>
+                                            {item.quantity} </Typography>
 
                                         <RemoveCircleOutlinedIcon
-                                            onClick={() => handleMinusItem(index)}
+                                            onClick={() => handleMinusItem(item)}
                                             sx={{ fontSize: "30px", color: "#44404D", cursor: "pointer" }}
                                         />
                                     </Box>
-                                    <Box>
+                                    {/* <Box>
                                         <Typography variant="h6" sx={{
                                             marginTop: "5px",
                                             fontSize: '15px', fontWeight: "bold", color: 'white'
                                         }}>
-                                            {item.price}x{item.SelectedQuantity} : {(item.price * item.SelectedQuantity).toFixed(2)} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                            {item.price}x{item.quantity} : {(item.price * item.quantity).toFixed(2)} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                         </Typography>
-                                    </Box>
+                                    </Box> */}
                                 </Box>
                             </Box>
                         </>
@@ -260,7 +204,7 @@ const page = () => {
                         {t("totalPrice")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                        {totalPrice}
+                        {subTotal() ?? 0}
                         <span style={{ fontSize: "10px", color: '#575756' }}> EGP</span>
                     </Typography>
                 </Box>

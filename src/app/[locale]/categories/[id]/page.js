@@ -62,7 +62,7 @@ const page = ({ params }) => {
         position: 'relative',
         color: 'white',
         backgroundColor: '#1E1E2A',
-        overflow: 'hidden',
+        overflow: 'auto',
         height: "100vh",
         width: '100%',
       }}
@@ -121,17 +121,18 @@ const page = ({ params }) => {
       </Box>
 
 
-      <Box sx={{ margin: "10px 0px " }}>
-        {data?.meals?.map((product) => (
-          <>
+      <Box sx={{ margin: "10px 0px " , overflow:'scroll' ,display:'flex',flexDirection:"column"}} className='hereProblem1'>
+        {data?.meals?.map((product,index) => (
+          <div key={index}>
             <Box sx={{ padding: '5px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }} key={product.id}>
               <Box display="flex" justifyContent="space-between" alignItems="center" borderBottom="2px solid gray">
                 <Box sx={{ marginBottom: "6px" }}>
                   <Typography variant="h6" sx={{ color: '#797993', fontSize: "17px", fontWeight: "900" }}>
-                    {product?.name} {product?.Description}</Typography>
-
+                    {product?.name} 
+                    {/* {product?.Description} */}
+                    </Typography>
                   <Typography variant="body1" sx={{ color: '#AAAAAA', fontSize: "11px" }}>
-                    {product?.brief}</Typography>
+                    {product?.Brief}</Typography>
 
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography sx={{ fontSize: "16px", fontWeight: "900" }}>{product?.price}
@@ -139,7 +140,7 @@ const page = ({ params }) => {
                     </Typography>
 
                     {/* availability */}
-                    <Typography variant="body2" sx={{
+                    {/* <Typography variant="body2" sx={{
                       display: "flex", alignItems: "center", color: "#575756",
                       marginLeft: "15px", fontSize: "9px"
                     }}>
@@ -154,18 +155,18 @@ const page = ({ params }) => {
                           {product?.availability}
                         </>
                       )}
-                    </Typography>
+                    </Typography> */}
                   </Box>
 
                 </Box>
 
                 <Box>
-                  <Box display="flex" alignItems="center" marginBottom={"10px"} >
+                  {/* <Box display="flex" alignItems="center" marginBottom={"10px"} >
                     <span className='icon-star' style={{ fontSize: "14px" }} />
                     <Typography variant="body2" sx={{ marginLeft: '4px', color: "#AAAAAA" }}>
-                      {/* {product?.rating.toFixed(1)} */}
+                      {/* {product?.rating.toFixed(1)} * /}
                     </Typography>
-                  </Box>
+                  </Box> */}
 
                   <Link key={product?.id} href={`/ProductDetails/${product?.id}?shopId=${shopId}&branchId=${branchId}&catId=${data?.id}` + (tableId ? `&tableId=${tableId}` : '')}>
                     <Box
@@ -188,7 +189,7 @@ const page = ({ params }) => {
 
 
             </Box>
-          </>
+          </div>
         ))}
       </Box>
     </Box>

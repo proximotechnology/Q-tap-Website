@@ -6,13 +6,14 @@ import { Link } from "@/i18n/navigation"
 import { getCartItems } from "../ProductDetails/cartUtils";
 import { useTranslations } from 'use-intl';
 import axios from 'axios';
-import {  calculateOrderPriceDetailed } from '@/utils/utils';
+import { calculateOrderPriceDetailed } from '@/utils/utils';
 import { toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MapView from '../clientDetails/map';
 import { useReactToPrint } from 'react-to-print';
 import html2pdf from 'html2pdf.js';
 import { BASE_URL } from '@/utils/constants';
+import { useCartStore } from '@/store/cartStore';
 
 const page = () => {
     const t = useTranslations()
@@ -39,13 +40,14 @@ const page = () => {
         html2pdf().set(opt).from(element).save();
     };
     const [isLoading, setIsLoading] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState(null);
+    const cartItems = useCartStore(state=>state.meals);
+    
+    const subTotal = useCartStore.getState().cartItemsSubTotal()
+    const tax = useCartStore.getState().cartItemsTax()
+    const discount = useCartStore.getState().cartItemDiscountWithDiscountCode()
+    const totalPrice = useCartStore.getState().cartItemTotalWithDiscountCode()
 
-    const [subTotal, setSubTotal] = useState(0);
-    const [tax, setTax] = useState(0);
-    const [discount, setDiscount] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0);
     // =====================================
     const [position, setPosition] = useState(null); // null || array with 2 number [ number , number]
 
@@ -56,8 +58,8 @@ const page = () => {
     // ============================================================================
     const [selectedMethod, setSelectedMethod] = useState("cash");
     const searchParams = useSearchParams();
-    // const shopId = searchParams.get('shopId')
-    // const branchId = searchParams.get('branchId')
+    const shopId = searchParams.get('shopId')
+    const branchId = searchParams.get('branchId')
     const tableId = searchParams.get('tableId')
     // ============================================================================
     const makeOrder = async () => {
@@ -81,9 +83,9 @@ const page = () => {
                 comments: formdata.comment ? formdata.comment : "-",
                 type: 'takeaway',
                 payment_way: payWay,
-                brunch_id: cartItems?.[0].branchId,// TODO:  order payment errror TypeError: Cannot read properties of undefined (reading 'branchId')
+                brunch_id:branchId,// TODO:  order payment errror TypeError: Cannot read properties of undefined (reading 'branchId')
                 "tax": tax, //may be nullable
-                "total_price": totalPrice - discount,
+                "total_price": totalPrice ,
                 meals: []
             }
             console.log(data) // debug log
@@ -92,7 +94,7 @@ const page = () => {
             cartItems.map((item) => {
                 const itemData = {
                     meal_id: item.id,
-                    quantity: item.SelectedQuantity,
+                    quantity: item.quantity,
                     variants: (item.selectedOptions ?? []).map(item => item.id),
                     extras: (item.selectedExtras ?? []).map(item => item.id),
                     size: item.selectedSize ? sizeConvert[item.selectedSize] : 's',
@@ -132,10 +134,11 @@ const page = () => {
 
                 }
             );
-            if(response.data.status === "error")
+            if (response.data.status === "error"){
+                console.log(response)
                 throw new Error("make order api error")
+            }
             localStorage.setItem('cartItems', '')
-            setCartItems([])
             console.log(" order set to localStorage ", response) // debug log
             localStorage.setItem('order', JSON.stringify(response.data.order))
             if (payWay === "wallet" && response.data.payment_url)
@@ -156,18 +159,11 @@ const page = () => {
     };
 
 
-    // ============================================================================
-    useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, formData?.code)
 
-
-    }, [cartItems]);
 
 
 
     useEffect(() => {
-        const storedCartItems = getCartItems();
-        setCartItems(storedCartItems);
         const storedData = localStorage.getItem('formData');
         if (storedData) {
             setFormData(JSON.parse(storedData));
@@ -291,7 +287,7 @@ const page = () => {
                                         </Button>
                                         <Typography style={{ fontSize: "12px", color: "#575756", marginLeft: "10px" }}>
                                             <span style={{ color: "#AAAAAA" }}>x</span>
-                                            {item.SelectedQuantity || 0}
+                                            {item.quantity || 0}
                                         </Typography>
                                     </Box>
                                     <Typography variant="h6" sx={{
@@ -402,7 +398,7 @@ const page = () => {
 
                                     <Typography variant="h6" sx={{ fontSize: '19px', fontWeight: "bold", color: 'white' }}>
 
-                                        {totalPrice - discount} <span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                        {totalPrice } <span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                     </Typography>
                                 </Box>
 

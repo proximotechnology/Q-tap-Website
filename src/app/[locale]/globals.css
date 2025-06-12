@@ -134,3 +134,16 @@ input:-webkit-autofill:active {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* .gradient-icon-waiterCall {
+  background: linear-gradient(to right, grey, white);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} */
+
+.gradient-icon-waiterCall{
+  background: linear-gradient(to right, grey 70%, white 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+

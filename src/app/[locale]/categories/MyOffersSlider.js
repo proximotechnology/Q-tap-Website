@@ -27,7 +27,7 @@ const MyOffersSlider = ({ items, openOffer }) => {
                 breakpoints={{
                     1024: { slidesPerView: 3 }, // large screens
                     768: { slidesPerView: 2 },  // medium screens
-                    0: { slidesPerView: 1 },    // small screens
+                    0: { slidesPerView: 2 },    // small screens
                 }}
                 // style={{ padding: '20px 40px' }} // Optional side padding
                 style={{ overflow: "visible" }} // Optional side padding

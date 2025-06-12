@@ -1,0 +1,1 @@
+export const sortByIdDesc = (arr) => [...arr].sort((a, b) => b.id - a.id)

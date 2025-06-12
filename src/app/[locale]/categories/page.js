@@ -27,13 +27,14 @@ const page = () => {
     const t = useTranslations();
     const [currentBranch, setCurrentBranch] = useState(null)
     const [isViewCategories, setIsViewCategories] = useState(true)
+    const [inputQuery, setInputQuery] = useState("")
+    const [shopImg, setShopImg] = useState(null)
+    const [queryResult, setQueryResult] = useState([])
 
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
     const tableId = searchParams.get('tableId')
-    const [inputQuery, setInputQuery] = useState("")
-    const [queryResult, setQueryResult] = useState([])
 
 
 
@@ -54,7 +55,7 @@ const page = () => {
 
         localStorage.setItem("selectedShopID", selectedShop.id)
         localStorage.setItem("selectedBranchID", selectedBranch.id)
-
+        setShopImg(selectedShop.img)
         setCurrentBranch(selectedBranch)
 
     }, [shops])
@@ -75,20 +76,30 @@ const page = () => {
     }
 
 
-
+    const handleChangeInSearchField = (e) => {
+        setInputQuery(e.target.value)
+    }
 
     if (isLoading) return <div>Loading ...</div>;
     if (isError) return <div>Error: {error.message}</div>;
-    return (
-        <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white' }}>
 
-            <Box sx={{
-                position: 'fixed', top: 0, width: '90%', zIndex: 1000, padding: "20px",
-                backgroundColor: '#1E1E2A',
-            }}>
+    return (
+        <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white', position: "relative", padding: "0px 25px" }}>
+
+            <Box 
+                sx={{
+                    position: 'fixed', width: '100%', zIndex: 1000,
+                    backgroundColor: '#1E1E2A',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '0 25px',
+                    boxSizing: 'border-box',
+                }}>
 
                 <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>{t("logo")}</Typography>
+                    {shopImg?  <img src={`${BASE_URL_IMAGE}${shopImg}`} alt='log' style={{maxHeight:"40px"}}/>
+                    :<Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>{t("logo")}</Typography>}
                     <IconButton color="inherit">
                         <span className="icon-menu" sx={{ fontSize: "20px", color: "white" }}></span>
                     </IconButton>
@@ -106,6 +117,7 @@ const page = () => {
                     <TextField
                         variant="standard"
                         placeholder={t("whatAreYouLookingFor")}
+                        onChange={e => handleChangeInSearchField(e)}
                         InputProps={{
                             disableUnderline: true,
                             style: { color: 'white', width: '100%', fontSize: "11px" }
@@ -116,11 +128,11 @@ const page = () => {
                 </Box>
             </Box>
 
-            <Box sx={{ padding: '30px 25px' }}>
+            <Box sx={{paddingBottom:"40px"}}>
                 <Box mt={2} sx={{ paddingTop: '100px' }}>
                     <Typography variant="body1" sx={{ marginBottom: "10px", }}>
                         <span style={{
-                            fontSize: "11px",
+                            fontSize: "14px",
                             backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                             padding: "5px 16px", borderRadius: "0px 20px 20px 20px",
                         }}>{t("specialOffers")}</span>
@@ -196,7 +208,9 @@ const CategoryView = ({ t, currentBranch, prefetchTarget, shopId, branchId, tabl
 
     return (<Box mt={3}>
         <Box sx={{ display: "flex" }}>
-            <Typography variant="body1" sx={{ fontSize: "16px", marginRight: "30px" }}>{t("categories")}</Typography>
+            <Typography variant="body1" sx={{ fontSize: "20px", marginRight: "30px" }}>
+                {t("categories")}
+                </Typography>
 
             <Typography variant="body1" sx={{
                 marginBottom: "10px", display: "flex", fontSize: "10px",
@@ -331,7 +345,7 @@ const MealsList = ({ currentBranch, selectedCategory, categoryRefs }) => {
 const CatList = ({ currentBranch, selectedCategory, setSelectedCategory, scrollToCategory }) => {
     return (
         <Box sx={{
-            padding: "10px 0px",
+            padding: "0px 0px",
             display: "flex",
             flexDirection: 'row',
             overflowX: 'auto',
@@ -352,17 +366,19 @@ const CatList = ({ currentBranch, selectedCategory, setSelectedCategory, scrollT
                 const textColor2 = isActive && item.name !== "Popular" ? "white" : item?.color;
 
                 return (
-                    <Button key={index}
+                    <Button key={index} 
+                    style={{margin:'0px', padding:'0px'}}
                         onClick={() => {
                             console.log('clikc')
                             setSelectedCategory(item)
                             scrollToCategory(item.id)
                         }}>
                         <ListItem
-
+                            
                             sx={{
                                 flexDirection: 'column',
                                 background: backgroundColor,
+                                ml:0,mr:0,
                                 mb: 2, padding: "5px 13px ",
                                 width: "100%",
                                 borderRadius: "20px", cursor: "pointer",

@@ -14,6 +14,8 @@ import { toast } from 'react-toastify';
 import { useSpecialOffers } from '@/hooks/useSpecialOffers';
 import { useShops } from '@/hooks/useShops';
 import { BASE_URL_IMAGE } from '@/utils/constants';
+import { useCartStore } from '@/store/cartStore';
+import { createMeal, createSpecialOfferMeal } from '@/utils/mealsFactory';
 
 const sizes = ["S", "M", "L"];
 
@@ -24,8 +26,11 @@ const page = ({ params }) => {
     const { id } = params;//mealid
     // const [shopData, setShopData] = useState(null)
     const [mealData, setMealData] = useState(null)
+    console.log(mealData)
     // const [isLoading, setIsLoading] = useState(true)
     /*  */
+    const addItemToCart = useCartStore(state => state.addItemToCart);
+
     const searchParams = useSearchParams();
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
@@ -50,7 +55,7 @@ const page = ({ params }) => {
         const selectedBranch = shop?.brunchs?.find(branch => branch.id === Number(branchId));
         const selectedCat = selectedBranch?.cat_meal?.find(cat => cat.id === Number(catId));
         const selectedMeal = selectedCat?.meals?.find(meal => meal.id === Number(id));
-        console.log("selected shop",selectedCat)
+        console.log("selected shop", selectedCat)
         setMealData(selectedMeal)
     }, [shopData])
 
@@ -83,7 +88,7 @@ const page = ({ params }) => {
         const { itemDiscount, itemSubTotal, itemTax } = itemPriceDetailsCalculation(meal)
 
         setPriceBeforeDiscount(((itemSubTotal + itemTax) * count).toFixed(2))
-        console.log("value",itemDiscount,"value", itemSubTotal,"value", itemTax )
+        console.log("value", itemDiscount, "value", itemSubTotal, "value", itemTax)
         setPrice((itemSubTotal - itemDiscount).toFixed(2))
         /* one piece price * quantity */
         setTotalPrice(((itemSubTotal + itemTax - itemDiscount) * count).toFixed(2))
@@ -121,107 +126,158 @@ const page = ({ params }) => {
         }
     }
     // ========================================================================
+    // const addToCart = () => {
+    //     if ((!selectedSize && !specialID) || count === 0) {
+    //         toast.error(t("SizeCountRequired"))
+    //         return;
+    //     }
+
+    //     let currentCart = localStorage.getItem("cartItems")
+
+    //     if (currentCart) {
+    //         currentCart = JSON.parse(currentCart)
+    //     } else {
+    //         currentCart = []
+    //     }
+    //     const isValidCart = isAllItemComeFromSameBranch(currentCart, mealData.brunch_id);
+    //     if (!isValidCart) {
+    //         toast.error(t("cartNotValid"))
+    //         toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
+    //         return;
+    //     }
+    //     let sizePrice =
+    //         selectedSize === 'L' ?
+    //             mealData.price_large :
+    //             selectedSize === 'M' ?
+    //                 mealData.price_medium :
+    //                 mealData.price_small;
+
+
+    //     if (currentCart.length === 0) {
+    //         let sizePrice =
+    //             selectedSize === 'L' ?
+    //                 mealData.price_large :
+    //                 selectedSize === 'M' ?
+    //                     mealData.price_medium :
+    //                     mealData.price_small;
+    //         currentCart.push({
+    //             ...mealData,
+    //             selectedSize,
+    //             SelectedQuantity: count,
+    //             selectedExtra,
+    //             selectedOptions,
+    //             special: specialID ? offersData.find(item => item.id === Number(specialID)) : null,
+
+    //             price,
+    //             shopId,
+    //             branchId,
+    //             catId,
+    //             sizePrice,
+    //         })
+
+
+    //     } else {
+    //         if (currentCart.some(item => item.selectedSize === selectedSize
+    //             && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
+    //             && Number(specialID) === item?.special?.id
+    //         )) {
+    //             currentCart.map(item => {
+    //                 if (item.selectedSize === selectedSize
+    //                     && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
+    //                     && Number(specialID) === item?.special?.id) {
+    //                     item.SelectedQuantity += count;
+    //                 }
+    //             })
+
+    //         } else {
+    //             currentCart.push({
+    //                 ...mealData,
+    //                 selectedSize,
+    //                 SelectedQuantity: count,
+    //                 selectedExtra,
+    //                 selectedOptions,
+    //                 special: specialID ? offersData.find(item => item.id === Number(specialID)) : null,
+
+    //                 price,
+    //                 shopId,
+    //                 branchId,
+    //                 catId,
+    //                 sizePrice,
+    //             })
+
+    //         }
+    //     }
+    //     localStorage.setItem("cartItems", JSON.stringify(currentCart))
+    //     setSelectedExtra([])
+    //     setCount(0)
+    //     setPrice(0)
+    //     setSelectedOptions([])
+    //     setSelectedSize(null)
+    // }
+    // const isTheSameVariantsAndExtras = (obj1, obj2) => {
+    //     const sortByIdDesc = (arr) => [...arr].sort((a, b) => b.id - a.id);
+
+    //     const obj1Extra = JSON.stringify(sortByIdDesc(obj1?.selectedExtra ?? []));
+    //     const obj2Extra = JSON.stringify(sortByIdDesc(obj2?.selectedExtra ?? []));
+
+    //     const obj1Options = JSON.stringify(sortByIdDesc(obj1?.selectedOptions ?? []));
+    //     const obj2Options = JSON.stringify(sortByIdDesc(obj2?.selectedOptions ?? []));
+
+    //     return obj1Extra === obj2Extra && obj1Options === obj2Options;
+    // };
     const addToCart = () => {
-        if ((!selectedSize && !specialID) || count === 0) {
-            toast.error(t("SizeCountRequired"))
-            return;
-        }
-
-        let currentCart = localStorage.getItem("cartItems")
-
-        if (currentCart) {
-            currentCart = JSON.parse(currentCart)
-        } else {
-            currentCart = []
-        }
-        const isValidCart = isAllItemComeFromSameBranch(currentCart, mealData.brunch_id);
-        if (!isValidCart) {
-            toast.error(t("cartNotValid"))
-            toast.error(t("cartShouldnotbeEmptyAndFromSameBranch"))
-            return;
-        }
-        let sizePrice =
-            selectedSize === 'L' ?
-                mealData.price_large :
-                selectedSize === 'M' ?
-                    mealData.price_medium :
-                    mealData.price_small;
-
-
-        if (currentCart.length === 0) {
-            let sizePrice =
-                selectedSize === 'L' ?
-                    mealData.price_large :
-                    selectedSize === 'M' ?
-                        mealData.price_medium :
-                        mealData.price_small;
-            currentCart.push({
-                ...mealData,
-                selectedSize,
-                SelectedQuantity: count,
-                selectedExtra,
-                selectedOptions,
-                special: specialID ? offersData.find(item => item.id === Number(specialID)) : null,
-
-                price,
-                shopId,
-                branchId,
-                catId,
-                sizePrice,
-            })
-
-
-        } else {
-            if (currentCart.some(item => item.selectedSize === selectedSize
-                && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
-                && Number(specialID) === item?.special?.id
-            )) {
-                currentCart.map(item => {
-                    if (item.selectedSize === selectedSize
-                        && isTheSameVariantsAndExtras(item, { selectedExtra, selectedOptions })
-                        && Number(specialID) === item?.special?.id) {
-                        item.SelectedQuantity += count;
-                    }
+        console.log("here")
+        try {
+            let meal = null;
+            if (specialID) {
+                meal = createSpecialOfferMeal({
+                    id: Number(mealData.id),
+                    restaurantId: Number(shopId),
+                    branchId: Number(branchId),
+                    name: mealData.name,
+                    price: mealData.meals_special_offer?.[0]?.after_discount,
+                    specialId: mealData.meals_special_offer?.[0]?.id,
+                    quantity: count
                 })
-
             } else {
-                currentCart.push({
-                    ...mealData,
-                    selectedSize,
-                    SelectedQuantity: count,
+                if (!selectedSize) {
+                    throw new Error(t("SizeCountRequired"))
+                }
+
+                let sizePrice =
+                    selectedSize === 'L' ?
+                        mealData.price_large :
+                        selectedSize === 'M' ?
+                            mealData.price_medium :
+                            mealData.price_small;
+                meal = createMeal({
+                    id: mealData.id,
+                    restaurantId: Number(shopId),
+                    branchId: Number(branchId),
+                    name: mealData.name,
+                    selectedSize: selectedSize,
+                    price: Number(sizePrice),
                     selectedExtra,
                     selectedOptions,
-                    special: specialID ? offersData.find(item => item.id === Number(specialID)) : null,
-
-                    price,
-                    shopId,
-                    branchId,
-                    catId,
-                    sizePrice,
+                    quantity: count,
+                    discount: mealData.discounts,
+                    tax: Number(mealData.Tax),
+                    img: mealData.img
                 })
-
             }
+
+            console.log("meal", meal)
+            if (meal) {
+                addItemToCart(meal)
+            } else {
+                console.log("error")
+            }
+        } catch (error) {
+            console.log("error", error)
+            toast.error(error.message)
         }
-        localStorage.setItem("cartItems", JSON.stringify(currentCart))
-        setSelectedExtra([])
-        setCount(0)
-        setPrice(0)
-        setSelectedOptions([])
-        setSelectedSize(null)
+
     }
-
-    const isTheSameVariantsAndExtras = (obj1, obj2) => {
-        const sortByIdDesc = (arr) => [...arr].sort((a, b) => b.id - a.id);
-
-        const obj1Extra = JSON.stringify(sortByIdDesc(obj1?.selectedExtra ?? []));
-        const obj2Extra = JSON.stringify(sortByIdDesc(obj2?.selectedExtra ?? []));
-
-        const obj1Options = JSON.stringify(sortByIdDesc(obj1?.selectedOptions ?? []));
-        const obj2Options = JSON.stringify(sortByIdDesc(obj2?.selectedOptions ?? []));
-
-        return obj1Extra === obj2Extra && obj1Options === obj2Options;
-    };
-
     // ========================================================================
 
 
@@ -244,8 +300,7 @@ const page = ({ params }) => {
                                 sx={{
                                     width: '100%',
                                     height: '200px',
-                                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)), 
-    url(${BASE_URL_IMAGE}${mealData?.img})`,
+                                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)), url(${BASE_URL_IMAGE}${mealData?.img})`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     borderRadius: '0px 0px 20px 20px',
@@ -315,10 +370,14 @@ const page = ({ params }) => {
                         </Box>
 
                         <Box
-                            sx={{ zIndex: "5000", padding: "15px 20px", }} >
-                            <Box>
-                                <Typography variant="h6" sx={{ fontSize: "21px", fontWeight: '900', color: 'white' }}>{mealData?.name}</Typography>
-                                <Typography variant="body2" sx={{ fontSize: "11px", color: "#AAAAAA" }}>{mealData?.brief}</Typography>
+                            sx={{ zIndex: "5000", padding: "0px 20px", }} >
+                            <Box style={{ marginTop: '40px' }}>
+                                <Typography variant="h6" sx={{ fontSize: "21px", fontWeight: '900', color: 'white' }}>
+                                    {mealData?.name}
+                                </Typography>
+                                <Typography variant="body2" sx={{ fontSize: "11px", color: "#AAAAAA" }}>
+                                    {mealData?.Brief}
+                                </Typography>
                             </Box>
                             <Box width={"100%"} height={"60px"}>
 
@@ -327,7 +386,6 @@ const page = ({ params }) => {
                                     display: "flex", alignItems: "center", textAlign: "center",
                                     padding: "8px 0px", justifyContent: "space-around"
                                 }}>
-
                                     <Box sx={{ display: "flex", alignItems: "center" }}>
                                         <span className="icon-star" style={{ color: "#ef7d00", fontSize: "14px" }}></span>
                                         <Typography variant="body2" color="white" sx={{ fontSize: '13px', marginLeft: "3px" }}  >
@@ -356,16 +414,16 @@ const page = ({ params }) => {
                     </Box>
 
                     {/* الجزء المتحرك  */}
-                    <Box sx={{ position: "relative", top: "330px", padding: "12px 20px" }} >
+                    <Box sx={{ position: "relative", top: "340px", padding: "12px 20px" }} >
 
-                        <Box display="flex" alignItems="center" gap={3} >
+                        <Box display="flex" alignItems="center" gap={2} >
                             {!specialID && <Typography variant="h6" sx={{ fontSize: '12px', fontWeight: "bold", color: 'white' }}>
                                 {t("size")}
                             </Typography>}
-                            {!specialID && sizes.map((size) => {
+                            {!specialID && sizes.map((size, index) => {
                                 return (
                                     <>
-                                        <Typography>
+                                        {/* <Typography>
                                             {
                                                 (size === "S") ? mealData?.price_small : <></>
                                             }
@@ -376,16 +434,17 @@ const page = ({ params }) => {
                                                 (size === "L") ? mealData?.price_large : <></>
                                             }
                                             EGP
-                                        </Typography>
+                                        </Typography> */}
                                         <Button
                                             key={size}
                                             onClick={() => { handleSize(size) }}
                                             sx={{
                                                 width: "30px",
                                                 height: "30px",
-                                                fontSize: "10px",
+                                                fontSize: "14px",
                                                 borderRadius: "50%",
                                                 minWidth: "20px",
+                                                fontWeight:"700",
                                                 backgroundColor: selectedSize === size ? "#797993" : "#302E3B",
                                                 color: selectedSize === size ? "white" : "gray",
                                                 "&:hover": {
@@ -395,12 +454,19 @@ const page = ({ params }) => {
                                         >
                                             {t(size)}
                                         </Button>
+                                        {index === 2 ? "" :
+                                            <Box sx={{
+                                                width: '2px',
+                                                height: '28px', // adjust height
+                                                backgroundColor: 'white',
+                                                mx: 2 // optional horizontal margin
+                                            }} />}
                                     </>
                                 );
                             })}
                         </Box>   {/* size */}
-                        {!specialID && mealData?.discount ? <Typography>discount {mealData?.discount} %</Typography> : <></>}
-                        {!specialID && mealData?.Tax ? <Typography>Tax {mealData?.Tax} %</Typography> : <></>}
+                        {/* {!specialID && mealData?.discount ? <Typography>discount {mealData?.discount} %</Typography> : <></>}
+                        {!specialID && mealData?.Tax ? <Typography>Tax {mealData?.Tax} %</Typography> : <></>} */}
                         <Box sx={{ marginTop: "15px" }}>
                             <Typography variant="h6" sx={{ fontSize: "12px", color: 'white' }}>
                                 {t("options")} <span style={{ fontSize: "9px", fontWeight: '300', color: 'white' }}>{t("required)")}</span>
@@ -536,7 +602,7 @@ const page = ({ params }) => {
                             </Typography>
                             <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
                                 {selectedSize && count !== 0 && !specialID && <span style={{ textDecoration: 'line-through' }}>
-                                {priceBeforeDiscount}</span>}{" "}
+                                    {priceBeforeDiscount}</span>}{" "}
                                 {selectedSize && count ? totalprice : 0}
                                 <span style={{ fontSize: "10px", color: '#575756' }}> EGP</span>
                             </Typography>

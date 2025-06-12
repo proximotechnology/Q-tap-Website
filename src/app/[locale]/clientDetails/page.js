@@ -11,15 +11,13 @@ import 'react-phone-input-2/lib/style.css';
 import TableBarOutlinedIcon from '@mui/icons-material/TableBarOutlined';
 import { Link } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl';
-import { getCartItems } from '../ProductDetails/cartUtils';
-import axios from 'axios';
-import { calculateOrderPriceDetailed, egyptCities, fetchShopsData } from '@/utils/utils';
 import MapView from './map';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useShops } from '@/hooks/useShops';
 import { apiCheckDiscountCode } from '@/api/checkDiscountCode';
-import { BASE_URL } from '@/utils/constants';
+import { egyptCities } from '@/utils/constants';
+import { useCartStore } from '@/store/cartStore';
 
 
 const options = [
@@ -30,18 +28,25 @@ const options = [
 const page = () => {
     const t = useTranslations()
     const [isLoading, setIsLoading] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [tax, setTax] = useState(0);
-    const [discount, setDiscount] = useState(0);
-    const [subTotal, setSubTotal] = useState(0);
-    const [cartItems, setCartItems] = useState([]);
+
+
+    const subTotal = useCartStore.getState().cartItemsSubTotal()
+    const tax = useCartStore.getState().cartItemsTax()
+    const discount = useCartStore.getState().cartItemDiscountWithDiscountCode()
+    const totalPrice = useCartStore.getState().cartItemTotalWithDiscountCode()
+
+    const setDiscountCode = useCartStore((state) => state.setDiscountCode);
+
+
+
+
     const [table, setTable] = useState([]);
     const [showMap, setShowMap] = useState(false);
     const [userPosition, setUserPosition] = useState(null)
     const router = useRouter()
 
 
-    const { data: shops, } = useShops()
+    const { data: shops } = useShops()
     const [selectedOption, setSelectedOption] = useState('dine_in');
     const [branchServigWay, setBranchServingWary] = useState([])
 
@@ -49,12 +54,9 @@ const page = () => {
     const shopId = searchParams.get('shopId')
     const branchId = searchParams.get('branchId')
     const tableId = searchParams.get('tableId')
-
     useEffect(() => {
-        const storedCartItems = getCartItems();
+        // const storedCartItems = getCartItems();
 
-        const branchId = storedCartItems?.[0]?.branchId
-        const shopId = storedCartItems?.[0]?.shopId
 
         const shop = shops?.find(item => Number(item.id) === Number(shopId))
         const branch = shop?.brunchs?.find(item => Number(item.id) === Number(branchId))
@@ -82,29 +84,6 @@ const page = () => {
         {id: 887, name: 'dine_in', brunch_id: 187, tables_number: 12, deleted_at: null, …} */
     }, [shops])
 
-    const getTable = async () => { // TODO: handle this user suppose to select table based of QR code on the table he set on
-        try {
-
-            const response = await axios.get(`${BASE_URL}tables`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-
-            if (response.data) {
-                setTable(response.data.tables);
-            }
-
-        } catch (error) {
-            console.log("error Table data ", error);
-        }
-    }
-
-    useEffect(() => {
-        const storedCartItems = getCartItems();
-        setCartItems(storedCartItems);
-        // getTable()
-    }, []);
 
 
     // =========================================================================
@@ -113,6 +92,7 @@ const page = () => {
     const handleClick = (optionValue) => {
         setSelectedOption(optionValue);
     };
+
     const getTransformStyle = (optionValue) => {
         const translateMap = {
             delivery: 'translate(100px, -20px)',
@@ -171,7 +151,7 @@ const page = () => {
 
     useEffect(() => {
         setValidated(false);
-        setDiscount(0)
+        setDiscountCode(null);
     }, [code]);
 
     const handleValidate = async () => {
@@ -181,6 +161,7 @@ const page = () => {
             if (res?.data?.discount) {
                 setValidated(true)
                 setValidDiscountCode(res?.data?.discount)
+                setDiscountCode(res?.data?.discount)
             } else {
                 toast.error(t("inValidDiscountCode"))
             }
@@ -193,9 +174,9 @@ const page = () => {
     }
     // ===================================== Discount code ====================================
 
-    useEffect(() => {
-        calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validated ? validDiscountCode : null)
-    }, [cartItems, validDiscountCode, validated]);
+    // useEffect(() => {
+    //     calculateOrderPriceDetailed(cartItems, setSubTotal, setTax, setDiscount, setTotalPrice, validated ? validDiscountCode : null)
+    // }, [cartItems, validDiscountCode, validated]);
 
     useEffect(() => {
         const data = {
@@ -215,8 +196,10 @@ const page = () => {
         localStorage.setItem('formData', JSON.stringify(data));
     }, [phone, selectedTable, selectedCity, selectedName, comment, address, validDiscountCode, validated, selectedValue, selectedOption, userPosition]);
 
+
+
     const handlePlaceOrderClick = () => {
-        setIsLoading(true)
+
         if (!phone || !selectedName) {
             toast.error(t("pleaseFillAllFields"))
             setIsLoading(false)
@@ -227,6 +210,7 @@ const page = () => {
             setIsLoading(false)
             return;
         }
+        setIsLoading(true)
 
         router.push('/payment' + (shopId || branchId ? `?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '') : (tableId ? `?tableId=${tableId}` : '')))
 
@@ -345,7 +329,7 @@ const page = () => {
             >
                 {/* الحقول*/}
                 {selectedOption && (
-                    <Box  sx={{ padding: "0px 20px" }} >
+                    <Box sx={{ padding: "0px 20px" }} >
 
                         <Typography variant='body2' sx={{ fontSize: "11px", marginBottom: "3px", color: "white" }}>{t("name")}</Typography>
                         <TextField
@@ -562,7 +546,7 @@ const page = () => {
                         {t("totalPrice")}
                     </Typography>
                     <Typography variant="h6" sx={{ fontSize: '20px', fontWeight: "bold", color: 'white' }}>
-                        {totalPrice - discount}<span style={{ fontSize: "10px", fontWeight: "400", color: '#AAAAAA' }}>EGP</span>
+                        {totalPrice}<span style={{ fontSize: "10px", fontWeight: "400", color: '#AAAAAA' }}>EGP</span>
                     </Typography>
                 </Box>
 
