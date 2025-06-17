@@ -1,16 +1,18 @@
+import useUserStore from "@/store/userStore";
 import { BASE_URL } from "@/utils/constants";
 import axios from "axios";
 
 
-export const getUserDataFromCookies = () => {
-    console.log("==================>")
-    axios.get(`${BASE_URL}checkCookies`, {
-        withCredentials: true
-    })
-        .then(response => {
-            console.log('==================>User data:', response.data);
+export const getUserDataFromCookies = async () => {
+    
+    try {
+        const res = await axios.get(`${BASE_URL}checkCookies`, {
+            withCredentials: true
         })
-        .catch(error => {
-            console.error('==================>Unauthenticated or error:', error.response?.data || error.message);
-        });
+        
+        
+        return res.data.user
+    } catch (error) {
+        throw new Error(error.message)
+    }
 }

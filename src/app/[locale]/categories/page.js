@@ -21,48 +21,26 @@ import { useShops } from '@/hooks/useShops';
 import { Item } from './Item';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import { searchMeals } from '@/utils/utils';
+import { useSelectShopAndBranchData } from '@/hooks/useSelectShopAndBranchData';
+import { useQueryParamsRedirect } from '@/hooks/useShopSearchParam';
 
 
 const page = () => {
     const t = useTranslations();
-    const [currentBranch, setCurrentBranch] = useState(null)
     const [isViewCategories, setIsViewCategories] = useState(true)
     const [inputQuery, setInputQuery] = useState("")
-    const [shopImg, setShopImg] = useState(null)
     const [queryResult, setQueryResult] = useState([])
-
-    const searchParams = useSearchParams();
-    const shopId = searchParams.get('shopId')
-    const branchId = searchParams.get('branchId')
-    const tableId = searchParams.get('tableId')
-
-
-
     const router = useRouter();
 
-    if (!shopId || !branchId) {
-        router.push(`/shops/`);
-    }
+    const { shopId, branchId, tableId, error: paramError } = useQueryParamsRedirect()
 
     const { data: offers, isLoading: isLoadingOffers } = useSpecialOffers(branchId);
     const { data: shops, isLoading, isError, error, refetch } = useShops();
 
-    useEffect(() => {
-        if (!shops) return;
-
-        const selectedShop = shops?.find(shop => shop.id === Number(shopId));
-        const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
-
-        localStorage.setItem("selectedShopID", selectedShop.id)
-        localStorage.setItem("selectedBranchID", selectedBranch.id)
-        setShopImg(selectedShop.img)
-        setCurrentBranch(selectedBranch)
-
-    }, [shops])
+    const { shopImg, currentBranch, error: SelectedBranchError } = useSelectShopAndBranchData(shops, shopId, branchId)
 
     useEffect(() => {
         const result = searchMeals(currentBranch, inputQuery)
-        console.log("qu res", result)
         setQueryResult(result)
     }, [inputQuery])
 
@@ -81,12 +59,16 @@ const page = () => {
     }
 
     if (isLoading) return <div>Loading ...</div>;
+
     if (isError) return <div>Error: {error.message}</div>;
+
+    if (paramError) return <div>Error: {paramError}</div>
+    if (SelectedBranchError) return <div>Error: {SelectedBranchError}</div>;
 
     return (
         <Box sx={{ backgroundColor: '#1E1E2A', minHeight: '100vh', color: 'white', position: "relative", padding: "0px 25px" }}>
 
-            <Box 
+            <Box
                 sx={{
                     position: 'fixed', width: '100%', zIndex: 1000,
                     backgroundColor: '#1E1E2A',
@@ -98,8 +80,8 @@ const page = () => {
                 }}>
 
                 <Box display="flex" justifyContent="space-between" alignItems="center">
-                    {shopImg?  <img src={`${BASE_URL_IMAGE}${shopImg}`} alt='log' style={{maxHeight:"40px"}}/>
-                    :<Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>{t("logo")}</Typography>}
+                    {shopImg ? <img src={`${BASE_URL_IMAGE}${shopImg}`} alt='log' style={{ maxHeight: "40px" }} />
+                        : <Typography variant="h6" sx={{ fontSize: "18px", fontWeight: "900", color: "#797993" }}>{t("logo")}</Typography>}
                     <IconButton color="inherit">
                         <span className="icon-menu" sx={{ fontSize: "20px", color: "white" }}></span>
                     </IconButton>
@@ -128,7 +110,7 @@ const page = () => {
                 </Box>
             </Box>
 
-            <Box sx={{paddingBottom:"40px"}}>
+            <Box sx={{ paddingBottom: "40px" }}>
                 <Box mt={2} sx={{ paddingTop: '100px' }}>
                     <Typography variant="body1" sx={{ marginBottom: "10px", }}>
                         <span style={{
@@ -185,12 +167,10 @@ export const handleSpecialOfferClick = (router, branchId, shopId, mealId, specia
             return category.meals.some(meal => meal.id === Number(mealId))
         }
         );
-    console.log(categoryWithMeal) // debug log
     if (shopId && branchId && categoryWithMeal) {
         router.push(`/ProductDetails/${mealId}?shopId=${shopId}&branchId=${branchId}&catId=${categoryWithMeal.id}&special=${specialOfferId}` + (tableId ? `&tableId=${tableId}` : ''));
         // router.push(`/ProductDetails/${mealId}?shopId=${shopId}&branchId=${branchId}&catId=${categoryWithMeal.id}&special=${specialOfferId}`);
     } else {
-        console.log("Shop or Branch not selected yet");// debug log
     }
 
 }
@@ -201,62 +181,62 @@ const CategoryView = ({ t, currentBranch, prefetchTarget, shopId, branchId, tabl
             let catIdUrl = `/categories/${id}?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')
             router.push(catIdUrl);
         } else {
-            console.log("Shop or Branch not selected yet");// debug log
         }
 
     }
 
-    return (<Box mt={3}>
-        <Box sx={{ display: "flex" }}>
-            <Typography variant="body1" sx={{ fontSize: "20px", marginRight: "30px" }}>
-                {t("categories")}
+    return (
+        <Box mt={3}>
+            <Box sx={{ display: "flex" }}>
+                <Typography variant="body1" sx={{ fontSize: "20px", marginRight: "30px" }}>
+                    {t("categories")}
                 </Typography>
 
-            <Typography variant="body1" sx={{
-                marginBottom: "10px", display: "flex", fontSize: "10px",
-                backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                padding: "6px 20px", borderRadius: "20px", cursor: "pointer",
-            }}>
-                <span className="icon-fire" style={{ fontSize: "17px", marginRight: "6px" }}><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span></span>
-                {t("popular")}
-            </Typography>
-            <Box sx={{ marginLeft: "-10px", marginTop: "4px" }}><Arrow /> </Box>
-        </Box>
+                <Typography variant="body1" sx={{
+                    marginBottom: "10px", display: "flex", fontSize: "10px",
+                    backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
+                    padding: "6px 20px", borderRadius: "20px", cursor: "pointer",
+                }}>
+                    <span className="icon-fire" style={{ fontSize: "17px", marginRight: "6px" }}><span className="path1"></span><span className="path2"></span><span className="path3"></span><span className="path4"></span></span>
+                    {t("popular")}
+                </Typography>
+                <Box sx={{ marginLeft: "-10px", marginTop: "4px" }}><Arrow /> </Box>
+            </Box>
 
-        <div className="menu-container" style={{ marginTop: "5px", marginBottom: "70px" }}>
-            {currentBranch?.cat_meal?.map((item, index) => (
+            <div className="menu-container" style={{ marginTop: "5px", marginBottom: "70px" }}>
+                {currentBranch?.cat_meal?.map((item, index) => (
 
-                <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${BASE_URL_IMAGE}${item.cover})` }}>
-                    <Button
-                        sx={{ width: '100%', height: '100%' }}
-                        onClick={() => { handlCatClick(item.id) }}
-                        onMouseEnter={() => { prefetchTarget(item.id) }}>
-                        <div className="overlay">
-                            <Typography className="menu-title" >{item.name}</Typography>
-                        </div>
-
+                    <div key={item.id} className="menu-item" style={{ backgroundImage: `url(${BASE_URL_IMAGE}${item.cover})` }}>
                         <Button
-                            sx={{
-                                backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                                width: "30px", height: "30px",
-                                padding: '0px', margin: '0px',
-                                minWidth: '0px',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: "pointer",
-                                position: 'absolute', bottom: "0", right: "0",
-                            }}
-                        >
-                            <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
-                        </Button>
-                    </Button>
-                </div>
+                            sx={{ width: '100%', height: '100%' }}
+                            onClick={() => { handlCatClick(item.id) }}
+                            onMouseEnter={() => { prefetchTarget(item.id) }}>
+                            <div className="overlay">
+                                <Typography className="menu-title" >{item.name}</Typography>
+                            </div>
 
-            ))}
-        </div>
-    </Box>)
+                            <Button
+                                sx={{
+                                    backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
+                                    width: "30px", height: "30px",
+                                    padding: '0px', margin: '0px',
+                                    minWidth: '0px',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: "pointer",
+                                    position: 'absolute', bottom: "0", right: "0",
+                                }}
+                            >
+                                <ArrowForwardIcon className="icon" sx={{ color: 'white', fontSize: '15px' }} />
+                            </Button>
+                        </Button>
+                    </div>
+
+                ))}
+            </div>
+        </Box>)
 }
 
 const GridView = ({ t, currentBranch, prefetchTarget, shopId, branchId, tableId, router, queryResult }) => {
@@ -366,19 +346,18 @@ const CatList = ({ currentBranch, selectedCategory, setSelectedCategory, scrollT
                 const textColor2 = isActive && item.name !== "Popular" ? "white" : item?.color;
 
                 return (
-                    <Button key={index} 
-                    style={{margin:'0px', padding:'0px'}}
+                    <Button key={index}
+                        style={{ margin: '0px', padding: '0px' }}
                         onClick={() => {
-                            console.log('clikc')
                             setSelectedCategory(item)
                             scrollToCategory(item.id)
                         }}>
                         <ListItem
-                            
+
                             sx={{
                                 flexDirection: 'column',
                                 background: backgroundColor,
-                                ml:0,mr:0,
+                                ml: 0, mr: 0,
                                 mb: 2, padding: "5px 13px ",
                                 width: "100%",
                                 borderRadius: "20px", cursor: "pointer",

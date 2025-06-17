@@ -10,6 +10,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { BASE_URL_IMAGE } from '@/utils/constants';
 import { useShops } from '@/hooks/useShops';
+import { useSelectShopAndBranchData } from '@/hooks/useSelectShopAndBranchData';
+import { useQueryParamsRedirect } from '@/hooks/useShopSearchParam';
 
 
 const page = ({ params }) => {
@@ -19,50 +21,43 @@ const page = ({ params }) => {
   const [data, setData] = useState(null)
   // const [shopData, setShopData] = useState([])
 
-  const searchParams = useSearchParams();
-  const shopId = searchParams.get('shopId')
-  const branchId = searchParams.get('branchId')
-  const tableId = searchParams.get('tableId')
-
-  if (!id || !shopId || !branchId) {
+  const { shopId, branchId, tableId, error: paramError } = useQueryParamsRedirect()
+  if (!id || paramError) {
     return <p>{t("noProductAvailableForThisCategory")}</p>;
   }
 
-  const { data: shopData, } = useShops()
+  const { data: shopData } = useShops()
 
-
-
+  const { currentBranch, error: SelectedBranchError } = useSelectShopAndBranchData(shopData, shopId, branchId)
 
 
 
   useEffect(() => {
-
-    const shop = shopData?.find(shop => shop.id === Number(shopId));
-    const selectedBranch = shop?.brunchs?.find(branch => branch.id === Number(branchId));
-    const selectedCat = selectedBranch?.cat_meal?.find(cat => cat.id === Number(id));
-    console.log("shopData", shopData)// debug log
-    setData(selectedCat)
-  }, [shopData])
-  // console.log(products)
+    if (currentBranch) {
+      const selectedCat = currentBranch?.cat_meal?.find(cat => cat.id === Number(id));
+      setData(selectedCat)
+    }
+  }, [currentBranch])
 
   const router = useRouter();
 
   const handleGoBack = () => {
-    console.log('bakc') // debug log
-    const shopId = searchParams.get('shopId')
-    const branchId = searchParams.get('branchId')
-    const tableId = searchParams.get('tableId')
     let catUrl = `/categories?shopId=${shopId}&branchId=${branchId}` + (tableId ? `&tableId=${tableId}` : '')
     router.push(catUrl);
-
   }
+
+  if (SelectedBranchError) {
+    return <div>error 404 Not Found</div>
+  }
+
   return (
     <Box
       sx={{
         position: 'relative',
         color: 'white',
         backgroundColor: '#1E1E2A',
-        overflow: 'auto',
+        overflowY: 'auto',
+        overflowX: 'hidden',
         height: "100vh",
         width: '100%',
       }}
@@ -121,16 +116,16 @@ const page = ({ params }) => {
       </Box>
 
 
-      <Box sx={{ margin: "10px 0px " , overflow:'scroll' ,display:'flex',flexDirection:"column"}} className='hereProblem1'>
-        {data?.meals?.map((product,index) => (
+      <Box sx={{ margin: "10px 0px ",  display: 'flex', flexDirection: "column" }} className='hereProblem1'>
+        {data?.meals?.map((product, index) => (
           <div key={index}>
             <Box sx={{ padding: '5px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }} key={product.id}>
               <Box display="flex" justifyContent="space-between" alignItems="center" borderBottom="2px solid gray">
                 <Box sx={{ marginBottom: "6px" }}>
                   <Typography variant="h6" sx={{ color: '#797993', fontSize: "17px", fontWeight: "900" }}>
-                    {product?.name} 
+                    {product?.name}
                     {/* {product?.Description} */}
-                    </Typography>
+                  </Typography>
                   <Typography variant="body1" sx={{ color: '#AAAAAA', fontSize: "11px" }}>
                     {product?.Brief}</Typography>
 

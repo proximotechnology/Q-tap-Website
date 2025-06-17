@@ -25,7 +25,7 @@ export const useCartStore = create(
             },
 
             cartItemsTax: () => {
-                return get().meals.reduce((sum, meal) => sum + (meal.tax ?? 0), 0)
+                return get().meals.reduce((sum, meal) => sum + meal.itemBasePrice *(meal.tax ?? 0)/100, 0)
             },
 
 
@@ -74,9 +74,15 @@ export const useCartStore = create(
                     set({ meals: updatedMeals });
                 } else {
                     // Add new meal
-
+                    let basePrice = newMeal.price - newMeal.price * (newMeal.discount / 100)
+                    if (newMeal.selectedExtra) {
+                        newMeal.selectedExtra.map(extra => basePrice += Number(extra.price))
+                    }
+                    if (newMeal.selectedOptions) {
+                        newMeal.selectedOptions.map(option => basePrice += Number(option.price))
+                    }
                     const tax =
-                        set({ meals: [...meals, { ...newMeal, quantity: newMeal.quantity || 1 }] });
+                        set({ meals: [...meals, { ...newMeal, quantity: newMeal.quantity || 1, itemBasePrice: basePrice }] });
                 }
             },
 

@@ -32,7 +32,6 @@ const FormFields = ({ onStartChat }) => {
             phone,
             address
         };
-        console.log(userData);
 
         try {
             // send data to backend
@@ -45,7 +44,6 @@ const FormFields = ({ onStartChat }) => {
             });
 
             const data = await response.json();
-            console.log('Response:', data);
 
             if (data.message === "Phone number already exists" || data.message === "Data stored successfully") {
 

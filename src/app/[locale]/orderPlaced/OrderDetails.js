@@ -39,9 +39,7 @@ export const OrderDetails = () => {
 
                 myOrder = JSON.parse(myOrder)
                 setOrder(myOrder)
-                console.log('myOrder', myOrder)
             } catch(err){
-                console.log(err)
             }
         }
 

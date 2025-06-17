@@ -46,8 +46,8 @@ export const VerfiyEmail = () => {
             }
             const response = await axios.request(options)
                 .then(res => res)
-                .catch(error => console.log(error))
-            console.log(response);
+                .catch(error => 
+            
 
             if (response?.data?.status == true) {
                 toast.success("success sign up");

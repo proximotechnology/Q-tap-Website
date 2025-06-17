@@ -19,7 +19,7 @@ export const Language = () => {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        console.log("open")
+        
 
     };
 
@@ -29,7 +29,7 @@ export const Language = () => {
             router.push(pathName, { locale: language });
         }
         setAnchorEl(null);
-        console.log("close")
+        
     };
 
 

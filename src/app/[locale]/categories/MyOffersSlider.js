@@ -58,7 +58,7 @@ const MyOffersSlider = ({ items, openOffer }) => {
                                     borderRadius: '20px',
                                     height: 'auto',
                                 }} >
-                                {console.log(`${BASE_URL_IMAGE}${offer.img}`)}
+                                
                                 <CardMedia
                                     component="img"
                                     height="90"

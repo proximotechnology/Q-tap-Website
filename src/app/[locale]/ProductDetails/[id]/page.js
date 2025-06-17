@@ -26,7 +26,7 @@ const page = ({ params }) => {
     const { id } = params;//mealid
     // const [shopData, setShopData] = useState(null)
     const [mealData, setMealData] = useState(null)
-    console.log(mealData)
+    
     // const [isLoading, setIsLoading] = useState(true)
     /*  */
     const addItemToCart = useCartStore(state => state.addItemToCart);
@@ -55,7 +55,7 @@ const page = ({ params }) => {
         const selectedBranch = shop?.brunchs?.find(branch => branch.id === Number(branchId));
         const selectedCat = selectedBranch?.cat_meal?.find(cat => cat.id === Number(catId));
         const selectedMeal = selectedCat?.meals?.find(meal => meal.id === Number(id));
-        console.log("selected shop", selectedCat)
+        
         setMealData(selectedMeal)
     }, [shopData])
 
@@ -88,7 +88,7 @@ const page = ({ params }) => {
         const { itemDiscount, itemSubTotal, itemTax } = itemPriceDetailsCalculation(meal)
 
         setPriceBeforeDiscount(((itemSubTotal + itemTax) * count).toFixed(2))
-        console.log("value", itemDiscount, "value", itemSubTotal, "value", itemTax)
+        
         setPrice((itemSubTotal - itemDiscount).toFixed(2))
         /* one piece price * quantity */
         setTotalPrice(((itemSubTotal + itemTax - itemDiscount) * count).toFixed(2))
@@ -102,7 +102,7 @@ const page = ({ params }) => {
         if (count > 0)
             setCount(count - 1)
     }
-
+    console.log("meal ",mealData)
     const handleSize = (size) => {
         setSelectedSize(size)
     }
@@ -226,7 +226,6 @@ const page = ({ params }) => {
     //     return obj1Extra === obj2Extra && obj1Options === obj2Options;
     // };
     const addToCart = () => {
-        console.log("here")
         try {
             let meal = null;
             if (specialID) {
@@ -237,7 +236,8 @@ const page = ({ params }) => {
                     name: mealData.name,
                     price: mealData.meals_special_offer?.[0]?.after_discount,
                     specialId: mealData.meals_special_offer?.[0]?.id,
-                    quantity: count
+                    quantity: count,
+                    img:mealData.img
                 })
             } else {
                 if (!selectedSize) {
@@ -260,20 +260,17 @@ const page = ({ params }) => {
                     selectedExtra,
                     selectedOptions,
                     quantity: count,
-                    discount: mealData.discounts,
+                    discount: mealData.discount,
                     tax: Number(mealData.Tax),
                     img: mealData.img
                 })
             }
 
-            console.log("meal", meal)
             if (meal) {
                 addItemToCart(meal)
             } else {
-                console.log("error")
             }
         } catch (error) {
-            console.log("error", error)
             toast.error(error.message)
         }
 
@@ -416,7 +413,7 @@ const page = ({ params }) => {
                     {/* الجزء المتحرك  */}
                     <Box sx={{ position: "relative", top: "340px", padding: "12px 20px" }} >
 
-                        <Box display="flex" alignItems="center" gap={2} >
+                        <Box display="flex" alignItems="center"  >
                             {!specialID && <Typography variant="h6" sx={{ fontSize: '12px', fontWeight: "bold", color: 'white' }}>
                                 {t("size")}
                             </Typography>}
@@ -445,6 +442,7 @@ const page = ({ params }) => {
                                                 borderRadius: "50%",
                                                 minWidth: "20px",
                                                 fontWeight:"700",
+                                                margin:"5px",
                                                 backgroundColor: selectedSize === size ? "#797993" : "#302E3B",
                                                 color: selectedSize === size ? "white" : "gray",
                                                 "&:hover": {
@@ -459,7 +457,7 @@ const page = ({ params }) => {
                                                 width: '2px',
                                                 height: '28px', // adjust height
                                                 backgroundColor: 'white',
-                                                mx: 2 // optional horizontal margin
+                                                
                                             }} />}
                                     </>
                                 );

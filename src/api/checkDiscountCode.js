@@ -17,7 +17,6 @@ export const apiCheckDiscountCode = async (discountCode, branchId) => {
         });
         return (response)
     } catch (error) {
-        console.log(error)
         throw error;
     }
 

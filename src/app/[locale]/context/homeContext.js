@@ -9,10 +9,8 @@ const HomeContextProvider = (props) => {
   const getHomeData = async () => {
     try {
       const response = await axios.get(`${BASE_URL}home`);
-      console.log("all response", response);
       return response;
     } catch (err) {
-       console.log("all response", err);
       throw err
     }
   };

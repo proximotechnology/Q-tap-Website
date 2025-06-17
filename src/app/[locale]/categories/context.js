@@ -6,7 +6,6 @@ const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
   const [selectedShop, setSelectedShop] = useState(null);
-  console.log("ShopProvider")
   return (
     <ShopContext.Provider value={{ selectedShop, setSelectedShop }}>
       {children}

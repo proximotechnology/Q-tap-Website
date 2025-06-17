@@ -41,8 +41,8 @@ const page = () => {
     };
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState(null);
-    const cartItems = useCartStore(state=>state.meals);
-    
+    const cartItems = useCartStore(state => state.meals);
+
     const subTotal = useCartStore.getState().cartItemsSubTotal()
     const tax = useCartStore.getState().cartItemsTax()
     const discount = useCartStore.getState().cartItemDiscountWithDiscountCode()
@@ -75,7 +75,6 @@ const page = () => {
                 return;
             }
             formdata = JSON.parse(formdata)
-            console.log("formdata", formdata) // debug log
             let payWay = selectedMethod === 'cash' ? 'cash' : "wallet";
             let data = {
                 name: formdata.selectedName,
@@ -83,12 +82,11 @@ const page = () => {
                 comments: formdata.comment ? formdata.comment : "-",
                 type: 'takeaway',
                 payment_way: payWay,
-                brunch_id:branchId,// TODO:  order payment errror TypeError: Cannot read properties of undefined (reading 'branchId')
+                brunch_id: branchId,// TODO:  order payment errror TypeError: Cannot read properties of undefined (reading 'branchId')
                 "tax": tax, //may be nullable
-                "total_price": totalPrice ,
+                "total_price": totalPrice,
                 meals: []
             }
-            console.log(data) // debug log
             //// add meals data to the request 
             const sizeConvert = { 'L': 'l', 'M': 'm', 'S': 's' }
             cartItems.map((item) => {
@@ -122,8 +120,7 @@ const page = () => {
                     type: 'dinein',
                 }
             }
-
-            console.log("add_orders data : ", data) // debug log
+            console.log(JSON.stringify(data))
             const response = await axios.post(
                 `${BASE_URL}add_orders`,
                 data,
@@ -134,12 +131,11 @@ const page = () => {
 
                 }
             );
-            if (response.data.status === "error"){
-                console.log(response)
+            console.log("add_orders",response)
+            if (response.data.status === "error") {
                 throw new Error("make order api error")
             }
             localStorage.setItem('cartItems', '')
-            console.log(" order set to localStorage ", response) // debug log
             localStorage.setItem('order', JSON.stringify(response.data.order))
             if (payWay === "wallet" && response.data.payment_url)
                 localStorage.setItem('payment_url', JSON.stringify(response.data.payment_url))
@@ -148,9 +144,8 @@ const page = () => {
                 router.push("/orderPlaced")
             }
         } catch (error) {
-            console.log('order payment errror', error) // debug log
-            if (error?.response?.data?.errors?.table_id)
-                toast.error("error table")
+            // if (error?.response?.data?.errors?.table_id)
+            console.log("add_orders",error)
             toast.error(t("somethingWentWrong"))
         }
         finally {
@@ -175,7 +170,7 @@ const page = () => {
                 formData?.userPosition?.[0],
                 formData?.userPosition?.[1]
             ]
-            console.log("selected Pos", pos) // debug log 
+            
             setPosition(pos)
         }
         setSelectedMethod(formData?.paymentWay)
@@ -184,7 +179,7 @@ const page = () => {
     // ============================================================================
     const renderIcon = () => {
         if (!formData) return null;
-        console.log("renderIcon", formData.servingWay) // debug log
+        
         switch (formData.servingWay) {
             case 'dine_in':
                 return <span className='icon-table' style={{ fontSize: '20px', color: "#F78822" }}></span>;
@@ -398,7 +393,7 @@ const page = () => {
 
                                     <Typography variant="h6" sx={{ fontSize: '19px', fontWeight: "bold", color: 'white' }}>
 
-                                        {totalPrice } <span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                        {totalPrice} <span style={{ fontSize: "10px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                     </Typography>
                                 </Box>
 
@@ -448,15 +443,15 @@ const page = () => {
                 </Box>
                 <Divider orientation="vertical" flexItem sx={{ backgroundColor: "gray", mx: 1 }} />
 
-                <Box width={"100%"} sx={{ display: "flex", alignItems: "center" }} >
+                <Box width={"100%"} sx={{ display: "flex", alignItems: "center" ,gap:'5px'}} >
 
                     {/* <Link href='/orderPlaced' > */}
                     <Button
                         sx={{
                             width: "100%",
                             backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
-                            color: "white", textTransform: "capitalize", fontSize: "12px",
-                            borderRadius: "20px", height: "30px", marginRight: "50px",
+                            color: "white", textTransform: "capitalize", fontSize: "14px",
+                            borderRadius: "20px", height: "30px",
                             "&:hover": {
                                 backgroundImage: 'linear-gradient(to right, #48485B, #797993)',
                             }
@@ -466,15 +461,18 @@ const page = () => {
                         {t("confirm")} <img src="/assets/hands.svg" style={{ marginLeft: "5px" }} />
                     </Button>
                     {/* </Link> */}
-                    <Button onClick={() => {
-                        if (pageRef.current) {
-                            handlePrint();
-                            // handleDownloadPDF()
-                            console.log("on print click", pageRef.current)
-                        } else {
-                            console.warn("Printable content not mounted");
-                        }
-                    }} ><span className="icon-printer1" style={{ fontSize: "22px", marginLeft: "10px", color: "#AAAAAA" }}></span></Button>
+                    <Button style={{ padding: "0px", minWidth: '25px' }}
+                        onClick={() => {
+                            if (pageRef.current) {
+                                handlePrint();
+                                // handleDownloadPDF()
+                                
+                            } else {
+                                console.warn("Printable content not mounted");
+                            }
+                        }} >
+                        <span className="icon-printer1" style={{ fontSize: "22px",  color: "#AAAAAA" }}></span>
+                    </Button>
                 </Box>
             </Box>
         </Box>

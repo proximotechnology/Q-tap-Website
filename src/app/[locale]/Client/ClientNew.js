@@ -10,7 +10,7 @@ import "./Client.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "@/utils/constants";
+import { BASE_URL, BASE_URL_IMAGE } from "@/utils/constants";
 
 export const ClientNew = () => {
   const { getHomeData } = useContext(HomeContext);
@@ -101,7 +101,7 @@ export const ClientNew = () => {
                     "&:hover": { cursor: "pointer", transform: "scale(1.05)", transition: "0.3s" }
                   }}>
                     <img
-                      src={`${BASE_URL}${client?.img}`}
+                      src={`${BASE_URL_IMAGE}${client?.img}`}
                       alt={client?.title}
                       style={{
                         height: "100%",

@@ -130,7 +130,6 @@ export const Pricing = () => {
       );
     },
   });
-  console.log("error pricing", error)
   // التعامل مع حالات التحميل
   if (isLoading) {
     return (

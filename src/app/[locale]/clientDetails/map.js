@@ -21,7 +21,6 @@ function LocationMarker({ onSelect, defaultPos = null }) {
     useMapEvents({
         click(e) {
             const coords = [e.latlng.lat, e.latlng.lng];
-            console.log("coords", coords)
             setPosition(coords);
             onSelect(coords);
         },
@@ -55,7 +54,6 @@ export default function MapView({ setUserPosition, currentPos = null }) {
             console.warn('Geolocation not supported');
             return;
         }
-        console.log("MapView currentPos obj", currentPos)//debug log
         if (!currentPos) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
@@ -70,7 +68,6 @@ export default function MapView({ setUserPosition, currentPos = null }) {
         else {
             const coords = [currentPos[0], currentPos[1]];
 
-            console.log("MapView useEffect update pos by currentPos props  ", coords)//debug log
             setSelectedLocation(coords);
             setPosition(coords);
         }
@@ -85,7 +82,6 @@ export default function MapView({ setUserPosition, currentPos = null }) {
                 <LocationMarker defaultPos={currentPos} onSelect={(coords) => {
                     setSelectedLocation(coords);
                     setUserPosition(coords);
-                    console.log("locaiton selected ", coords) // debug log
                 }} />
                 <RecenterMap position={position} />
             </MapContainer>

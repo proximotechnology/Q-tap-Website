@@ -8,6 +8,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRouter } from 'next/navigation';
 import { Link } from "@/i18n/navigation"
 import { useLocale } from 'next-intl';
+import useUserStore from '@/store/userStore';
+import { logout } from '@/api/logout';
 
 export const Admin = () => {
     const router = useRouter();
@@ -16,56 +18,65 @@ export const Admin = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const openUserPopover = Boolean(anchorElUser);
 
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
-
+    // const [isLoggedIn, setIsLoggedIn] = useState(null);
+    const { user, setUser, clearUser } = useUserStore();
     const [userData, setUserData] = useState({
         name: '',
         email: ''
     });
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-        const storedName = localStorage.getItem('userName');
-        const storedEmail = localStorage.getItem('userEmail');
-
-        // فقط نفذ العملية إذا كانت القيم غير موجودة
-        if (!storedToken || !storedName || !storedEmail) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const name = urlParams.get('name');
-            const email = urlParams.get('email');
-
-            if (token) {
-                localStorage.setItem('token', token);
-                console.log('Token stored:', token);
-            }
-
-            if (name) {
-                localStorage.setItem('userName', name);
-                console.log('Name stored:', name);
-            }
-
-            if (email) {
-                localStorage.setItem('userEmail', email);
-                console.log('Email stored:', email);
-            }
-        } else {
-            console.log('Data already exists in localStorage');
+        if (!!user) {
+            setUserData({
+                name: user?.name,
+                email: user?.email
+            });
         }
-    }, []);
+    }, [user])
 
-    const currentToken = localStorage.getItem('token');
-    useEffect(() => {
-        // This code runs only on the client side
-        setUserData({
-            name: localStorage.getItem("userName") || '',
-            email: localStorage.getItem("userEmail") || ''
-        });
-    }, []);
-    useEffect(() => {
-        // This will only run on the client side
-        setIsLoggedIn(localStorage.getItem("token"));
-    }, []);
+    // useEffect(() => {
+    //     const storedToken = localStorage.getItem('token');
+    //     const storedName = localStorage.getItem('userName');
+    //     const storedEmail = localStorage.getItem('userEmail');
+
+    //     // فقط نفذ العملية إذا كانت القيم غير موجودة
+    //     if (!storedToken || !storedName || !storedEmail) {
+    //         const urlParams = new URLSearchParams(window.location.search);
+    //         const token = urlParams.get('token');
+    //         const name = urlParams.get('name');
+    //         const email = urlParams.get('email');
+
+    //         if (token) {
+    //             localStorage.setItem('token', token);
+    //             
+    //         }
+
+    //         if (name) {
+    //             localStorage.setItem('userName', name);
+    //             
+    //         }
+
+    //         if (email) {
+    //             localStorage.setItem('userEmail', email);
+    //             
+    //         }
+    //     } else {
+    //         
+    //     }
+    // }, []);
+
+    // const currentToken = localStorage.getItem('token');
+    // useEffect(() => {
+    //     // This code runs only on the client side
+    //     setUserData({
+    //         name: localStorage.getItem("userName") || '',
+    //         email: localStorage.getItem("userEmail") || ''
+    //     });
+    // }, []);
+    // useEffect(() => {
+    //     // This will only run on the client side
+    //     setIsLoggedIn(localStorage.getItem("token"));
+    // }, []);
 
     const handleUserClick = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -75,18 +86,25 @@ export const Admin = () => {
         setAnchorElUser(null);
     };
 
-    const handleLogoutClick = () => {
-        // Remove from localStorage
-        localStorage.removeItem('token');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        setIsLoggedIn(null);
-        handleUserClose();
+    // const handleLogoutClick = () => {
+    //     // Remove from localStorage
+    //     localStorage.removeItem('token');
+    //     localStorage.removeItem('userName');
+    //     localStorage.removeItem('userEmail');
+    //     setIsLoggedIn(null);
+    //     handleUserClose();
 
+    // };
+    const [loading,setLoading] = useState()
+    const handleLogoutClick = async () => {
+        if (loading) return;
+        setLoading(true);
+        await logout();
+        setLoading(false);
     };
 
     return (
-        <div>
+       !loading ? ( <div>
             <Box className='noRightPadding'
                 aria-describedby={openUserPopover ? 'simple-popover' : undefined}
                 onClick={handleUserClick}
@@ -133,7 +151,7 @@ export const Admin = () => {
 
             >
                 <Box sx={{ width: 200, padding: '10px' }}>
-                    {isLoggedIn && isLoggedIn !== "null" ? <>
+                    {!!user ? <>
                         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', marginBottom: '20px', gap: '10px' }}>
                             <Avatar sx={{ bgcolor: '#ef7d00', width: 40, height: 40 }}>
                                 <PersonOutlineOutlinedIcon sx={{ fontSize: "22px" }} />
@@ -151,7 +169,7 @@ export const Admin = () => {
 
                     <List>
                         {/* login/signin and logout section  */}
-                        {isLoggedIn && isLoggedIn !== "null" ? <>
+                        {!!user ? <>
                             <Box
                                 onClick={() => router.push(`/${locale}`)}
                                 sx={{
@@ -223,7 +241,7 @@ export const Admin = () => {
                                 </ListItem>
                             </Link>
                         </> : ""}
-                        {isLoggedIn && isLoggedIn !== "null" ? (
+                        {!!user ? (
                             <ListItem sx={{ cursor: "pointer" }} onClick={handleLogoutClick}>
                                 <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
                                     <img
@@ -303,6 +321,6 @@ export const Admin = () => {
                     </List>
                 </Box>
             </Popover >
-        </div>
+        </div>):"Loading"
     )
 }

@@ -43,12 +43,9 @@ const page = () => {
 
         const selectedShop = shops?.find(shop => shop.id === Number(shopId));
         const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
-        console.log("selectedBranch", selectedBranch)
 
-        console.log('check setSelectedCategory', Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal?.length > 0)
         if (Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal.length > 0) {
             setSelectedCategory(selectedBranch?.cat_meal[0])
-            console.log('setSelectedCategory')
         }
 
         setCurrentBranch(selectedBranch)

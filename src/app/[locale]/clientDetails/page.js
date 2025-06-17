@@ -46,7 +46,7 @@ const page = () => {
     const router = useRouter()
 
 
-    const { data: shops } = useShops()
+    const { data: shops,error } = useShops()
     const [selectedOption, setSelectedOption] = useState('dine_in');
     const [branchServigWay, setBranchServingWary] = useState([])
 
@@ -72,6 +72,7 @@ const page = () => {
             }
 
         }
+      
         // serving_ways
         /* 0
         : 
@@ -166,7 +167,6 @@ const page = () => {
                 toast.error(t("inValidDiscountCode"))
             }
         } catch (error) {
-            console.log(error)
             toast.error(t("inValidDiscountCode"))
         } finally {
             setIsLoading(false)
@@ -192,7 +192,6 @@ const page = () => {
             userPosition,
             code: validated ? validDiscountCode : ''
         };
-        console.log("formData data :", data)// debug log
         localStorage.setItem('formData', JSON.stringify(data));
     }, [phone, selectedTable, selectedCity, selectedName, comment, address, validDiscountCode, validated, selectedValue, selectedOption, userPosition]);
 
@@ -217,7 +216,9 @@ const page = () => {
     }
     // =========================================================================
 
-
+    if(error) {
+        return ( <div> error {error} </div> )
+    }
 
     return (
         <Box

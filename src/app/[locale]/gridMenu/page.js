@@ -60,14 +60,12 @@ const page = () => {
     
     useEffect(() => {
         const result = searchMeals(currentBranch, userQuery)
-        console.log("qu res",result)
         setQueryResult(result)
     }, [userQuery])
     
     useEffect(() => {
 
         const selectedShop = shops?.find(shop => shop.id === Number(shopId));
-        console.log("selectedShop", selectedShop)
         const selectedBranch = selectedShop?.brunchs?.find(branch => branch.id === Number(branchId));
 
         if (Array.isArray(selectedBranch?.cat_meal) && selectedBranch?.cat_meal.length > 0) {
@@ -202,7 +200,6 @@ const CatList = ({ currentBranch, selectedCategory, setSelectedCategory, scrollT
                 return (
                     <Button key={index}
                         onClick={() => {
-                            console.log('clikc')
                             setSelectedCategory(item)
                             scrollToCategory(item.id)
                         }}>

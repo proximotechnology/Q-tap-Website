@@ -90,8 +90,8 @@ export const Signup = () => {
           }
           const response = await axios.request(options)
           .then(res => res )
-          .catch(error => console.log(error))
-          console.log(response);
+          .catch(error => 
+          
           
           setIsLoading(false);
             

@@ -10,6 +10,7 @@ export const createMeal = ({
     quantity = 1,
     discount = 0,
     tax = 0,
+    img
 }) => {
     if (id === undefined || name === undefined || selectedSize === undefined || price === undefined || restaurantId === undefined || branchId === undefined) {
         throw new Error('Missing required meal fields');
@@ -27,6 +28,7 @@ export const createMeal = ({
         price,
         discount,
         tax,
+        img
     };
 };
 export const createSpecialOfferMeal = ({
@@ -41,13 +43,9 @@ export const createSpecialOfferMeal = ({
     quantity = 1,
     discount = 0,
     tax = 0,
+    img
 }) => {
-    console.log(id,
-    name,
-    price,
-    restaurantId,
-    branchId,
-    specialId )
+   
     if (id === undefined || name === undefined ||  price === undefined ||specialId === undefined || restaurantId === undefined || branchId === undefined) {
         throw new Error('Missing required special meal fields');
     }
@@ -64,5 +62,6 @@ export const createSpecialOfferMeal = ({
         price,
         discount,
         tax,
+        img
     };
 };

@@ -35,7 +35,6 @@ const Features = () => {
       setActiveIndex(next);
     }
   };
-  { console.log("direction === rtl", direction === "rtl") }
   const settings = {
     dots: true,
     infinite: true,
@@ -46,7 +45,7 @@ const Features = () => {
     centerPadding: "0",
     rtl: direction === "rtl",
     initialSlide: 0, // Start from the first slide
-    afterChange: (current) => console.log("Active slide:", current), // Verify active index
+    afterChange: (current) => {}, // Verify active index
     beforeChange: handleBeforeChange,
     responsive: [
       {

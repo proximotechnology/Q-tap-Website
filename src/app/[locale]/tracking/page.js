@@ -74,34 +74,34 @@ PHASE_TEMP represents the different stages an order goes through.
     if (!pusherOrder || !pusherPhase || !order) {
       return;
     }
-    console.log("call the update order")
+    
     setOrder(prev => {
       let phase = prev.phase
       if (phase) {
         let AcceptProccess;
-        console.log("pusher updata data", pusherOrder)
+        
         if (pusherPhase === "Accepted") {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "accepted");
           phase[pusherPhase].prepareTime = AcceptProccess?.time
-          console.log('pusher updata data AcceptProccess', AcceptProccess)
+          
         }
         if (pusherPhase === "Prepared") {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "prepared");
-          console.log('pusher updata data AcceptProccess', AcceptProccess)
+          
         }
         if (pusherPhase === "Delivered") {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "delivered");
-          console.log('pusher updata data AcceptProccess', AcceptProccess)
+          
         }
         if (pusherPhase === "Closed") {
           AcceptProccess = pusherOrder?.orders_processing?.find(o => o.status === "done");
-          console.log('pusher updata data AcceptProccess', AcceptProccess)
+          
           setOpen(true)
         }
         phase[pusherPhase].status = true;
         phase[pusherPhase].time = AcceptProccess?.created_at
       }
-      console.log("call the update order", { ...pusherOrder, phase })
+      
       localStorage.setItem('order', JSON.stringify({ ...pusherOrder, phase }))
       return { ...pusherOrder, phase }
     }
@@ -119,10 +119,10 @@ PHASE_TEMP represents the different stages an order goes through.
         if (!myOrder.phase)
           myOrder.phase = { ...PHASE_TEMP }
         setOrder(myOrder)
-        console.log('track my order', myOrder)
+        
         
       } catch (error) {
-        // console.log(error)
+        // 
         toast.error("cannot read order")
       }
     }
@@ -133,37 +133,37 @@ PHASE_TEMP represents the different stages an order goes through.
 
     const channel = pusher.subscribe('notify-channel');
     channel.bind('form-submitted', (data) => {
-      console.log('📢 track page Received from Pusher:', data);
+      
       // accepted_order
       if (data.type === "accepted_order") {
-        console.log('track accepted_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        
         if (myOrder?.id === data?.message?.[0]?.id) {
-          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          
           setPusherOrder(data?.message?.[0])
           setPusherPhase('Accepted')
         }
       }
       // prepared_order
       if (data.type === "prepared_order") {
-        console.log('track prepared_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        
         if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
-          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          
           setPusherOrder(data?.message?.[0])
           setPusherPhase('Prepared')
         }
       }
       if (data.type === 'delivered_order') {
-        console.log('track delivered_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        
         if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
-          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          
           setPusherOrder(data?.message?.[0])
           setPusherPhase('Served')
         }
       }
       if (data.type === 'done_order') {
-        console.log('track delivered_order', data?.message?.[0]?.id, "- ", myOrder?.id)
+        
         if (myOrder?.id === data?.message?.[0]?.id) { // data formate from pusher change from data?.message?.[0]?.id to  data?.message?.id
-          console.log('track prepared_order setPusherOrder setPusherPhase', data?.message?.[0])
+          
           setPusherOrder(data?.message?.[0])
           setPusherPhase('Closed')
         }

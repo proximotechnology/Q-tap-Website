@@ -13,7 +13,7 @@ import "./Features.css";
 import { HomeContext } from "../context/homeContext.js";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "@/utils/constants";
+import { BASE_URL,BASE_URL_IMAGE } from "@/utils/constants";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 
@@ -56,7 +56,6 @@ const FeaturesNew = () => {
     });
 
     const handleCardSiblingSizeSwipper = (index, length) => {
-        console.log("index", index, "lenght", length)
         if (index !== activeIndex && Math.abs(index - activeIndex) === 1) {
             return true
         } else if (index !== activeIndex && activeIndex === 0 && length - 1 === index) {
@@ -172,7 +171,6 @@ const FeaturesNew = () => {
                     onSwiper={(swiper) => {
                         setTimeout(() => {
                             setActiveIndex(swiper.realIndex);
-                            console.log("Active Index on Load:", swiper.realIndex);
                         }, 0);
                     }}
                     style={{
@@ -254,7 +252,7 @@ const CardComponent = ({ feature, index }) => {
                 <CardMedia
                     component="img"
                     height="50%"
-                    image={`${BASE_URL}${feature?.img}`}
+                    image={`${BASE_URL_IMAGE}${feature?.img}`}
                     alt={feature?.titles}
                 />
                 <CardContent>

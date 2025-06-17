@@ -10,6 +10,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import { toast } from 'react-toastify';
 import { BASE_URL_IMAGE } from '@/utils/constants';
 import { useCartStore } from '@/store/cartStore';
+import { Trash2 } from 'lucide-react';
+
 
 const page = () => {
     const t = useTranslations();
@@ -125,9 +127,8 @@ const page = () => {
                                 }}
                             >
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    {console.log("",item)}
                                     <img
-                                        src={BASE_URL_IMAGE + item.image}
+                                        src={BASE_URL_IMAGE + item.img}
                                         alt={item.name}
                                         style={{ width: '60px', height: '60px', borderRadius: "10px", marginRight: '10px' }}
                                     />
@@ -171,19 +172,20 @@ const page = () => {
                                         }}>
                                             {item.quantity} </Typography>
 
-                                        <RemoveCircleOutlinedIcon
-                                            onClick={() => handleMinusItem(item)}
-                                            sx={{ fontSize: "30px", color: "#44404D", cursor: "pointer" }}
-                                        />
+                                        {item.quantity === 1 ? <Trash2 onClick={() => handleMinusItem(item)} size={12} className="text-red-500 cursor-pointer" style={{width:"15px", height:"15px",padding:'5px' ,cursor:"pointer", background:'red',borderRadius:"50%"}} />
+                                            : <RemoveCircleOutlinedIcon
+                                                onClick={() => handleMinusItem(item)}
+                                                sx={{ fontSize: "30px", color: "#44404D", cursor: "pointer" }}
+                                            />}
                                     </Box>
-                                    {/* <Box>
+                                    <Box>
                                         <Typography variant="h6" sx={{
                                             marginTop: "5px",
                                             fontSize: '15px', fontWeight: "bold", color: 'white'
                                         }}>
-                                            {item.price}x{item.quantity} : {(item.price * item.quantity).toFixed(2)} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
+                                            {item.itemBasePrice * item.quantity} <span style={{ fontSize: "9px", fontWeight: "400", color: '#575756' }}>EGP</span>
                                         </Typography>
-                                    </Box> */}
+                                    </Box>
                                 </Box>
                             </Box>
                         </>

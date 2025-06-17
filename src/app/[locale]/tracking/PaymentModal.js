@@ -20,7 +20,7 @@ const PaymentModal = ({ isOpen, onClose }) => {
             payUrl = JSON.parse(payUrl)
             setPaymentUrl(payUrl)
         } catch (error) {
-            console.log("parse url error", error)
+            
         }
     }, []);
 

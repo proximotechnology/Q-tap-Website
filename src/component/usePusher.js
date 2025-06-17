@@ -16,7 +16,7 @@ export const usePusher = () => {
 
             switch (data?.type) {
                 case "notfy":
-                    console.log(`📢 notfy: ${data?.message?.title}: ${data?.message?.content}`);
+                    
                     break;
                 case "chat":
                     if (String(localStorage.getItem("customer_id")) === String(data?.message?.receiver_id)) {
@@ -24,7 +24,7 @@ export const usePusher = () => {
                     }
                     break;
                 case "add_order":
-                    console.log(`🛒 New Order: ${data?.message?.orderId}`);
+                    
                     break;
                 default:
                     // alert(JSON.stringify(data));

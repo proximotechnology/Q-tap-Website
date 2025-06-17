@@ -14,7 +14,6 @@ export default function page() {
   const locale = useLocale()
 
   const handleLangChange = (lang) => {
-    console.log(lang)
     router.push(pathName, { locale: lang });
   }
   return (

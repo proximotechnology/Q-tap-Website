@@ -64,9 +64,9 @@ export const itemPriceDetailsCalculation = (item) => {
             subTotal = Number(item.price_medium)
         if (item.selectedSize === 'S')
             subTotal = Number(item.price_small)
-        console.log("1", item)
+        
     }
-    console.log("1", subTotal)
+    
     // calculate discount base on the basic price
     if (item.discount) {
         if (!item.special) {
@@ -81,7 +81,7 @@ export const itemPriceDetailsCalculation = (item) => {
     // calculate tax on the total price of item (basic + extra + options)
     if (item.Tax) tax += (subTotal) * Number(item.Tax) / 100
 
-    console.log(tax, ">>", subTotal, ">>", discount)
+    
 
     return { itemSubTotal: subTotal, itemDiscount: discount, itemTax: tax }
 
@@ -93,7 +93,7 @@ export const searchMeals = (branch, query) => {
     if (query === "") return [];
     branch?.cat_meal?.forEach((category) => {
         category.meals.forEach((meal) => {
-            console.log("searchMeals meals",meal)
+            
             if (meal.name.toLowerCase().includes(query.toLowerCase())) {
                 results.push({
                     meal,
