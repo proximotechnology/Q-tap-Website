@@ -90,7 +90,7 @@ export const Signup = () => {
           }
           const response = await axios.request(options)
           .then(res => res )
-          .catch(error => 
+          .catch(error => {
           
           
           setIsLoading(false);
@@ -101,7 +101,7 @@ export const Signup = () => {
             router.push(`/${locale}/verfiy-email`)
           } else {
             setApiError(response?.data?.message || t("checkEmailPhoneDublicate"));
-          }
+          }})
         } catch (error) {
           setIsLoading(false);
           setApiError(error.response?.data?.message || t("failedRegisterTryAgain"));
