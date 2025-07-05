@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation"
 import { useLocale } from 'next-intl';
 import useUserStore from '@/store/userStore';
 import { logout } from '@/api/logout';
+import { LogIn, LogOut } from 'lucide-react';
 
 export const Admin = () => {
     const router = useRouter();
@@ -148,7 +149,7 @@ export const Admin = () => {
                         },
                     },
                 }}
-
+                sx={{marginTop:"10px"}}
             >
                 <Box sx={{ width: 200, padding: '10px' }}>
                     {!!user ? <>
@@ -263,6 +264,7 @@ export const Admin = () => {
                                 />
                             </ListItem>
                         ) : (
+                            /* user dont login */
                             <div>
                                 <Typography
                                     onClick={() => {
@@ -271,14 +273,10 @@ export const Admin = () => {
                                     style={{ textDecoration: "none" }}>
                                     <ListItem sx={{ cursor: "pointer" }} >
                                         <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
-                                            <img
-                                                src="/assets/logout.svg"
-                                                alt="icon"
-                                                style={{ width: "16px", height: "16px" }}
-                                            />
+                                            <LogOut  width={"18px"} height={"18px"}/>
                                         </ListItemIcon>
                                         <ListItemText
-                                            primary="Log In"
+                                            primary="sign up"
                                             primaryTypographyProps={{
                                                 sx: {
                                                     color: "#5D5D5C",
@@ -297,11 +295,7 @@ export const Admin = () => {
                                     style={{ textDecoration: "none" }}>
                                     <ListItem sx={{ cursor: "pointer" }} >
                                         <ListItemIcon sx={{ marginLeft: locale === "ar" ? "-30px" : "0px" }}>
-                                            <img
-                                                src="/assets/logout.svg"
-                                                alt="icon"
-                                                style={{ width: "16px", height: "16px" }}
-                                            />
+                                            <LogIn  width={"18px"} height={"18px"} />
                                         </ListItemIcon>
                                         <ListItemText
                                             primary="Sign In"

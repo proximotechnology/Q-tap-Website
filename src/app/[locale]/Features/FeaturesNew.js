@@ -185,7 +185,8 @@ const FeaturesNew = () => {
                     {featData?.map((feature, index) => {
                         const isActive = index === activeIndex;
                         const isSibling = handleCardSiblingSizeSwipper(index, featData?.length)
-                        return (
+                        console.log("featData",featData)
+                        return feature &&(
 
                             <SwiperSlide
                                 key={index}
