@@ -7,13 +7,14 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { useTranslations } from 'next-intl';
 import { BASE_URL } from '@/utils/constants';
+import axios from 'axios';
 
 const FormFields = ({ onStartChat }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const t  = useTranslations()
+    const t = useTranslations()
 
     // enter user data
     const handleSubmit = async (e) => {
@@ -35,16 +36,19 @@ const FormFields = ({ onStartChat }) => {
 
         try {
             // send data to backend
-            const response = await fetch(`${BASE_URL}customer_info`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                method: "POST",
-                body: JSON.stringify(userData)
-            });
+            const response = await axios.post(
+                `${BASE_URL}customer_info`,
+                userData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true, // equivalent to fetch's credentials: 'include'
+                }
+            );
 
-            const data = await response.json();
-
+            const data = response.data;
+            console.log("response", data)
             if (data.message === "Phone number already exists" || data.message === "Data stored successfully") {
 
                 const userDataFromResponse = data.data;
